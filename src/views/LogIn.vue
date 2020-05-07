@@ -10,7 +10,7 @@
                     <router-link to="/" class="bg-black text-white font-bold text-xl p-4">Logo</router-link>
                 </div>
 
-                <div>
+                <div class="m-auto">
                     <SignInForm/>
                 </div>
             </div>

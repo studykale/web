@@ -23,10 +23,10 @@
           <img class="hidden lg:block h-8 w-auto" src="/img/logos/workflow-logo-on-dark.svg" alt="" />
         </div>
         <div class="hidden sm:block sm:ml-6">
-          <div class="flex">
-            <router-link to="dashboard" class="px-3 py-2 rounded-md text-sm font-medium leading-5 text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Dashboard</router-link>
-            <router-link to="projects" class="ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Projects</router-link>
-            <router-link to="calendar" class="ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-150 ease-in-out">Calendar</router-link>
+          <div class="flex h-full">
+            <router-link to="dashboard" class="flex items-center  px-3 py-2 rounded-md text-sm font-medium leading-5 text-white hover:bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-250 ease-in-out">Logo</router-link>
+            <router-link to="login" class="flex items-center ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-300 hover:text-white hover:bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-250 ease-in-out">Sign Up</router-link>
+            <router-link to="signup" class="flex items-center ml-4 px-3 py-2 rounded-md text-sm font-medium leading-5 text-gray-300 hover:text-white hover:bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700 transition duration-250 ease-in-out">Sign In</router-link>
           </div>
         </div>
       </div>

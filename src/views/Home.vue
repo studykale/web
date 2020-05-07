@@ -154,7 +154,7 @@
           <li>
             <div class="flex flex-col">
               <h2 class="leading-loose text-xl font-bold text-purple-700 text-center font-display">Workation</h2>
-              <blockquote class="text-gray-700 text-center md:w-50 lg:w-75">
+              <blockquote class="text-gray-700 mx-auto text-center md:w-50 lg:w-1/2 block">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, fugiat. Omnis facere minima iste possimus obcaecati voluptas reiciendis accusamus cum.
               </blockquote>
               <div class="flex flex-row justify-center my-5">
