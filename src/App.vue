@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <Navbar/>
     <router-view />
   </div>
 </template>
@@ -12,24 +11,51 @@ export default {
 </script>
 
 <style lang="scss">
-
 #app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  color: #2c3e50;
+  font-family: "Muli", sans-serif;
 }
 
-#nav {
-  padding: 30px;
+.text-xs {
+  font-size: .75rem;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+.text-sm {
+  font-size: .875rem;
+}
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.text-base {
+  font-size: 1rem;
+}
+
+.text-lg {
+  font-size: 1.175rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+}
+
+.text-4xl {
+  font-size: 2.25rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-extrabold {
+  font-weight: 800;
+}
+
+.font-black {
+  font-weight: 900;
 }
 </style>

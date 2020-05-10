@@ -1,6 +1,8 @@
 <template>
   <div>
-      <h2>Hope</h2>
+      <h2>
+          Pricing
+      </h2>
   </div>
 </template>
 
