@@ -1,7 +1,7 @@
 <template>
   <Layout>
       <h3>
-        Sign Up
+        Contact Us
       </h3>
   </Layout>
 </template>

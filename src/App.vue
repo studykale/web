@@ -11,6 +11,9 @@ export default {
 </script>
 
 <style lang="scss">
+
+@import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
+
 #app {
   font-family: "Muli", sans-serif;
 }
@@ -57,5 +60,21 @@ export default {
 
 .font-black {
   font-weight: 900;
+}
+
+.flex {
+  display: flex;
+}
+
+.justify-around {
+  justify-content: space-between;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-row {
+  flex-direction: row;
 }
 </style>

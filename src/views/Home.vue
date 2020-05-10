@@ -1,48 +1,44 @@
 <template>
-    <section class="hero is-medium home">
+    <section class="hero home">
   <!-- Hero head: will stick at the top -->
     <Navbar/>
 
         <!-- Hero content: will be in the middle -->
     <div class="hero-body">
-        <div class="container has-text-left">
-        <h1 class="title font-bold">
-            Title
-        </h1>
-        <h2 class="subtitle">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos quis cum aliquid, ipsam tempora enim facere totam aliquam laudantium quibusdam ut magnam culpa molestias. Voluptatibus quibusdam expedita veritatis fugit commodi!
-        </h2>
-        <div class="buttons">
-            <b-button tag="router-link"
-                to="/pricing"
-                type="is-primary" 
-                rounded
-                size="is-medium">
-                Pricing
-        </b-button>
-        <b-button tag="router-link"
-                to="/auth/signup"
-                type="is-primary"
-                outlined
-                size="is-medium"
-                rounded>
-                Sign Up
-        </b-button>
-        </div>
-        
-        </div>
+        <div class="container flex justify-around flex-wrap flex-row">
+            <div class="has-text-left content">
+                <h1 class="title font-bold">
+                    Build your grades, Save time, with our essay service.
+                </h1>
+                <h4 class="subtitle">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos quis cum aliquid, ipsam tempora enim facere.
+                </h4>
+                <div class="buttons">
+                    <b-button 
+                        tag="router-link"
+                        to="/auth/signup"
+                        type="is-primary" 
+                        rounded
+                        size="is-medium">
+                        Get Started
+                </b-button>
+                
+            </div>
+            </div>
+                <OrderCard/>
+            </div>
     </div>
-
-
     </section>
 </template>
 
 <script>
     import Navbar from "@/components/Navbar.vue";
+    import OrderCard from "@/components/OrderCard.vue";
 
     export default {
         components: {
-            Navbar
+            Navbar,
+            OrderCard
         }
     }
 </script>
@@ -56,7 +52,6 @@
     position: relative;
 
     .hero-body {
-        
         z-index: 9;
     }
 
@@ -73,7 +68,18 @@
 }
 
 .hero-body {
-    
+    .content {
+        width: 50%;
+
+        @media only screen and (max-width: 768px) {
+            width: 100%;
+
+            .title, .subtitle {
+
+            text-align: center;
+            }
+        }
+    }
     .title, .subtitle {
         color: white;
         line-height: 1.8;
@@ -91,20 +97,6 @@
         @media only screen and (max-width: 480px) {
             display: flex;
             justify-content: center;
-        }
-    }
-
-    .subtitle {
-        width: 50%;
-        text-overflow: ellipsis;
-
-        @media (max-width: 768px) {
-            width: 75%;
-        }
-
-        @media (max-width: 480px) {
-            width: 100%;
-            text-align: center;
         }
     }
 }
