@@ -96,13 +96,11 @@ export default {
     .dropdown-menu {
         width: auto !important;
     }
-    // .navbar-item.start {
-    //     color: white !important;
-
-    //     @media only screen and (max-width: 1024px) {
-    //         color: #111111 !important;
-    //     }
-    // }
+   .navbar-item {
+        @media only screen and (min-width: 1024px) {
+             color: white !important;
+        }
+    }
 
     .login {
         margin: -10px 0 0 !important;

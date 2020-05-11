@@ -67,8 +67,17 @@ export default {
 }
 
 .justify-around {
+  justify-content: space-around;
+}
+
+.justify-between {
   justify-content: space-between;
 }
+
+.justify-center {
+  justify-content: center;
+}
+
 
 .flex-wrap {
   flex-wrap: wrap;
