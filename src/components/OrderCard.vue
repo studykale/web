@@ -19,7 +19,7 @@
                 </b-select>
             </b-field>
             <b-field label="Pages">
-                <b-numberinput v-model="orderPages" min="1" max="10" >
+                <b-numberinput v-model="orderPages" min="1" :max="maxOrderPages" >
                 </b-numberinput>
             </b-field>
             
@@ -50,6 +50,7 @@ export default {
         return {
             date: new Date(),
             minDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+            maxOrderPages: 100,
             orderEmail: "",
             orderPaperType: "",
             orderPages: 1,
