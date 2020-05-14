@@ -13,6 +13,9 @@
             <b-navbar-item href="#">
                 Profile
             </b-navbar-item>
+            <b-navbar-item href="#">
+                Log Out
+            </b-navbar-item>
         </template>
             
         <template slot="end">

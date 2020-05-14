@@ -1,11 +1,7 @@
 <template>
   
     <div class="card">
-        <div class="card__header">
-            <b-message size="is-small" type="is-warning" aria-close-label="Close message">
-                Wrong email, password combination
-            </b-message>
-        </div>
+        
         <div class="card-content">
             <b-field label="Username"
             >

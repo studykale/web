@@ -9,6 +9,7 @@
 <script>
 import Layout from "./Default.vue";
 
+
 export default {
   components: {
     Layout
