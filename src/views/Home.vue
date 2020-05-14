@@ -31,7 +31,7 @@
                     </div>
             </div>
         </section>
-        <div class="mt-5 mx-3">
+        <div class="container mt-5 mx-a w-90">
             <div>
                 <h3 class="title">Our features</h3>
             </div>
@@ -52,7 +52,7 @@
                     <p class="title">Exceptional Deliveries and Content</p>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam semper diam at erat pulvinar, at pulvinar felis blandit. Vestibulum volutpat tellus diam, consequat gravida libero rhoncus ut. Morbi maximus, leo sit amet vehicula eleifend, nunc dui porta orci, quis semper odio felis ut quam.</p>
                     <p>Suspendisse varius ligula in molestie lacinia. Maecenas varius eget ligula a sagittis. Pellentesque interdum, nisl nec interdum maximus, augue diam porttitor lorem, et sollicitudin felis neque sit amet erat. Maecenas imperdiet felis nisi, fringilla luctus felis hendrerit sit amet. Aenean vitae gravida diam, finibus dignissim turpis. Sed eget varius ligula, at volutpat tortor.</p>
-                    <p>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero. Donec leo ligula, maximus et pellentesque sed, gravida a metus. Cras ullamcorper a nunc ac porta. Aliquam ut aliquet lacus, quis faucibus libero. Quisque non semper leo.</p>
+                    <!-- <p>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero. Donec leo ligula, maximus et pellentesque sed, gravida a metus. Cras ullamcorper a nunc ac porta. Aliquam ut aliquet lacus, quis faucibus libero. Quisque non semper leo.</p> -->
                     </div>
                 </div>
                 </div>
@@ -121,11 +121,6 @@
                         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempora rem beatae, eius quo temporibus quae cumque velit excepturi quis distinctio.</p>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="CTO">
-            <div>
-                
             </div>
         </div>
         <Footer/>
@@ -237,71 +232,45 @@
 }
 
 .rocket {
-    background: url('../assets/images/social.png') no-repeat right;
-        background-size: contain;
-        // z-index: -10;
+    background-color: rebeccapurple;
+    p {
+        color: white;
+    }
 
-        position: relative;
-        p, .title {
-            color: white !important;
-        }
-
-        &::after {
-                position: absolute;
-                content: "";
-                height: 100%;
-                width: 100%;
-                top: 0;
-                left: 0;
-                background: #100c17;
-                z-index: -2;
-                border-radius: 5px;
-        }
+    .title {
+        color: mediumpurple;
+    }
 }
 
 .plane {
-        background: url('../assets/images/sent.png') no-repeat right;
-        background-size: contain;
+        // background: url('../assets/images/sent.png') no-repeat right;
+        // background-size: contain;
         // z-index: -10;
 
+        background-color: orange;
+
         position: relative;
-        p, .title {
+        p {
             color: white !important;
         }
 
-        &::after {
-                position: absolute;
-                content: "";
-                height: 100%;
-                width: 100%;
-                top: 0;
-                left: 0;
-                background: rgb(29, 12, 75);
-                z-index: -2;
-                border-radius: 5px;
+        .title {
+            color: rgb(243, 207, 141);
         }
 }
 
 .service {
-        background: url('../assets/images/success.png') no-repeat right;
-        background-size: contain;
+        // background: url('../assets/images/success.png') no-repeat right;
+        // background-size: contain;
         // z-index: -10;
-
+        background-color: #E20338;
         position: relative;
-        p, .title {
+        p {
             color: white !important;
         }
 
-        &::after {
-                position: absolute;
-                content: "";
-                height: 100%;
-                width: 100%;
-                top: 0;
-                left: 0;
-                background: #414042;
-                z-index: -2;
-                border-radius: 5px;
+        .title {
+            color: rgb(255, 152, 152);
         }
 }
 
@@ -315,7 +284,7 @@
     padding: 10em 1.5em;
 
     @media only screen and (min-width: 768px) {
-        clip-path: polygon(0 10%, 100% 0, 100% 90%, 0% 100%);
+        clip-path: polygon(0 10%, 100% 0, 100% 100%, 0% 100%);
     }
 
     .title {

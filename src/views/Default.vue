@@ -1,7 +1,9 @@
 <template>
-    <div>
-        <Navbar/>
-            <slot></slot>
+    <div class="main">
+        <Navbar type="is-dark"/>
+            <div class="wrapper">
+                <slot></slot>
+            </div>
         <Footer/>
     </div>
 </template>
@@ -20,5 +22,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+    .wrapper {
+        padding: 2em 1em;
+        min-height: calc(100vh - (15vh + 8vh));
+    }
 </style>

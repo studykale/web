@@ -1,6 +1,6 @@
 <template>
-<div class="h-100">
-  <div class="p-2">
+  <div class="h-100 flex justify-content items-center">
+  <div class="p-2 mx-auto">
     <div>
       <div class="text-center logo flex leading-snug justify-center">
         <span>
@@ -15,31 +15,27 @@
         </span>
       </div>
       <div class="flex justify-center">
-        <SignUpCard/>
-      </div>
+            <SignInCard/>
+    </div>
     </div>
   </div>
   </div>
 </template>
 
 <script>
-
-import SignUpCard from "@/components/SignUp.vue"
+import SignInCard from "@/components/SignIn.vue";
 
 export default {
-  components: {
-    SignUpCard
-  }
+    components: {
+        SignInCard
+    }
 }
 </script>
 
 <style scoped>
-  .p-2 {
-    padding: 1em;
-  }
+    .logo {
+        padding: 2em;
+    }
 
-
-  .logo {
-    padding: 2em;
-  }
+    
 </style>

@@ -1,7 +1,7 @@
 <template>
   <Layout>
       <h3>
-        Contact Us
+        Blog page
       </h3>
   </Layout>
 </template>

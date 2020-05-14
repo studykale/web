@@ -1,5 +1,5 @@
 <template>
-    <b-navbar  transparent>
+    <b-navbar transparent :type="type">
       
             <template slot="brand">
             <b-navbar-item tag="router-link" :to="{ path: '/' }">
@@ -9,10 +9,10 @@
             </b-navbar-item>
             </template>
             <template slot="start" class="start">
-                <b-navbar-item tag="router-link" to="/reviews">
+                <b-navbar-item tag="router-link" to="/how-it-works">
                     How it Works
                 </b-navbar-item>
-                <b-navbar-item tag="router-link" to="/about-us">
+                <b-navbar-item tag="router-link" to="/aboutus">
                     About Us
                 </b-navbar-item>
                 <b-navbar-item tag="router-link" to="/reviews">
@@ -26,7 +26,7 @@
             <template slot="end">
                 <b-navbar-item tag="div">
                     <div class="buttons">
-                        <b-button type="is-primary" rounded outlined>Sign Up</b-button>
+                        <b-button type="is-primary" tag="router-link" to="/auth/signup" rounded outlined>Sign Up</b-button>
                         <b-dropdown position="is-bottom-left" append-to-body aria-role="menu" trap-focus class="login">
                             <a
                                 class="navbar-item"
@@ -42,47 +42,26 @@
                                 custom
                                 paddingless
                                 class="login__modal">
-                                <form action="">
-                                    <div class="modal-card" style="width:300px;">
-                                        <section class="modal-card-body">
-                                            <b-field label="Email">
-                                                <b-input
-                                                    type="email"
-                                                    placeholder="Your email"
-                                                    required>
-                                                </b-input>
-                                            </b-field>
-
-                                            <b-field label="Password">
-                                                <b-input
-                                                    type="password"
-                                                    password-reveal
-                                                    placeholder="Your password"
-                                                    required>
-                                                </b-input>
-                                            </b-field>
-
-                                            <b-checkbox>Remember me</b-checkbox>
-                                        </section>
-                                        <footer class="modal-card-foot">
-                                            <button class="button is-primary">Login</button>
-                                        </footer>
-                                    </div>
-                                </form>
+                                <SignInCard :shadow="true"/>
                             </b-dropdown-item>
                         </b-dropdown>
                     </div>
                 </b-navbar-item>
             </template>
-        
     </b-navbar>
-
 </template>
 
 
 <script>
-export default {
+import SignInCard from "./SignIn";
 
+export default {
+    props: {
+        type: String
+    },
+    components: {
+        SignInCard
+    }
 }
 </script>
 
@@ -108,5 +87,9 @@ export default {
 
     .dropdown-content {
         padding-bottom: 0 !important;
+    }
+
+    .form {
+        box-shadow: 0 10px 15px 8px rgba(110, 110, 110, 0.445);
     }
 </style>
