@@ -1,57 +1,71 @@
 <template>
   <Layout>
     <div class="container">
-      <div class="text-4xl text-left">
-        <h3 class="font-bold leading-tight mb-2 text-purple">Know more about Us</h3>
-      </div>
-      <div class="header-content">
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio reprehenderit fugit velit nisi adipisci, doloremque beatae illum consequuntur odit iure quas inventore, exercitationem quos eaque accusamus. A deleniti possimus atque.</p>
+      <div class="flex justify-around">
+        <div class="w-50">
+          <div class="text-4xl text-left">
+            <h3 class="font-bold leading-tight mb-2 text-purple">Know more about Us</h3>
+          </div>
+          <div class="header-content">
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio reprehenderit fugit velit nisi adipisci, doloremque beatae illum consequuntur odit iure quas inventore, exercitationem quos eaque accusamus. A deleniti possimus atque.</p>
+          </div>
+        </div>
       </div>
 
       <div id="#FAQS" class="faqs">
-        <div class="leading-snug my-5">
-          <h5 class="subtitle text-left">
-            FAQS
-          </h5>
-          <div>
-            <b-collapse
-              class="card"
-              animation="slide"
-              v-for="(collapse, index) of collapses"
-              :key="index"
-              :open="isOpen == index"
-              @open="isOpen = index">
-              <div
-                  slot="trigger"
-                  slot-scope="props"
-                  class="card-header"
-                  role="button">
-                  <p class="card-header-title">
-                      {{ collapse.title }}
-                  </p>
-                  <a class="card-header-icon">
-                      <b-icon
-                          :icon="props.open ? 'menu-down' : 'menu-up'">
-                      </b-icon>
-                  </a>
-              </div>
-              <div class="card-content">
-                  <div class="content">
-                      {{ collapse.text }}
-                  </div>
-              </div>
+        <div class="flex justify-around">
 
-          </b-collapse>
+        <div class="w-50">
+          <div class="leading-snug my-5">
+            <h5 class="subtitle text-left">
+              FAQS
+            </h5>
+            <div>
+              <b-collapse
+                class="card"
+                animation="slide"
+                v-for="(collapse, index) of collapses"
+                :key="index"
+                :open="isOpen == index"
+                @open="isOpen = index">
+                <div
+                    slot="trigger"
+                    slot-scope="props"
+                    class="card-header"
+                    role="button">
+                    <p class="card-header-title">
+                        {{ collapse.title }}
+                    </p>
+                    <a class="card-header-icon">
+                        <b-icon
+                            :icon="props.open ? 'menu-down' : 'menu-up'">
+                        </b-icon>
+                    </a>
+                </div>
+                <div class="card-content">
+                    <div class="content">
+                        {{ collapse.text }}
+                    </div>
+                </div>
+
+            </b-collapse>
+            </div>
           </div>
+        </div>
         </div>
       </div>
 
 
       <div id='contact' class="contact mt-5">
-        <div>
-          <h5 class="subtitle mb-3">Contact Us</h5>
+        <div class="flex flex-row justify-around">
+          <div class="w-50">
+            <div>
+              <h5 class="subtitle mb-3">Contact Us</h5>
+            </div>
+            <Contact />
+          </div>
         </div>
-        <Contact />
+        
       </div>
     </div>
   </Layout>
@@ -95,11 +109,10 @@ export default {
 
 
 .header-content  {
-  width: 100%;
   margin-bottom: 3em;
 
   @media screen and (min-width: 768px) {
-    width: 50%;
+
     margin-bottom: 5em;
   }
 }
@@ -116,5 +129,17 @@ export default {
 
   .mt-5 {
     margin-top: 5em;
+  }
+
+  .w-50 {
+    width: 100%;
+
+    @media screen and (min-width: 520px) {
+      width: 60%;
+    }
+
+    @media screen and (min-width: 768px) {
+      width: 50%;
+    }
   }
 </style>
