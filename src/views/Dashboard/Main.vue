@@ -1,15 +1,13 @@
 <template>
   <div>
     
-    <section class="hero is-danger">
+    <section class="hero is-small">
       <div class="hero-head">
         <Navbar/>
       </div>
       <div class="hero-body">
         <div class="container">
-          <h1 class="title">
-            Welcome
-          </h1>
+
           <div class="buttons">
             <b-button type="is-danger" icon-left="file" size="is-small" inverted>Create a new Project</b-button>
             <b-button type="is-light" icon-left="thumbs-up" size="is-small" inverted>Completed</b-button>
@@ -75,7 +73,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+  .hero {
+    background: #edd17a !important;
+  }
+
   .my-5 {
     margin: 2em 0;
   }

@@ -11,6 +11,10 @@ export const ADD_PROJECT = "project/new";
 export const ADD_PROJECT_REQUEST = "project/new_loading";
 export const ADD_PROJECT_FAILURE = "project/new_fail";
 
+export const ADD_DRAFT_PROJECT = "project/draft";
+export const ADD_DRAFT_PROJECT_REQUEST = "project/request_draft";
+export const ADD_DRAFT_PROJECT_FAILURE = "project/failure_draft";
+
 export const UPDATE_PROJECT = "project/update";
 export const UPDATE_PROJECT_REQUEST = "project/update_loading";
 export const UPDATE_PROJECTFAILURE = "project/update_fail";
