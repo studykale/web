@@ -71,7 +71,7 @@ const User = {
 		login({ commit }, payload) {
 			auth.signInWithEmailAndPassword(payload.email, payload.password)
 			.then(user => {
-				console.log("user", user)
+				router.push(`/dashboard/${user.displayName}/projects`)
 			})
 			.catch(error => {
 				if(error.code == "auth/user-not-found") {
