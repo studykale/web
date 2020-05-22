@@ -16,15 +16,15 @@
             <b-navbar-item>
                 Profile
             </b-navbar-item>
-            <b-navbar-item href="#">
-                Log Out
+            <b-navbar-item @click="signout">
+                Log out
             </b-navbar-item>
         </template>
     </b-navbar>
 </template>
 
 <script>
-
+import { mapActions } from "vuex"
 export default {
     name: 'Navbar',
     data() {
@@ -37,6 +37,7 @@ export default {
 
     },
     methods: {
+        ...mapActions('user', ['signput']),
         addNewProject() {
             console.log("added new project")
         }

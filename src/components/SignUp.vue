@@ -2,7 +2,7 @@
   
     <div class="card">
         <div v-if="Notify.length > 0" class="card-header">
-            <b-message v-for="note in Notify" :key="note.mKey" :type="note.type" duration="note.duration" aria-close-label="Close message">
+            <b-message v-for="note in Notify" :key="note.mKey" :type="note.type" :duration="note.duration" aria-close-label="Close message">
                 {{ note.message }}
             </b-message>
         </div>

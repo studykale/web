@@ -9,42 +9,67 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: Home,
+    meta: {
+      requiresAuth: false
+    }
   },
   {
     path: "/auth/signup",
     name: "SignUp",
-    component : () => import('@/views/SignUp.vue')
+    component : () => import('@/views/SignUp.vue'),
+    meta: {
+      requiresAuth: false
+    }
   },
   {
     path: "/auth/signin",
     name: "SignIn",
-    component : () => import('@/views/Signin.vue')
+    component : () => import('@/views/Signin.vue'),
+    
+    meta: {
+      requiresAuth: false
+    }
   },
   {
     path: "/auth/password-change-req",
     name: "PassChangeReq",
-    component: () => import('@/views/PassReq')
+    component: () => import('@/views/PassReq'),
+    meta: {
+      requiresAuth: false
+    }
   },
   {
     path: "/reviews",
     name: 'Reviews',
-    component : () => import('@/views/Reviews.vue')
+    component : () => import('@/views/Reviews.vue'),
+    meta: {
+      requiresAuth: false
+    }
   },
   {
     path: "/aboutus",
     name: "AboutUs",
-    component: () => import('@/views/About.vue')
+    component: () => import('@/views/About.vue'),
+    meta: {
+      requiresAuth: false
+    }
   },
   {
     path: "/blog",
     name: 'Blog',
-    component : () => import('@/views/Blog.vue')
+    component : () => import('@/views/Blog.vue'),
+    meta: {
+      requiresAuth: false
+    }
   },
   {
     path: "/how-it-works",
     name: 'Process',
-    component: () => import('@/views/Process.vue')
+    component: () => import('@/views/Process.vue'),
+    meta: {
+      requiresAuth: false
+    }
   },
   {
     path: "/dashboard/:username",
@@ -58,12 +83,12 @@ const routes = [
       },
       {
           path: "notifications",
-          name: 'Profile',
+          name: 'Notifications',
           component: () => import('@/views/Dashboard/Views/Notifications.vue')
       },
       {
         path: "Chats",
-        name: 'Profile',
+        name: 'Chats',
         component: () => import('@/views/Dashboard/Views/Chats.vue')
       },
       {
