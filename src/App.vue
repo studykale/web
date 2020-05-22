@@ -16,6 +16,26 @@
 #app {
   font-family: "Muli", sans-serif;
 }
+
+.bg-light {
+        background-color: #F2F8FD;
+}
+
+
+ .inbox-grid {
+    height: 100vh;
+    display: grid;
+    grid-template-columns:  22% 20% 1fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 20px;
+    justify-items: stretch;
+    align-items: stretch;
+
+    @media screen and (max-width: 768px){
+      grid-template-columns: 1fr;
+    }
+ }
+
 .text-left {
   text-align: left;
 }
@@ -134,8 +154,17 @@
   line-height: 2;
 }
 
+.mt-2 {
+  margin-top: 1.2em;
+}
+
+
 .mb-2 {
-  margin-bottom: 1em;
+  margin-bottom: 1.4em;
+}
+
+.p-2 {
+  padding: 1.4em;
 }
 
 .divider-auto {
@@ -162,6 +191,8 @@
 .mb-3 {
   margin-bottom: 1.3em;
 }
+
+
 
 .mt-3 {
   margin-top: 3em;

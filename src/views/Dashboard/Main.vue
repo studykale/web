@@ -1,20 +1,10 @@
 <template>
   <div>
-    
     <section class="hero is-small is-primary">
       <div class="hero-head">
         <Navbar/>
       </div>
-      <div class="hero-body">
-        <div class="container">
-
-          <div class="buttons">
-            <b-button @click="showModal" rounded invereted type="is-danger" icon-left="file" size="is-small" inverted>Create a new Project</b-button>
-            <b-button type="is-light" rounded icon-left="thumbs-up" size="is-small" inverted>Completed</b-button>
-          </div>
-        </div>
-      </div>
-
+    
       <div class="hero-foot">
         <nav class="tabs is-boxed is-small">
           <div class="container">

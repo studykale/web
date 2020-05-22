@@ -3,7 +3,8 @@
 
         <section class="hero home">
             <!-- Hero head: will stick at the top -->
-            <Navbar/>
+            <navbar>
+            </navbar>
 
             <!-- Hero content: will be in the middle -->
             <div class="hero-body">
@@ -134,7 +135,7 @@
 
     export default {
         components: {
-            Navbar,
+            'navbar': Navbar,
             OrderCard,
             Footer
         },

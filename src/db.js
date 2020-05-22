@@ -1,9 +1,6 @@
 import firebase from "firebase/app";
 import 'firebase/firestore';
-
-console.log("store", JSON.stringify(config));
-console.log("process", process.env)
-
+require('firebase/auth');
 
 let config = {
     projectId: process.env.VUE_APP_PROJECTID,
@@ -16,12 +13,10 @@ let config = {
 }
 
 const db = firebase.initializeApp(config).firestore();
-
 //  Firebase Utils.
 const { Timestamp } = firebase.firestore
 const auth = firebase.auth();
 const currentUser = auth.currentUser;
-
 // Firebase Collections.
 const usersCollection = db.collection('users');
 const projectsCollection = db.collection('projects');

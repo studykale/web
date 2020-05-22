@@ -1,7 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import firebase from 'firebase';
+// import firebase from 'firebase';
+// import { currentUser } from "../db"
 
 Vue.use(VueRouter);
 
@@ -26,7 +27,6 @@ const routes = [
     path: "/auth/signin",
     name: "SignIn",
     component : () => import('@/views/Signin.vue'),
-    
     meta: {
       requiresAuth: false
     }
@@ -73,8 +73,10 @@ const routes = [
   },
   {
     path: "/dashboard/:username",
-    name: "Dashboard",
     component: () => import('@/views/Dashboard/Main.vue'),
+    meta: {
+      requiresAuth: true
+    },
     children: [
       {
         path: "profile",
@@ -93,7 +95,6 @@ const routes = [
       },
       {
         path: "Drafts",
-        name: "Drafts",
         component: () => import('@/views/Dashboard/Views/Drafts.vue')
       },
       {
@@ -103,29 +104,41 @@ const routes = [
       },
       {
         path: "",
-        name: "Drafts",
+        name: 'Drafts',
         component: () => import('@/views/Dashboard/Views/Drafts.vue')
       }
-    ],
+    ]
+  },
+  {
+    path: "*",
+    name: '404',
+    component: () => import('@/views/404.vue'),
     meta: {
-      requiresAuth: true
+      requiresAuth: false
     }
+  },
+  {
+    path: '/admin/login',
+    name: 'AdminLogin',
+    component: () => import('@/views/Admin/Login')
   }
 ];
 
 const router = new VueRouter({
-  mode: 'history',
+ mode: 'history',
   routes
 });
 
 
-router.beforeEach((to, from, next) => {
-  let currentUser = firebase.auth().currentUser
-  let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+// router.beforeEach((to, from, next) => {
+//   let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   
-  if (requiresAuth && !currentUser) next('/auth/signin')
-  else if (!requiresAuth && currentUser) next('/')
-  else next()
-})
+//   if (requiresAuth && !currentUser)  next({
+//       path: '/auth/signin',
+//       query: { redirect: to.fullPath }
+//     }) 
+//   else if (!requiresAuth && currentUser) next({ name: "Home" })
+//   else next()
+// })
 
 export default router;

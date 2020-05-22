@@ -24,7 +24,7 @@
                     :type="{ 'is-danger': passwordErrors.length > 0 }"
                     :message="passwordErrors"
                 >
-                    <b-input v-model.trim="$v.password.$model" placeholder="Your password" type="password" minLength="8" maxlength="16"></b-input>
+                    <b-input v-model.trim="$v.password.$model" placeholder="Your password" type="password" minLength="8" maxlength="16" password-reveal></b-input>
                 </b-field>
                 <button :disabled="submitStatus === 'ERROR'" :loading="submitStatus === 'PENDING'" class="is-success button is-fullwidth" type="submit" expanded>Sign Up</button>
             </form>

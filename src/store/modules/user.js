@@ -25,7 +25,8 @@ function onIdTokenRevocation() {
 
 function sendVerificationEmail(user, url) {
 	user.sendEmailVerification({
-		url: url
+		url: url,
+		canHandleCodeInApp: false
 	})
 	.then(() => {
 		Notification.open({
@@ -92,7 +93,7 @@ const User = {
 				data.user.updateProfile({
 					displayName: payload.username
 				}).then(()=> {
-					sendVerificationEmail(data.user, 'https://studykale-test.netlify.app/auth/signin')
+					sendVerificationEmail(data.user, 'http://localhost:8080/auth/signin')
 					router.push(`/dashboard/${data.user.displayName}/projects`)
 				})
 				.catch(error => {
