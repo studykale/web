@@ -1,7 +1,7 @@
 <template>
   <div>
     
-    <section class="hero is-small">
+    <section class="hero is-small is-primary">
       <div class="hero-head">
         <Navbar/>
       </div>
@@ -9,8 +9,8 @@
         <div class="container">
 
           <div class="buttons">
-            <b-button type="is-danger" icon-left="file" size="is-small" inverted>Create a new Project</b-button>
-            <b-button type="is-light" icon-left="thumbs-up" size="is-small" inverted>Completed</b-button>
+            <b-button @click="showModal" rounded invereted type="is-danger" icon-left="file" size="is-small" inverted>Create a new Project</b-button>
+            <b-button type="is-light" rounded icon-left="thumbs-up" size="is-small" inverted>Completed</b-button>
           </div>
         </div>
       </div>
@@ -45,6 +45,9 @@
       </div>
     </section>
     <div class="container">
+        <b-modal :active.sync="showProjectModel" scroll="keep">
+            <NewProject/>
+        </b-modal>
       <div class="my-5 px-2">
           <router-view></router-view>
       </div>
@@ -54,15 +57,26 @@
 
 <script>
 import Navbar from "@/components/Dashboard/Navbar.vue";
-
+import NewProject from '@/components/Dashboard/NewProject.vue'
 
 export default {
   components: {
     Navbar,
+    NewProject
   },
   data() {
     return {
-      activeClass: "is-active"
+      activeClass: "is-active",
+      showProjectModel: false
+    }
+  },
+  methods: {
+    showModal() {
+      if(this.showProjectModel) {
+        this.showProjectModel = false
+      } else {
+        this.showProjectModel = true;
+      }
     }
   },
   computed: {
@@ -74,9 +88,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .hero {
-    background: #edd17a !important;
-  }
+  
 
   .my-5 {
     margin: 2em 0;

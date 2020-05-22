@@ -5,9 +5,8 @@
 </template>
 
 <script>
-
-export default {  
-}
+  export default {  
+  }
 </script>
 
 <style lang="scss">
@@ -72,6 +71,10 @@ export default {
 
 .font-black {
   font-weight: 900;
+}
+
+.d-block {
+  display: block;
 }
 
 .flex {
@@ -194,5 +197,40 @@ export default {
 
 .w-90 {
   width: 90% !important;
+}
+
+.max-content {
+  width: max-content;
+}
+.m-2 {
+  margin: 1.2em;
+}
+
+.drop .card {
+  box-shadow: -1px 4px 16px 2px rgba(120, 121, 120, 0.26);
+}
+
+.no-drop .card {
+  box-shadow: none !important;
+}
+
+.no-border .card {
+  border: none !important;
+}
+
+.text-white {
+  color: white !important;
+}
+
+.py-2 {
+  padding: 1.2em 0;
+}
+
+.w-auto {
+  width: auto !important;
+}
+
+.ml-3 {
+  margin-left: 1.5em;
 }
 </style>

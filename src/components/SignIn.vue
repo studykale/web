@@ -1,11 +1,6 @@
 <template>
-  <div>
-      <div v-bind:class="[shadow ? shadowClass : 'card']">
-          <div class="card-header" v-if="Messages.length > 0">
-              <b-message v-for="msg in Messages" :key="msg.mKey" title="Error" :type="msg.type" size="is-small">
-                    {{ msg.message }}
-               </b-message>
-          </div>
+
+      <div class="card">
           <div class="card-content">
               <form @submit.prevent="loginUser">
                     
@@ -35,9 +30,9 @@
                                 </b-input>
                             </b-field>
 
-                            <p class="text-left text-purple">Forgot Password</p>
+                            <router-link to="/auth/password-change-req" class="text-left text-purple d-block">Forgot Password</router-link>
                             <button 
-                                :disabled="submitStatus !== 'OKAY' && submitStatus === 'ERROR'" 
+                                :disabled="submitStatus === 'ERROR'" 
                                 :loading="submitStatus === 'PENDING'"
                                 class="button is-primary" type="submit">Login</button>
                         
@@ -52,11 +47,11 @@
             </p>
         </div>
       </div>
-  </div>
+
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 import { validationMixin } from 'vuelidate';
 const { required, minLength, email } = require('vuelidate/lib/validators');
 
@@ -73,8 +68,7 @@ export default {
         return {
             email: '',
             password: '',
-            shadowClass: 'shadowed card',
-            submitStatus: null
+            submitStatus: "NULL"
         }
     },
     validations: {
@@ -97,34 +91,19 @@ export default {
             this.$v.$touch();
             if(this.$v.$invalid) {
                 this.submitStatus = "ERROR"
-                
-                
             } else {
                 this.submitStatus = "PENDING";
-                this.submitStatus = "OKAY"
-                this.login(data)
-                if(this.Messages.length > 0) {
-                    for (let message = 0; message < this.Messages.length; message++) {
-                        const msg = this.Messages[message];
-                        this.$buefy.notification.open({
-                            duration: msg.duration ? msg.duration : 5000,
-                            message: msg.message,
-                            position: 'is-top-right',
-                            type: msg.type,
-                            hasIcon: true
-                    })
-                }
-                    }
-                    console.log("login", data)
+                setTimeout(() => {
+                    this.submitStatus = "OKAY"
+                    this.login(data)
                     this.email = this.password = this.confirmation = "";
                     this.$v.$reset()
+                }, 2000)
+                
                 }
             }
         },
         computed: {
-        ...mapGetters({
-            Messages: 'notifications/Messages'
-        }), 
         emailErrors () {
             const errors = [];
             if(!this.$v.email.$dirty) {
@@ -158,7 +137,7 @@ export default {
 <style lang="scss" scoped>
     .card {
         border: none;
-        width: auto ;
+        width: auto;
         min-width: 290px;
 
         form {

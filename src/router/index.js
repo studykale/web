@@ -22,6 +22,11 @@ const routes = [
     component : () => import('@/views/Signin.vue')
   },
   {
+    path: "/auth/password-change-req",
+    name: "PassChangeReq",
+    component: () => import('@/views/PassReq')
+  },
+  {
     path: "/reviews",
     name: 'Reviews',
     component : () => import('@/views/Reviews.vue')
@@ -77,13 +82,14 @@ const routes = [
         component: () => import('@/views/Dashboard/Views/Drafts.vue')
       }
     ],
-    // meta: {
-    //   requiresAuth: true
-    // }
+    meta: {
+      requiresAuth: true
+    }
   }
 ];
 
 const router = new VueRouter({
+  mode: 'history',
   routes
 });
 
@@ -91,9 +97,9 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   let currentUser = firebase.auth().currentUser
   let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-
-  if (requiresAuth && !currentUser) next('login')
-  else if (!requiresAuth && currentUser) next('comics')
+  
+  if (requiresAuth && !currentUser) next('/auth/signin')
+  else if (!requiresAuth && currentUser) next('/')
   else next()
 })
 

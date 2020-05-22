@@ -1,7 +1,7 @@
 import { MESSAGE_DISMISSED, MESSAGE_ERROR, MESSAGE_SUCCESS } from "../MutationTypes"
 const defaultDuration = 3000;
 
-const Notifications = {
+const notifications = {
 	namespaced: true,
 	state: {
 		Messages: []
@@ -53,9 +53,9 @@ const Notifications = {
         }
 	},
 	getters: {
-		Messages: state => state.Messages.map(n => n.Raw)
+		Notify: state => state.Messages.map(n => n.Raw)
 	}
 	
 }
 
-export default Notifications
+export default notifications

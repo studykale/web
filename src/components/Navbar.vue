@@ -41,7 +41,7 @@
                                 :focusable="false"
                                 custom
                                 paddingless
-                                class="login__modal">
+                                class="login__modal drop">
                                 <SignInCard :shadow="true"/>
                             </b-dropdown-item>
                         </b-dropdown>
