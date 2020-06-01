@@ -54,7 +54,7 @@
 
 
 <script>
-import SignInCard from "./SignIn"
+import SignInCard from "./SignInCard"
 
 export default {
     name: 'navbar',

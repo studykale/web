@@ -2,20 +2,26 @@
   <div class="flex justify-center items-center h-100">
       <div class="no-drop">
         <div class="card">
-            <div class="card__header">
+            <div v-if="emailSent == true" class="card__header">
                 <h3 class="subtitle text-white">
-                    Change password
+                    Email Sent.
                 </h3>
                 <p class="text-white">We will send an email with a link on how to change your password</p>
             </div>
+            <b-message v-else-if="emailNotFound == true" label="No account found" type="is-info">
+                No account was not found by that email...
+            </b-message>
+            <b-message  v-else>
+                An email will be sent if an account exists.
+            </b-message>
             <div class="card__content">
-                <form @submit.prevent="passReq">
+                <form @submit.prevent="sendPassChangeRequest">
                     <b-field label="Email">
-                        <b-input placeholder="your@email.com" type="email"></b-input>
+                        <b-input v-model="email" placeholder="your@email.com" type="email"></b-input>
                     </b-field>
-                    <b-button class="is-danger" type="submit">
+                    <button class="button is-danger is-fullwidth" :class="{ submitting : 'is-loading' }" type="submit">
                         Send
-                    </b-button>
+                    </button>
                 </form>
             </div>
             <div class="card-footer py-2">
@@ -27,8 +33,39 @@
 </template>
 
 <script>
-export default {
+import { auth } from '../db'
 
+export default {
+    data() {
+        return {
+            email: "",
+            emailSent: false,
+            emailNotFound: false,
+            submitting: false
+        }
+    },
+    methods: {
+        sendPassChangeRequest() {
+            this.submitting = true;
+            auth.sendPasswordResetEmail(this.email)
+            .then(() => {
+                this.email = "";
+                this.submitting = false;
+                this.emailSent = true;
+                console.log("sent")
+            })
+            .catch(error => {
+                this.email = ""
+                this.submitting = false;
+                if(error.code == "auth/user-not-found") {
+                    this.emailNotFound = true
+                }
+
+                console.log("error", error);
+                console.log("error", error)
+            })
+        }
+    }
 }
 </script>
 

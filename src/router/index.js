@@ -3,6 +3,10 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 // import firebase from 'firebase';
 // import { currentUser } from "../db"
+import Dashboard from "../views/Dashboard/DashHome.vue";
+import Settings from "../views/Dashboard/Views/Settings";
+import Profile from "../views/Dashboard/Views/Profile";
+
 
 Vue.use(VueRouter);
 
@@ -11,101 +15,109 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
-    meta: {
-      requiresAuth: false
-    }
+  
   },
   {
     path: "/auth/signup",
     name: "SignUp",
     component : () => import('@/views/SignUp.vue'),
-    meta: {
-      requiresAuth: false
-    }
+   
   },
   {
     path: "/auth/signin",
     name: "SignIn",
     component : () => import('@/views/Signin.vue'),
-    meta: {
-      requiresAuth: false
-    }
+  
   },
   {
     path: "/auth/password-change-req",
     name: "PassChangeReq",
     component: () => import('@/views/PassReq'),
-    meta: {
-      requiresAuth: false
-    }
+   
   },
   {
     path: "/reviews",
     name: 'Reviews',
     component : () => import('@/views/Reviews.vue'),
-    meta: {
-      requiresAuth: false
-    }
+   
   },
   {
     path: "/aboutus",
     name: "AboutUs",
     component: () => import('@/views/About.vue'),
-    meta: {
-      requiresAuth: false
-    }
+   
   },
   {
     path: "/blog",
     name: 'Blog',
     component : () => import('@/views/Blog.vue'),
-    meta: {
-      requiresAuth: false
-    }
+    
   },
   {
     path: "/how-it-works",
     name: 'Process',
-    component: () => import('@/views/Process.vue'),
-    meta: {
-      requiresAuth: false
-    }
+    component: () => import('@/views/Process.vue')
   },
   {
-    path: "/dashboard/:username",
-    component: () => import('@/views/Dashboard/Main.vue'),
-    meta: {
-      requiresAuth: true
-    },
+    path: "/dashboard",
+    component: Dashboard,
+    name: 'Dashboard',
     children: [
-      {
-        path: "profile",
-        name: 'Profile',
-        component: () => import('@/views/Dashboard/Views/Profile.vue')
-      },
       {
           path: "notifications",
           name: 'Notifications',
           component: () => import('@/views/Dashboard/Views/Notifications.vue')
       },
       {
-        path: "Chats",
+        path: "chats",
         name: 'Chats',
         component: () => import('@/views/Dashboard/Views/Chats.vue')
       },
       {
-        path: "Drafts",
+        path: "drafts",
+        name: 'Drafts',
         component: () => import('@/views/Dashboard/Views/Drafts.vue')
       },
       {
-        path: "Projects",
+        path: "projects",
         name: "Projects",
         component: () => import('@/views/Dashboard/Views/Projects.vue')
       },
       {
-        path: "",
-        name: 'Drafts',
-        component: () => import('@/views/Dashboard/Views/Drafts.vue')
+        path: 'settings',
+        name: 'UserSettings',
+        component: Settings
+      },
+      {
+        path: 'profile',
+        name: 'UserProfile',
+        component: Profile
+      },
+      {
+        path: '*',
+        redirect: '/dashboard/projects'
+      }
+    ],
+    meta: {
+      requiresAuth: true
+    },
+  },
+  {
+    path: '/admin',
+    name: 'Layout',
+    component: () => import('@/views/Admin/Layout.vue'),
+    children: [
+      {
+        path: 'projects',
+        component: () => import('@/views/Admin/Dashboard/try/Project.vue')
+      },
+      {
+        path: 'chats',
+        component: () => import('@/views/Admin/Dashboard/try/Project2.vue')
+      },
+      {
+        path: 'settings',
+        component: () => import('@/views/Admin/Dashboard/try/Settings.vue')
       }
     ]
   },
@@ -129,16 +141,31 @@ const router = new VueRouter({
   routes
 });
 
-
 // router.beforeEach((to, from, next) => {
 //   let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  
-//   if (requiresAuth && !currentUser)  next({
-//       path: '/auth/signin',
-//       query: { redirect: to.fullPath }
-//     }) 
-//   else if (!requiresAuth && currentUser) next({ name: "Home" })
-//   else next()
+
+//   auth.onAuthStateChanged(user => {
+//     if(!requiresAuth && user) {
+//         next({path: `/dashboard/projects`})
+//     } else if (requiresAuth && user) { 
+//         next({
+//           path: '/dashboard/projects'
+//         })
+//     }
+//   })
 // })
 
+
+
+router.beforeEach((to, from, next) => {
+  let isLoggedIn = Vue.$cookies.isKey('loggedIn')
+  console.log("loggedIn", isLoggedIn)
+  let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  // console.log("currentUser", currentUser)
+  if (requiresAuth && !isLoggedIn) {  
+    next('/auth/signin')
+  }
+  else if (!requiresAuth && isLoggedIn) next('/dashboard/projects')
+  else next()
+})
 export default router;

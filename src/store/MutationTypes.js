@@ -7,6 +7,14 @@ export const SIGNUP_USER_REQUEST = "auth/signup_loading";
 export const SIGNUP_USER_FAILURE = "auth/signup_fail";
 
 
+export const GET_ALLPROJECTS = "projects/getAll";
+export const GET_ALLPROJECTS_REQUEST = "projects/getAllRequest";
+export const GET_ALLPROJECTSFAIL = "projects/getAllFail"
+
+export const GET_ALLDRAFTS = "projects/getDrafts";
+export const GET_ALLDRAFTS_REQUEST = "projects/getDraftsRequest";
+export const GET_ALLDRAFTS_FAIL = "projects/getDraftsFail"
+
 export const ADD_PROJECT = "project/new";
 export const ADD_PROJECT_REQUEST = "project/new_loading";
 export const ADD_PROJECT_FAILURE = "project/new_fail";

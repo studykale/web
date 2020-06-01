@@ -1,6 +1,9 @@
 <template>
 
       <div class="card">
+          <b-message type="is-warning" title="Error" v-if="submitStatus == 'ERROR'">
+              Please fill in the form correctly
+          </b-message>
           <div class="card-content">
               <form @submit.prevent="loginUser">
                     
@@ -32,8 +35,8 @@
 
                             <router-link to="/auth/password-change-req" class="text-left text-purple d-block">Forgot Password</router-link>
                             <button 
-                                :disabled="submitStatus === 'ERROR'" 
-                                :loading="submitStatus === 'PENDING'"
+                                :disabled="submitStatus === 'PENDING'" 
+                                :class="{ 'is-loading': loginStatus.loggingIn == true }"
                                 class="button is-primary" type="submit">Login</button>
                         
                  
@@ -51,7 +54,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 import { validationMixin } from 'vuelidate';
 const { required, minLength, email } = require('vuelidate/lib/validators');
 
@@ -68,7 +71,7 @@ export default {
         return {
             email: '',
             password: '',
-            submitStatus: "NULL"
+            submitStatus: null
         }
     },
     validations: {
@@ -89,7 +92,7 @@ export default {
                 password: this.password
             };
             this.$v.$touch();
-            if(this.$v.$invalid) {
+            if(this.$v.$invalid && !this.$v.$touch()) {
                 this.submitStatus = "ERROR"
             } else {
                 this.submitStatus = "PENDING";
@@ -104,6 +107,9 @@ export default {
             }
         },
         computed: {
+        ...mapState({
+            loginStatus: state => state.user.status
+        }),
         emailErrors () {
             const errors = [];
             if(!this.$v.email.$dirty) {

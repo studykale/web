@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import SignInCard from "@/components/SignIn.vue";
+import SignInCard from "@/components/SignInCard.vue";
 import Footer from "@/components/Footer.vue";
 
 

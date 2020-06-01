@@ -1,6 +1,9 @@
 import firebase from "firebase/app";
 import 'firebase/firestore';
-require('firebase/auth');
+import 'firebase/auth';
+import 'firebase/storage';
+import 'firebase/messaging';
+import store from "./store"
 
 let config = {
     projectId: process.env.VUE_APP_PROJECTID,
@@ -12,15 +15,64 @@ let config = {
     appId: process.env.VUE_APP_APPID
 }
 
+
 const db = firebase.initializeApp(config).firestore();
+let messaging = firebase.messaging()
+messaging.usePublicVapidKey(process.env.VUE_APP_MSG_KEY)
+
+messaging.requestPermission()
+.then(() => {
+    console.log("accepted")
+    return messaging.getToken()
+})
+.then((token) => {
+    console.log("token", token)
+})
+.catch(error => {
+    console.log("error", error)
+})
 //  Firebase Utils.
 const { Timestamp } = firebase.firestore
 const auth = firebase.auth();
-const currentUser = auth.currentUser;
+db.enablePersistence({ synchronizeTabs: true })
+
+// const currentUser = auth.currentUser;
+// For storing project extra files.
+const storageRef = firebase.storage().ref();
+const { TaskEvent, TaskState } = firebase.storage
 // Firebase Collections.
-const usersCollection = db.collection('users');
 const projectsCollection = db.collection('projects');
+const draftsCollection = db.collection('drafts');
+const currentUser = auth.currentUser;
+const newUser = uid => db.collection('users').doc(`${uid}`)
+const users = db.collection('users');
+const chats = db.collection('chats');
+const userPayments = uid => db.collection('users').doc(uid).collection('payments');
+const notifications = db.collection('notifications');
+const reviews = db.collection('reviews')
 
 
-export { Timestamp, auth, currentUser, usersCollection, projectsCollection };
+auth.onAuthStateChanged((user) => {
+    store.dispatch('user/fetchUser', user, { root: true })
+})
+
+export { 
+    Timestamp, 
+    auth, 
+    newUser, 
+    users, 
+    notifications, 
+    userPayments, 
+    currentUser, 
+    chats, 
+    projectsCollection, 
+    draftsCollection, 
+    storageRef, 
+    TaskEvent, 
+    TaskState, 
+    config,
+    reviews
+};
+
 export default db;
+

@@ -19,8 +19,11 @@
 
 .bg-light {
         background-color: #F2F8FD;
-}
+  }
 
+  .p-1 {
+    padding: 1em;
+  }
 
  .inbox-grid {
     height: 100vh;
@@ -32,7 +35,11 @@
     align-items: stretch;
 
     @media screen and (max-width: 768px){
-      grid-template-columns: 1fr;
+      display: grid;
+      grid-template-columns: 0.9fr 1.6fr 1.3fr 0.9fr;
+      grid-template-rows: repeat(2, 0.3fr) 2.4fr;
+      gap: 1em 1px;
+      grid-template-areas: "categories-and\ from categories-and\ from categories-and\ from categories-and\ from" "people people people people" "messages messages messages messages";
     }
  }
 
@@ -188,6 +195,14 @@
   margin: 0 auto;
 }
 
+.m-auto {
+  margin: auto !important;
+}
+
+.mb-1 {
+  margin-bottom: 1em;
+}
+
 .mb-3 {
   margin-bottom: 1.3em;
 }
@@ -208,6 +223,18 @@
 
 .text-purple {
     color: rebeccapurple !important;
+  }
+
+  .text-red {
+    color: #FF005C !important;
+  }
+
+  .text-warning {
+    color: #ffc11e;
+  }
+
+  .text-green {
+    color: #00DC7D !important;
   }
 
 .h-100 {
@@ -235,6 +262,10 @@
 }
 .m-2 {
   margin: 1.2em;
+}
+
+.mr-2 {
+  margin-right: 1.2em;
 }
 
 .drop .card {

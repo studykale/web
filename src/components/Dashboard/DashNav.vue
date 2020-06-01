@@ -1,7 +1,7 @@
 <template>
   <b-navbar class="container">
         <template slot="brand">
-            <b-navbar-item href="/dashboard/brian/">
+            <b-navbar-item href="/dashboard/projects/">
                 <h3 class="text-white">
                     studykale
                 </h3>
@@ -10,45 +10,43 @@
         </template>
 
         <template slot="end">
-            <b-navbar-item href="#">
-                Settings
-            </b-navbar-item>
-            <b-navbar-item>
-                Profile
-            </b-navbar-item>
-            <b-navbar-item @click="signout">
-                Log out
-            </b-navbar-item>
-            <b-navbar-dropdown :label="name">
-                <b-navbar-item  href="#">
+            <b-navbar-dropdown :label="username">
+                <b-navbar-item  href="/dashboard/profile">
                     Profile
                 </b-navbar-item>
-                <b-navbar-item href="#">
+                <b-navbar-item href="/dashboard/settings">
                     Settings
                 </b-navbar-item>
-                <b-navbar-item href="#">
+                <b-navbar-item @click="signout">
                     Log out
                 </b-navbar-item>
             </b-navbar-dropdown>
             <div class="avatar">
-                <img src="../../assets/images/brown.jpg" alt="user avatar">
+                <img v-if="photoURL" :src="photoURL" alt="user avatar">
+                <img v-else src="https://avatars.dicebear.com/api/bottts/smile.svg" alt="User avatar default">
             </div>
         </template>
     </b-navbar>
 </template>
 
 <script>
-import { mapActions } from "vuex"
+import { mapActions } from "vuex";
 export default {
     name: 'Navbar',
+    props: {
+        username: {
+            type: String,
+            default: 'user'
+        },
+        photoURL: {
+            type: String, 
+        }
+    },
     data() {
         return {
             navigation: 'Home',
-            name: this.$route.params.username
+            name: "brian"
         }
-    },
-    firebase: {
-
     },
     methods: {
         ...mapActions('user', ['signout']),

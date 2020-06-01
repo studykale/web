@@ -29,7 +29,7 @@
 
 <script>
 
-import SignUpCard from "@/components/SignUp.vue"
+import SignUpCard from "@/components/SignUpCard.vue"
 import Footer from "@/components/Footer.vue";
 
 export default {

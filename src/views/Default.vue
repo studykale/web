@@ -58,7 +58,7 @@
 <script>
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import SignInCard from "@/components/SignIn";
+import SignInCard from "@/components/SignInCard";
 
 export default {
     name: 'Layout',

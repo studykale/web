@@ -12,7 +12,7 @@
               </button>
               
               <b-dropdown-item value="new" aria-role="listitem">
-                  <div class="media">
+                  <div @click="createProject" class="media">
                       <b-icon class="media-left" type="is-primary" icon="play"></b-icon>
                       <div class="media-content">
                           <h3>New project</h3>
@@ -22,7 +22,7 @@
               </b-dropdown-item>
 
               <b-dropdown-item value="complete" aria-role="listitem">
-                  <div class="media">
+                  <div @click="projectType = 'Completed'" class="media">
                       <b-icon class="media-left" type="is-success" icon="book"></b-icon>
                       <div class="media-content">
                           <h3>Completed</h3>
@@ -32,7 +32,7 @@
               </b-dropdown-item>
 
               <b-dropdown-item value="pending" aria-role="listitem">
-                  <div class="media">
+                  <div @click="projectType = 'Pending'" class="media">
                       <b-icon class="media-left" type="is-info" icon="clock"></b-icon>
                       <div class="media-content">
                           <h3>Pending</h3>
@@ -42,7 +42,7 @@
               </b-dropdown-item>
 
               <b-dropdown-item value="cancelled" aria-role="listitem">
-                  <div class="media">
+                  <div @click="projectType = 'Cancelled'" class="media">
                       <b-icon class="media-left" type="is-danger" icon="eraser"></b-icon>
                       <div class="media-content">
                           <h3>Cancelled</h3>
@@ -57,46 +57,134 @@
         <div class="nav">
           <h2 class="subtitle">Projects</h2>
           <hr class="dropdown-divider"/>
-          <b-button class="mb-2" type="is-primary" expanded icon-left="play-circle">Create a new project</b-button>
-          <b-button class="mb-2" type="is-link" icon-left="book">View completed</b-button>
-          <b-button class="mb-2" type="is-link" icon-left="eraser">View cancelled projects</b-button>
+          <b-button class="mb-1" type="is-primary" expanded icon-left="play-circle" @click="createProject">Create a new project</b-button>
+          <b-button class="mb-1" type="is-link" icon-left="book">View completed</b-button>
+          <b-button class="mb-1" type="is-link" icon-left="eraser">View cancelled projects</b-button>
           <b-button type="is-link" icon-left="clock">View drafts</b-button>
         </div>
         <div class="projects">
-          <h4>projects</h4>
+            <h2 class="title">{{ projectType || 'All Projects' }}</h2>
+            <div v-if="projects.length > 0 && gettingProjects == false">
+              <div v-for="(project, i) in projects" :key="i">
+                <div class="card w-100">
+                  <div class="card-header">
+                    <h3 class="card-header-title">
+                      {{ project.name }}
+                    </h3>
+                    <b-taglist class="mr-2" attached>
+                      <b-tag type="is-info" >{{ project.status }}</b-tag>
+                      <b-tag type="is-danger">{{ project.pages }} pages</b-tag>
+                    </b-taglist>
+                  </div>
+                  <div class="card-content">
+                    <p>{{ project.description || "No description" }}</p>
+                  </div>
+                  <div class="card-footer flex justify-between">
+                    <p class="card-header-subtitle">Type: <span class="font-bold">{{ project.paperType }}</span></p>
+                    <b-taglist class="mr-2" attached>
+                      <b-tag type="is-info" >{{ project.files ? project.files.length : 0 }} files</b-tag>
+                    </b-taglist>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else-if="gettingProjects">
+              <div>
+                <b-skeleton width="20%" animated></b-skeleton>
+                <b-skeleton width="40%" animated></b-skeleton>
+                <b-skeleton width="80%" animated></b-skeleton>
+              </div>
+              <div class="mt-2">
+                <b-skeleton width="20%" animated></b-skeleton>
+                <b-skeleton width="40%" animated></b-skeleton>
+                <b-skeleton width="80%" animated></b-skeleton>
+              </div>
+            </div>
+            <div class="text-center my-2" v-else>
+              <h2>You don't have any projects yet.</h2>
+            </div>
         </div>
       </div>
+      <b-modal :active.sync="showNewProject">
+        <NewProject :showNewProject="showProjectModal" :currentUser="loggedInUser"/>
+      </b-modal>
   </div>
 </template>
 
 <script>
+
+import NewProject from '@/components/Dashboard/NewProject.vue'
+import { mapState, mapActions } from "vuex"
+
+
 export default {
+  components: {
+    NewProject
+  },
+  props: {
+    showProjectModal: Boolean
+  },
   data() {
     return {
-      projectChoice: true
+      projectChoice: true,
+      showNewProject: this.showProjectModal,
+      projectType: "All"
     }
+  },
+  methods: {
+    ...mapActions('projects', ['initProjects']),
+    createProject() {
+      console.log("modal")
+      if(this.showNewProject) {
+        this.showNewProject = false
+      } else {
+        this.showNewProject = true
+      }
+    }
+  },
+  computed: {
+    ...mapState({
+      loggedInUser: state => state.user.user,
+      gettingProjects: state => state.projects.gettingAllProj,
+      projects: state => state.projects.projects
+    })
+  },
+  created() {
+    this.initProjects(this.loggedInUser.userId);
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  .head {
-    width: 100%;
-    margin: 2em 0;
-    .float-right {
-      float: right;
+    .head {
+      width: 100%;
+      margin: 2em 0;
+      
+      .float-right {
+        float: right;
+      }
     }
-  }
 
-  .grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-    gap: 1px 20px;
-    grid-template-areas: "nav projects projects projects" "nav projects projects projects" "nav projects projects projects";
-  }
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap: 1px 20px;
+      grid-template-areas: "nav projects projects projects" "nav projects projects projects" "nav projects projects projects";
+    
+      @media screen and (max-width: 520px) {
+        display: flex;
+        flex-direction: column;
 
-  .nav { 
+        .nav {
+          display: none;
+          pointer-events: none;
+          visibility: none;
+        }
+      }
+    }
+
+    .nav { 
     grid-area: nav; 
     padding: 1em; 
 
@@ -110,7 +198,52 @@ export default {
         color: rebeccapurple;
       }
     }
+    }
+
+  .projects { 
+    grid-area: projects; 
+    padding: 1em;
+     
+     h2 {
+      padding: .5em;
+  
+      background: #ffffff; 
+     }
+
+    .card {
+      margin-top: 1.4em;
+
+      .card-header {
+        
+
+        @media screen and (max-width: 680px) {
+          display: flex;
+          flex-direction: column;
+
+          .tags {
+            margin: .25em .75rem;
+          }
+        }
+      }
+    }
+
+    .card .card-subtitle {
+      padding: 1em 0;
+    }
   }
 
-  .projects { grid-area: projects; background: lavender }
+  .card-footer {
+    padding: 1em .5em;
+  }
+
+  .dropdown-menu {
+    .dropdown-item.is-active {
+      background-color: white;
+      color: rgb(70, 69, 69);
+    }
+  }
+
+  .card.w-100 {
+    width: 100% !important; 
+  }
 </style>
