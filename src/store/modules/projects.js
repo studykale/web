@@ -100,13 +100,16 @@ const projects = {
 			state.addingDraftProject = false;
 			state.addingDraftFail = false;
 
-			state.draftProjects.push({
-				draftKey: tempId(5),
-				email: data.email,
-				pageNumber: data.pageNumber,
-				paperType: data.paperType,
-				deadline: data.dealine
-			})
+			if(state.draftProjects.includes(data) === false) {
+				state.draftProjects.push({
+					draftKey: tempId(5),
+					email: data.email,
+					pageNumber: data.pageNumber,
+					paperType: data.paperType,
+					deadline: data.dealine
+				})
+			}
+
 		},
 		[ADD_DRAFT_PROJECT_REQUEST] (state) {
 			state.addingDraftFail = false;
@@ -142,7 +145,9 @@ const projects = {
 		[ADD_PROJECT] (state, payload) {
 			state.addingProject = false;
 			state.addingProjectFail = false;
-			state.projects.push(payload);
+			if(state.projects.includes(payload) === false) {
+				state.projects.push(payload);
+			}
 		},
 		uploading(state) {
 			state.uploadingFiles = true
@@ -174,8 +179,10 @@ const projects = {
 					console.log("result", result);
 					let drafts = [];
 					result.forEach(r => {
+						let id = r.id;
 						console.log("r", r.data())
-						drafts.push(r.data())
+						let dData = { ...r.data(), id }
+						drafts.push(dData)
 					})
 					console.log("drafts", drafts);
 					Notification.open({
@@ -208,8 +215,10 @@ const projects = {
 						commit(GET_ALLPROJECTSFAIL)
 					} else {
 						res.forEach(p => {
+							let id = p.id;
 							console.log("init", p.data())
-							commit(GET_ALLPROJECTS, p.data())
+							let pData = { ...p.data(), id }
+							commit(GET_ALLPROJECTS, pData)
 						})
 					}
 				})
@@ -271,7 +280,7 @@ const projects = {
 				} else {
 					console.log("yes")
 
-
+					commit(ADD_DRAFT_PROJECT_REQUEST)
 					projectsCollection.add({
 						name: data.name,
 						status: 'pending',
@@ -280,6 +289,7 @@ const projects = {
 						paperType: data.paperType,
 						pages: data.pageNumber,
 						files: [],
+						price: data.price,
 						createdAt: Timestamp.now(),
 						creator: data.creator
 					})
@@ -325,7 +335,19 @@ const projects = {
 				commit(ADD_PROJECT_FAILURE)
 			})
 		}
-    }
+	},
+	getters: {
+		projectById: (state) => (id) => { return state.projects.find(p => p.id == id)  },
+		completedProjects: state => {
+			return state.projects.filter(p => p.status == 'completed')
+		},
+		cancelled: state => {
+			return state.projects.filter(c => c.status == 'cancelled')
+		},
+		pending: state => {
+			return state.projects.filter(p => p.status == 'pending')
+		}
+	}
 }
 
 export default projects;

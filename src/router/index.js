@@ -51,7 +51,6 @@ const routes = [
     path: "/blog",
     name: 'Blog',
     component : () => import('@/views/Blog.vue'),
-    
   },
   {
     path: "/how-it-works",
@@ -64,9 +63,9 @@ const routes = [
     name: 'Dashboard',
     children: [
       {
-          path: "notifications",
-          name: 'Notifications',
-          component: () => import('@/views/Dashboard/Views/Notifications.vue')
+        path: "notifications",
+        name: 'Notifications',
+        component: () => import('@/views/Dashboard/Views/Notifications.vue')
       },
       {
         path: "chats",
@@ -158,7 +157,7 @@ const router = new VueRouter({
 
 
 router.beforeEach((to, from, next) => {
-  let isLoggedIn = Vue.$cookies.isKey('loggedIn')
+  let isLoggedIn = window.$cookies.isKey('loggedIn')
   console.log("loggedIn", isLoggedIn)
   let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   // console.log("currentUser", currentUser)

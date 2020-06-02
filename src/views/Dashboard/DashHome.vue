@@ -59,7 +59,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('projects', ['initDrafts']),
+    ...mapActions('projects', ['initDrafts', 'initProjects']),
     ...mapActions('user', ['signout']),
   },
   computed: {
@@ -74,7 +74,8 @@ export default {
     if(!this.loggedInUser || !this.loggedInUser.username) {
       this.$router.push('/')
     } else {
-      this.initDrafts(this.loggedInUser.email)
+      this.initDrafts(this.loggedInUser.email);
+      this.initProjects(this.loggedInUser.userId)
     }
   }
 }

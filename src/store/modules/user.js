@@ -2,7 +2,7 @@
 import { LOGIN_USER, SIGNUP_USER, LOGIN_REQUEST, SIGNUP_USER_REQUEST, LOGIN_FAILURE, SIGNUP_USER_FAILURE } from "../MutationTypes"
 import { auth, newUser } from "../../db"
 import { NotificationProgrammatic as Notification } from 'buefy'
-import Vue from "vue"
+
 
 import router from "../../router"
 // function getRandomInt() {
@@ -76,7 +76,7 @@ const User = {
 				let user = result.user;
 				// console.log("user dis", user.displayName)
 				// dispatch('projects/initProjects', { id: user.uid }, {root: true})
-				Vue.$cookies.set('loggedIn', true, new Date().getDate() + 1)
+				window.$cookies.set('loggedIn', true, '1d');
 				commit(LOGIN_USER, { username: user.displayName, email: user.email, verified: user.emailVerified, photoUrl: user.photoURL, userId: user.uid })
 				router.replace('/dashboard/projects');
 			})

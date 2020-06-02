@@ -1,5 +1,8 @@
 <template>
   <div class="container h-100 flex flex-column">
+      <b-message v-if="addingProject">
+        Adding your project details...
+      </b-message>
       <div class="head">
         <div class="float-right">
           <b-dropdown v-model="projectChoice" aria-role="list">
@@ -65,7 +68,7 @@
         <div class="projects">
             <h2 class="title">{{ projectType || 'All Projects' }}</h2>
             <div v-if="projects.length > 0 && gettingProjects == false">
-              <div v-for="(project, i) in projects" :key="i">
+              <div v-for="project in projects" :key="project.id">
                 <div class="card w-100">
                   <div class="card-header">
                     <h3 class="card-header-title">
@@ -80,10 +83,7 @@
                     <p>{{ project.description || "No description" }}</p>
                   </div>
                   <div class="card-footer flex justify-between">
-                    <p class="card-header-subtitle">Type: <span class="font-bold">{{ project.paperType }}</span></p>
-                    <b-taglist class="mr-2" attached>
-                      <b-tag type="is-info" >{{ project.files ? project.files.length : 0 }} files</b-tag>
-                    </b-taglist>
+                   <b-button type="is-danger" @click="() => { showProjectDetails(project.id) }">View</b-button>
                   </div>
                 </div>
               </div>
@@ -108,18 +108,20 @@
       <b-modal :active.sync="showNewProject">
         <NewProject :showNewProject="showProjectModal" :currentUser="loggedInUser"/>
       </b-modal>
+      <ProjectDetails :open="openSide" :description="singleProject.description" :title="singleProject.name" :paperType="singleProject.paperType" :id="singleProject.id"/>
   </div>
 </template>
 
 <script>
 
 import NewProject from '@/components/Dashboard/NewProject.vue'
-import { mapState, mapActions } from "vuex"
-
+import { mapState, mapGetters } from "vuex"
+import ProjectDetails from "@/components/Dashboard/ProjectDetails.vue";
 
 export default {
   components: {
-    NewProject
+    NewProject,
+    ProjectDetails
   },
   props: {
     showProjectModal: Boolean
@@ -128,11 +130,13 @@ export default {
     return {
       projectChoice: true,
       showNewProject: this.showProjectModal,
-      projectType: "All"
+      projectType: "All",
+      singleProject: {},
+      openSide: false
     }
   },
   methods: {
-    ...mapActions('projects', ['initProjects']),
+    
     createProject() {
       console.log("modal")
       if(this.showNewProject) {
@@ -140,17 +144,28 @@ export default {
       } else {
         this.showNewProject = true
       }
+    },
+    showProjectDetails(id) {
+      if(this.openSide) {
+        this.openSide = false;
+      } else {
+        this.openSide = true
+      }
+      console.log("id", id);
+      this.singleProject = this.projectById(id)
+      console.log("project details", this.projectById(id));
     }
   },
   computed: {
     ...mapState({
       loggedInUser: state => state.user.user,
       gettingProjects: state => state.projects.gettingAllProj,
-      projects: state => state.projects.projects
+      projects: state => state.projects.projects,
+      addingProject: state => state.projects.addingProject
+    }),
+    ...mapGetters({
+      projectById: "projects/projectById"
     })
-  },
-  created() {
-    this.initProjects(this.loggedInUser.userId);
   }
 }
 </script>

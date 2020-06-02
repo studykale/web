@@ -5,7 +5,7 @@
                 <span>
                     Creating a new project
                 </span>
-                <span class="text-red font-bold">$6 per page.</span>
+                <span class="text-red font-bold"> {{ calcPrice }} || $6 per page.</span>
             </div>
         </div>
         <div class="card-content">
@@ -104,7 +104,7 @@
                         <h4><span class="font-bold">Paper type: </span><span>{{ paperType || 'Please set the type otf paper' }}</span></h4>
                         
                         </div>
-                        <button  class="button is-primary is-fullwidth" type="submit" @click="$parent.close()">Submit</button>
+                        <button  class="button is-primary is-fullwidth" :class="{ 'is-loading': addingProject }" type="submit" @click="$parent.close()">Submit</button>
                     </b-step-item>
                 </b-steps>
             </form>
@@ -114,7 +114,7 @@
 
 <script>
 // import { validationMixin } from "vuelidate";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
     props: {
@@ -151,7 +151,10 @@ export default {
             },
             deadline: new Date(),
             orderPages: 1,
-            maxOrderPages: 100
+            maxOrderPages: 100,
+            pricePerPage: 6,
+            currency: 'AUD',
+        
         }
     },
     methods: {
@@ -165,7 +168,8 @@ export default {
                 pageNumber: this.orderPages,
                 files: this.dropFiles,
                 status: 'pending',
-                creator: this.currentUser.userId
+                creator: this.currentUser.userId,
+                price: this.calcPrice()
             }
 
             console.log("files", this.dropFiles)
@@ -176,6 +180,17 @@ export default {
         },
          deleteDropFile(index) {
             this.dropFiles.splice(index, 1);
+        },
+    },
+    computed: {
+        ...mapState({
+            addingProject: state => state.projects.addingProject
+        }),
+        calcPrice() {
+            if((24 - this.deadline.getHours()) > 0) {
+                return (this.orderPages * this.pricePerPage) + (this.orderPages * 2)
+            }
+            return this.orderPages * this.pricePerPage;
         }
     }
 }

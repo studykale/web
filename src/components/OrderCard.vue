@@ -19,7 +19,13 @@
                     </option>
                 </b-select>
             </b-field>
-            <b-field label="Pages">
+            <b-field>
+                <template slot="label">
+                    Pages
+                    <b-tooltip type="is-dark" label="1 per page contains 275 words">
+                        <alert-circle-icon size="1x" class="custom-class"></alert-circle-icon>
+                    </b-tooltip>
+                </template>
                 <b-numberinput v-model="orderPages" min="1" :max="maxOrderPages" >
                 </b-numberinput>
             </b-field>
@@ -46,9 +52,13 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { AlertCircleIcon } from 'vue-feather-icons';
 
 export default {
     name: 'OrderCard',
+    components: {
+        AlertCircleIcon
+    },
     data() {
         const today = new Date()
         return {
