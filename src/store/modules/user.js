@@ -68,14 +68,14 @@ const User = {
 				}
 			})
 		},
-		login({ commit }, payload) {
+		login({ commit, dispatch }, payload) {
 			commit(LOGIN_REQUEST)
 			auth.signInWithEmailAndPassword(payload.email, payload.password)
 			.then(result => {
-				// console.log("user", user.additionalUserInfo.username)
+			
 				let user = result.user;
-				// console.log("user dis", user.displayName)
-				// dispatch('projects/initProjects', { id: user.uid }, {root: true})
+				let userId = user.uid;
+				dispatch('projects/initProjects', { userId }, { root: true })
 				window.$cookies.set('loggedIn', true, '1d');
 				commit(LOGIN_USER, { username: user.displayName, email: user.email, verified: user.emailVerified, photoUrl: user.photoURL, userId: user.uid })
 				router.replace('/dashboard/projects');
@@ -165,7 +165,7 @@ const User = {
 			auth.signOut()
 			.then(() => {
 				commit('logout')
-				localStorage.removeItem('loggedIn');
+				window.$cookies.remove('loggedIn');
 				router.replace('/')
 			})
 			.catch(error => {

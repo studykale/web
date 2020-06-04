@@ -69,23 +69,7 @@
             <h2 class="title">{{ projectType || 'All Projects' }}</h2>
             <div v-if="projects.length > 0 && gettingProjects == false">
               <div v-for="project in projects" :key="project.id">
-                <div class="card w-100">
-                  <div class="card-header">
-                    <h3 class="card-header-title">
-                      {{ project.name }}
-                    </h3>
-                    <b-taglist class="mr-2" attached>
-                      <b-tag type="is-info" >{{ project.status }}</b-tag>
-                      <b-tag type="is-danger">{{ project.pages }} pages</b-tag>
-                    </b-taglist>
-                  </div>
-                  <div class="card-content">
-                    <p>{{ project.description || "No description" }}</p>
-                  </div>
-                  <div class="card-footer flex justify-between">
-                   <b-button type="is-danger" @click="() => { showProjectDetails(project.id) }">View</b-button>
-                  </div>
-                </div>
+                <ProjectCard :project="project"/>
               </div>
             </div>
             <div v-else-if="gettingProjects">
@@ -108,20 +92,22 @@
       <b-modal :active.sync="showNewProject">
         <NewProject :showNewProject="showProjectModal" :currentUser="loggedInUser"/>
       </b-modal>
-      <ProjectDetails :open="openSide" :description="singleProject.description" :title="singleProject.name" :paperType="singleProject.paperType" :id="singleProject.id"/>
+      <ProjectDetails/>
   </div>
 </template>
 
 <script>
 
 import NewProject from '@/components/Dashboard/NewProject.vue'
-import { mapState, mapGetters } from "vuex"
+import { mapState } from "vuex"
 import ProjectDetails from "@/components/Dashboard/ProjectDetails.vue";
+import  ProjectCard from "@/components/ProjectCard"
 
 export default {
   components: {
     NewProject,
-    ProjectDetails
+    ProjectDetails,
+    ProjectCard
   },
   props: {
     showProjectModal: Boolean
@@ -132,7 +118,7 @@ export default {
       showNewProject: this.showProjectModal,
       projectType: "All",
       singleProject: {},
-      openSide: false
+      openSide: false,
     }
   },
   methods: {
@@ -145,16 +131,6 @@ export default {
         this.showNewProject = true
       }
     },
-    showProjectDetails(id) {
-      if(this.openSide) {
-        this.openSide = false;
-      } else {
-        this.openSide = true
-      }
-      console.log("id", id);
-      this.singleProject = this.projectById(id)
-      console.log("project details", this.projectById(id));
-    }
   },
   computed: {
     ...mapState({
@@ -163,21 +139,14 @@ export default {
       projects: state => state.projects.projects,
       addingProject: state => state.projects.addingProject
     }),
-    ...mapGetters({
-      projectById: "projects/projectById"
-    })
+    
   }
 }
 </script>
 
 <style lang="scss" scoped>
     .head {
-      width: 100%;
-      margin: 2em 0;
       
-      .float-right {
-        float: right;
-      }
     }
 
     .grid-container {
@@ -260,5 +229,19 @@ export default {
 
   .card.w-100 {
     width: 100% !important; 
+  }
+
+  .head {
+    display: none;
+    width: 100%;
+    margin: 2em 0;
+      
+    .float-right {
+        float: right;
+      }
+
+    @media screen  and (max-width: 520px) {
+      display: block;
+    }
   }
 </style>

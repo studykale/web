@@ -239,6 +239,7 @@
 
 .h-100 {
   min-height: 100vh;
+  overflow: auto;
 }
 
 .py-5 {

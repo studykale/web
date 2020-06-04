@@ -121,6 +121,11 @@ const routes = [
     ]
   },
   {
+    path: 'project-pay/:projectId/:type',
+    name: 'ProjectPay',
+    component: () => import('@/views/PaymentResponse.vue')
+  },
+  {
     path: "*",
     name: '404',
     component: () => import('@/views/404.vue'),

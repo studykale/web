@@ -3,12 +3,12 @@
        <Rave
         style-class="paymentbtn"
         :email="customerEmail"
-        :amount="amount"
-        :reference="reference"
+        :amount="paymentAmount"
+        :reference="projectId ? projectId : reference"
         :rave-key="raveKey"
         :callback="callback"
         :close="close"
-        :redirectUrl="redirect"
+        :redirect-url=""
         :paymentPlan="plan"
         :customerFirstname="fname"
         :customerLastname="lname"
@@ -31,6 +31,13 @@ import Rave from 'vue-ravepayment';
 import { CreditCardIcon } from 'vue-feather-icons'
 
 export default {
+    props:{
+        projectId: String,
+        paymentAmount: {
+            type: Number,
+            default: 50
+        }
+    },
     components: {
         Rave,
         CreditCardIcon
@@ -40,14 +47,13 @@ export default {
         return {
             raveKey,
             customerEmail: 'studykale@gmail.com',
-            amount: 200,
             plan: 2928,
             fname: 'Brian',
             lname: 'Mwangi',
-            redirect: 'https://google.com',
             currency: 'USD',
             hostedPayment: 1,
-            country: "KE"
+            country: "KE",
+            redirect: ''
         }
     },
     computed: {
@@ -63,10 +69,21 @@ export default {
     },
     methods: {
         callback: function(response){
-            console.log(response)
-        },
+                var txref = response.data.txRef; // collect txRef returned and pass to a                    server page to complete status check.
+                console.log("This is the response returned after a charge", response);
+                if (
+                    response.data.chargeResponseCode == "00" ||
+                    response.data.chargeResponseCode == "0"
+                ) {
+                    // redirect to a success page
+                    this.$router.push(`/project-pay/${this.projectId}/successful?ref=${txref}`)
+                } else {
+                    // redirect to a failure page.
+                    this.$router.push(`/project-pay/${this.projectId}/failed?ref=${txref}`)
+                }
+           },
         close: function(){
-            console.log("Payment closed")
+            this.$router.push('/dashboard/projects');
         }
     }
 }

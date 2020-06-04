@@ -24,7 +24,7 @@
                   Chats
                 </router-link>
               </li>
-              <li v-bind:class="[currentPage.includes('notifications') ? activeClass : '']">
+              <li class="banner" v-bind:class="[currentPage.includes('notifications') ? activeClass : '']">
                 <router-link to="/dashboard/notifications">
                  Notifications
                 </router-link>
@@ -55,7 +55,8 @@ export default {
     return {
       activeClass: "is-active",
       dashUrl: `/dashboard/projects`,
-      username: "brian"
+      username: "brian",
+      windowWidth: 0
     }
   },
   methods: {
@@ -75,7 +76,6 @@ export default {
       this.$router.push('/')
     } else {
       this.initDrafts(this.loggedInUser.email);
-      this.initProjects(this.loggedInUser.userId)
     }
   }
 }
@@ -88,5 +88,20 @@ export default {
 
   .px-2 {
     padding: 0 1em;
+  }
+
+  .banner {
+    position: relative;
+
+    &::before {
+      position: absolute;
+      content: "";
+      height: 5px;
+      width: 5px;
+      background-color: red;
+      border-radius: 2.5px;
+      top: 4px;
+      right: 5px;
+    }
   }
 </style>

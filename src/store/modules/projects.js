@@ -200,9 +200,10 @@ const projects = {
 		},
 		initProjects({ commit }, payload) {
 			commit(GET_ALLPROJECTS_REQUEST);
-			if(payload) {
+			console.log("payload", payload)
+			if(payload.userId) {
 				projectsCollection
-				.where('creator', '==', payload)
+				.where('creator', '==', payload.userId)
 				.get()
 				.then(res => {
 					if(res.empty) {
@@ -216,8 +217,11 @@ const projects = {
 					} else {
 						res.forEach(p => {
 							let id = p.id;
-							console.log("init", p.data())
+							let deadline = p.data()['deadline'].toDate()
+							delete p.data()['deadline']
+							
 							let pData = { ...p.data(), id }
+							pData.deadline = deadline;
 							commit(GET_ALLPROJECTS, pData)
 						})
 					}

@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
-import 'firebase/messaging';
+
 import store from "./store"
 
 let config = {
@@ -17,20 +17,6 @@ let config = {
 
 
 const db = firebase.initializeApp(config).firestore();
-let messaging = firebase.messaging()
-messaging.usePublicVapidKey(process.env.VUE_APP_MSG_KEY)
-
-messaging.requestPermission()
-.then(() => {
-    console.log("accepted")
-    return messaging.getToken()
-})
-.then((token) => {
-    console.log("token", token)
-})
-.catch(error => {
-    console.log("error", error)
-})
 //  Firebase Utils.
 const { Timestamp } = firebase.firestore
 const auth = firebase.auth();

@@ -154,7 +154,7 @@ export default {
             maxOrderPages: 100,
             pricePerPage: 6,
             currency: 'AUD',
-        
+            totalPrice: 0
         }
     },
     methods: {
