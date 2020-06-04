@@ -122,7 +122,6 @@ export default {
     }
   },
   methods: {
-    
     createProject() {
       console.log("modal")
       if(this.showNewProject) {
@@ -140,6 +139,9 @@ export default {
       addingProject: state => state.projects.addingProject
     }),
     
+  },
+  mounted() {
+    console.log("project", this.$route.query)
   }
 }
 </script>

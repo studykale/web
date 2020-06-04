@@ -42,7 +42,7 @@
             </b-taglist>
         </div>
     </b-field>
-    <p class="text-sm"><span class="text-red">Deadline</span> {{ dateFm(project.deadline.seconds) | moment('from', 'now') }}</p>
+    <p class="text-sm"><span class="text-red">Deadline</span> {{ project.deadline | moment('from', 'now')  }}</p>
   </div>
 </template>
 

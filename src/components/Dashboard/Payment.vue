@@ -8,7 +8,7 @@
         :rave-key="raveKey"
         :callback="callback"
         :close="close"
-        :redirect-url=""
+        :redirectUrl="redirect"
         :paymentPlan="plan"
         :customerFirstname="fname"
         :customerLastname="lname"
@@ -53,7 +53,7 @@ export default {
             currency: 'USD',
             hostedPayment: 1,
             country: "KE",
-            redirect: ''
+            redirect: 'http://192.168.43.14:8080/dashboard/projects?projectId='+this.projectId
         }
     },
     computed: {
