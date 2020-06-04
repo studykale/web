@@ -7,7 +7,7 @@
                 <h5>{{ project.paperType }}</h5>
               </div>
               <div>
-                  <chevron-right-icon @click.prevent="showSide" size="2x" class="icon"></chevron-right-icon>
+                  <chevron-right-icon @click.prevent="showSide(project.id)" size="2x" class="icon"></chevron-right-icon>
               </div>
           </div>
           
@@ -17,7 +17,7 @@
           <p>{{ project.description }}</p>
       </div>
       <div class="link">
-          <a href="#">View details</a>
+          <p @click="showSide(project.id)" class="text-green">View details</p>
       </div>
    
     <b-field class="mt-2" grouped group-multiline>
@@ -42,7 +42,7 @@
             </b-taglist>
         </div>
     </b-field>
-    <p class="text-sm"><span class="text-red">Deadline</span> {{ project.deadline | moment('from', 'now')  }}</p>
+    <p class="text-sm"><span class="text-red">Deadline</span> {{ dateFm(project.deadline) | moment('from')  }}</p>
   </div>
 </template>
 
@@ -62,10 +62,18 @@ export default {
     },
     methods: {
         dateFm(s) {
-           return new Date(s * 1000);
+            console.log("s type", new Date(s))
+
+            if(new Date(s) && !s.seconds) {
+                return s;
+            } else {
+                console.log("s", s.seconds)
+                return new Date(s.seconds * 1000)
+            }
         },
-        showSide() {
-            this.$root.$emit('projDetailOpen', { show: true, id: this.project.id  })
+        showSide(id) {
+            console.log("this id 1", id)
+            this.$root.$emit('projDetailOpen', { show: true, id: id  })
         }
     }
 }

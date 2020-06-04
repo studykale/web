@@ -220,7 +220,8 @@ const projects = {
 							let deadline = p.data()['deadline'].toDate()
 							delete p.data()['deadline']
 							
-							let pData = { ...p.data(), id }
+							let pData = p.data()
+							pData.id = id;
 							pData.deadline = deadline;
 							commit(GET_ALLPROJECTS, pData)
 						})
@@ -261,13 +262,14 @@ const projects = {
 							}, { merge: true })
 							
 							result.onSnapshot(q => {
-								
-								commit(ADD_PROJECT, q.data())
+								let dataId = q.id;
+								let data = { ...q.data(), dataId }
+								commit(ADD_PROJECT, data)
 								Notification.open({
 									type: 'is-success',
 									duration: 5000,
 									message: "Successfully added project",
-									position: "is-top-right"
+									position: "is-bottom-right"
 								})
 							}, (error) => {
 								console.log("error sn", error)

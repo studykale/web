@@ -166,6 +166,7 @@ const User = {
 			.then(() => {
 				commit('logout')
 				window.$cookies.remove('loggedIn');
+				localStorage.removeItem('vuex')
 				router.replace('/')
 			})
 			.catch(error => {

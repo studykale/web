@@ -5,7 +5,7 @@
                 <span>
                     Creating a new project
                 </span>
-                <span class="text-red font-bold"> {{ calcPrice }} || $6 per page.</span>
+                <span class="font-bold"> <span class="text-red">{{ calcPrice() }}</span> USD per page </span>
             </div>
         </div>
         <div class="card-content">
@@ -27,16 +27,16 @@
                     <!-- Add more details. Paper type, Paper deadline, Number of pages. -->
                     <b-step-item class="my-2" step="2" label="Time to complete">
                         <b-field class="mt-2" label="Select datetime">
-                            <b-datetimepicker
+                            <b-datepicker
                                 :name="deadline"
                                 v-model="deadline"
                                 placeholder="Select a date"
                                 icon="calendar-today"
                                 :timepicker="timepicker"
-                                :min-datetime="minDatetime"
-                                :max-datetime="maxDatetime"
+                                :min-date="minDatetime"
+                                :max-date="maxDatetime"
                                 >
-                            </b-datetimepicker>
+                            </b-datepicker>
                             <!-- <b-datetimepicker v-model="datetime" inline></b-datetimepicker> -->
                         </b-field>
                         <b-field label="Pages">
@@ -124,7 +124,7 @@ export default {
     data() {
             const min = new Date()
             min.setDate(min.getDate())
-            min.setHours(min.getHours())
+            min.setHours(min.getHours() + 4)
             min.setMinutes(0)
             min.setSeconds(0)
             const max = new Date()
@@ -143,16 +143,16 @@ export default {
             projectName: "",
             projectDescription: "",
             dropFiles: [],
-            minDatetime: min,
+            minDatetime: new Date(),
             maxDatetime: max,
             timepicker: {
                 incrementMinutes: 15,
-                incrementHours: 2
+                incrementHours: 4
             },
             deadline: new Date(),
             orderPages: 1,
             maxOrderPages: 100,
-            pricePerPage: 6,
+            pricePerPage: 12,
             currency: 'AUD',
             totalPrice: 0
         }
@@ -176,22 +176,27 @@ export default {
             console.log("project", data)
 
             this.addProject(data)
-           this.$parent.close();
+            this.$parent.close();
         },
          deleteDropFile(index) {
             this.dropFiles.splice(index, 1);
         },
+        calcPrice() {
+            let now = this.$moment(new Date());
+            let end = this.$moment(this.deadline);
+            var duration = this.$moment.duration(now.diff(end));
+            var days = duration.asDays();
+            console.log("days", days.toFixed())
+            if(days.toFixed() >= 0 ) {
+                return this.orderPages * this.pricePerPage + this.orderPages * 3.2
+            }
+            return this.orderPages * this.pricePerPage;
+        }
     },
     computed: {
         ...mapState({
             addingProject: state => state.projects.addingProject
         }),
-        calcPrice() {
-            if((24 - this.deadline.getHours()) > 0) {
-                return (this.orderPages * this.pricePerPage) + (this.orderPages * 2)
-            }
-            return this.orderPages * this.pricePerPage;
-        }
     }
 }
 </script>

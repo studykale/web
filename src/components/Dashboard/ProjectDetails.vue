@@ -4,7 +4,7 @@
       fullheight
       overlay
       right
-      can-cancel
+        can-cancel
       :open.sync="openSide"
       class="sidebar"
     >
@@ -15,15 +15,15 @@
         </div>
         <div class="dropdown-divider"></div>
         <div class="mb-2">
-            <p>Project type</p>
+            <p class="text-sm">Project type</p>
             <h4>{{ project.paperType }}</h4>
         </div>
         <div class="mb-2">
-            <p>Description</p>
+            <p class="text-sm">Description</p>
             <p>{{ project.description }}</p>
         </div>
         <div class="mb-2">
-            <b-field>
+            <b-field label="Files">
                 <div class="control">
                     <b-taglist attached>
                         <b-tag type="is-dark">Uploaded files</b-tag>
@@ -32,11 +32,11 @@
                 </div>
             </b-field>
         </div>
-        <p class="text-red mb-2">Dealine <span>{{ project.deadline | moment('from', 'now') }}</span></p>
+        <p class="mb-2">Completion in <span class="text-red">{{ dateFm(project.deadline) | moment('from', 'now') }}</span></p>
         
         <div class="flex flex-wrap items-center">
-            <Payment :projectId="project.id"/>
-            <b-button @click="cancel" type="is-warning">Cancel project</b-button>
+            <Payment :projectId="projectId"/>
+            <b-button @click="showId" type="is-warning">Cancel project</b-button>
         </div>
       </div>    
     </b-sidebar>
@@ -59,10 +59,16 @@ export default {
     },
     methods: {
         showId() {
-            console.log("id", this.project.id)
+            console.log("id", this.projectId)
         },
         dateFm(s) {
-            return new Date(s * 1000);
+
+            if(new Date(s) && !s.seconds) {
+                return s;
+            } else {
+                console.log("s", s.seconds)
+                return new Date(s.seconds * 1000)
+            }
         },
         cancel() {
             console.log("cancel");
@@ -78,7 +84,8 @@ export default {
           this.$root.$on('projDetailOpen', (arg1) => {
             this.openSide = arg1.show
             this.projectId = arg1.id
-            this.project = this.projectById(arg1.id)
+            console.log("this id", arg1)
+            this.project = this.projectById(arg1.id);
         }) 
        }) 
     }
@@ -86,9 +93,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .sidebar {
-        .sidebar-content {
-            width: 40%;
+    .b-sidebar {
+        
+    
+        .text-sm {
+            color: gray;
+            font-size: small;
         }
     }
 </style>

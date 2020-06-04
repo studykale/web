@@ -1,6 +1,6 @@
 <template>
   <div class="container h-100 flex flex-column">
-      <b-message v-if="addingProject">
+      <b-message type="is-info" v-if="addingProject">
         Adding your project details...
       </b-message>
       <div class="head">
@@ -121,6 +121,7 @@ export default {
       openSide: false,
     }
   },
+
   methods: {
     createProject() {
       console.log("modal")
