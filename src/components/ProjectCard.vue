@@ -30,13 +30,6 @@
 
         <div class="control">
             <b-taglist attached>
-                <b-tag type="is-dark">cost</b-tag>
-                <b-tag type="is-success">{{ project.price || "$20" }}</b-tag>
-            </b-taglist>
-        </div>
-
-        <div class="control">
-            <b-taglist attached>
                 <b-tag type="is-dark">status</b-tag>
                 <b-tag type="is-primary">{{ project.status }}</b-tag>
             </b-taglist>
@@ -74,7 +67,7 @@ export default {
         showSide(id) {
             console.log("this id 1", id)
             this.$root.$emit('projDetailOpen', { show: true, id: id  })
-        }
+        },
     }
 }
 </script>

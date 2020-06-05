@@ -23,11 +23,23 @@
             <p>{{ project.description }}</p>
         </div>
         <div class="mb-2">
-            <b-field label="Files">
+            <b-field grouped group-multiline>
                 <div class="control">
                     <b-taglist attached>
                         <b-tag type="is-dark">Uploaded files</b-tag>
                         <b-tag type="is-info">{{ project.files ? project.files.length : 0 }}</b-tag>
+                    </b-taglist>
+                </div>
+                <div class="control">
+                    <b-taglist attached>
+                        <b-tag type="is-dark">Pricing</b-tag>
+                        <b-tag type="is-info">{{ project.price ? project.price : calcPrice(project) }}</b-tag>
+                    </b-taglist>
+                </div>
+                <div class="control">
+                    <b-taglist attached>
+                        <b-tag type="is-dark">Status</b-tag>
+                        <b-tag type="is-info">{{ project.status }}</b-tag>
                     </b-taglist>
                 </div>
             </b-field>
@@ -70,6 +82,22 @@ export default {
                 return new Date(s.seconds * 1000)
             }
         },
+        calcPrice(project) {
+            
+            let now = this.$moment(this.dateFm(project.createdAt));
+            let end = this.$moment(this.dateFm(project.deadline));
+            var duration = this.$moment.duration(now.diff(end));
+            var days = Math.abs(duration.asHours());
+            console.log("days", days)
+            if(days <= 24 ) {
+                let p = parseInt(project.pages * 10 + project.pages * 3.2)
+                console.log("p", p);
+                return p;
+            } else {
+                let r = parseInt(project.pages * 10);
+                return r;
+            }
+        },
         cancel() {
             console.log("cancel");
         }
@@ -84,8 +112,8 @@ export default {
           this.$root.$on('projDetailOpen', (arg1) => {
             this.openSide = arg1.show
             this.projectId = arg1.id
-            console.log("this id", arg1)
             this.project = this.projectById(arg1.id);
+            console.log("this id", this.project)
         }) 
        }) 
     }

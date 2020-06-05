@@ -39,7 +39,13 @@
                             </b-datepicker>
                             <!-- <b-datetimepicker v-model="datetime" inline></b-datetimepicker> -->
                         </b-field>
-                        <b-field label="Pages">
+                        <b-field>
+                            <template slot="label">
+                                Pages
+                                <b-tooltip type="is-dark" label="Standard page has 275 words">
+                                    <alert-circle-icon size="1x" class="custom-class"></alert-circle-icon>
+                                </b-tooltip>
+                            </template>
                             <b-numberinput :name="orderPages" v-model="orderPages" min="1" :max="maxOrderPages" >
                             </b-numberinput>
                         </b-field>
@@ -115,11 +121,15 @@
 <script>
 // import { validationMixin } from "vuelidate";
 import { mapActions, mapState } from "vuex";
+import { AlertCircleIcon } from 'vue-feather-icons';
 
 export default {
     props: {
         showNewProject: Boolean,
         currentUser: Object
+    },
+    components: {
+        AlertCircleIcon
     },
     data() {
             const min = new Date()
@@ -159,7 +169,7 @@ export default {
     },
     methods: {
         ...mapActions('projects', ['addProject']),
-        newProject() {
+        async newProject() {
             let data = {
                 name: this.projectName,
                 description: this.projectDescription,
@@ -169,7 +179,7 @@ export default {
                 files: this.dropFiles,
                 status: 'pending',
                 creator: this.currentUser.userId,
-                price: this.calcPrice()
+                price: await this.calcPrice()
             }
 
             console.log("files", this.dropFiles)
@@ -186,7 +196,7 @@ export default {
             let end = this.$moment(this.deadline);
             var duration = this.$moment.duration(now.diff(end));
             var days = duration.asDays();
-            console.log("days", days.toFixed())
+            
             if(days.toFixed() >= 0 ) {
                 return this.orderPages * this.pricePerPage + this.orderPages * 3.2
             }

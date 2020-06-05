@@ -22,7 +22,7 @@
             <b-field>
                 <template slot="label">
                     Pages
-                    <b-tooltip type="is-dark" label="1 per page contains 275 words">
+                    <b-tooltip type="is-dark" label="Standard page has 275 words">
                         <alert-circle-icon size="1x" class="custom-class"></alert-circle-icon>
                     </b-tooltip>
                 </template>
