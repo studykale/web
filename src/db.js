@@ -33,6 +33,7 @@ const currentUser = auth.currentUser;
 const newUser = uid => db.collection('users').doc(`${uid}`)
 const users = db.collection('users');
 const chats = db.collection('chats');
+const contactCollection = db.collection('contactus');
 const userPayments = uid => db.collection('users').doc(uid).collection('payments');
 const notifications = db.collection('notifications');
 const reviews = db.collection('reviews')
@@ -57,7 +58,8 @@ export {
     TaskEvent, 
     TaskState, 
     config,
-    reviews
+    reviews,
+    contactCollection
 };
 
 export default db;

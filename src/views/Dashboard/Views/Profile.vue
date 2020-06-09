@@ -84,7 +84,7 @@ import { EditIcon } from 'vue-feather-icons'
           username: this.username
         }
 
-        console.log("data", data)
+        console.log("date", data)
         this.file = null;
         this.username = "";
       }

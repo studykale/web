@@ -114,7 +114,6 @@ export default {
         height: auto;
         width: 350px;
         border-radius: 7px;
-
         box-shadow: 0 10px 15px rgba(0, 0, 0, .25);
 
         @media only screen and (max-width: 768px) {

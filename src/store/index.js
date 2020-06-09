@@ -12,7 +12,7 @@ const store =  new Vuex.Store({
 	// strict: debug,
 	modules: modulesCache,
 	plugins: [
-		createPersistedState({})
+		createPersistedState()
 	]
 });
 

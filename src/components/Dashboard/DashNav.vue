@@ -51,7 +51,6 @@ export default {
     methods: {
         ...mapActions('user', ['signout']),
         addNewProject() {
-            console.log("added new project")
         }
     }
 }

@@ -1,14 +1,13 @@
 <template>
   <b-sidebar
-      type="is-light"
       fullheight
       overlay
       right
-        can-cancel
+      mobile="fullwidth"
       :open.sync="openSide"
       class="sidebar"
     >
-      <div class="p-1">
+      <div class="p-1 p-relative">
         <div class="mb-2">
             <p>Project title</p>
             <h4 class="font-bold">{{ project.name }}</h4>
@@ -39,46 +38,53 @@
                 <div class="control">
                     <b-taglist attached>
                         <b-tag type="is-dark">Status</b-tag>
-                        <b-tag type="is-info">{{ project.status }}</b-tag>
+                        <b-tag type="is-info">{{ project.status.progress || project.status }}</b-tag>
                     </b-taglist>
                 </div>
             </b-field>
         </div>
-        <p class="mb-2">Completion in <span class="text-red">{{ dateFm(project.deadline) | moment('from', 'now') }}</span></p>
+        <p class="mb-2">Completion <span class="text-red">{{ dateFm(project.deadline) | moment('from', 'now') }}</span></p>
         
-        <div class="flex flex-wrap items-center">
-            <Payment :projectId="projectId"/>
-            <b-button @click="showId" type="is-warning">Cancel project</b-button>
+        <div v-if="!paid" class="flex flex-wrap items-center">
+            <Payment :projectId="projectId" :paymentAmount="project.price ? project.price : calcPrice(project)"/>
+            <b-button @click="showId" type="is-warning">Update</b-button>
         </div>
+        <div v-else>
+            <div class="flex flex-row my-2"><span class="mr-1">Paid</span> <check-circle-icon size="1.5x" class="text-blue"></check-circle-icon></div>
+            <b-button type="is-info" @click="showId" expanded>Update</b-button>
+        </div>
+        <x-circle-icon @click="closeSide" size="1x"  class="p-absolute icon"></x-circle-icon>
       </div>    
     </b-sidebar>
 </template>
 
 <script>
 import { mapGetters } from "vuex"
-import Payment from "./Payment"
+import Payment from "./Payment";
+import { XCircleIcon, CheckCircleIcon } from 'vue-feather-icons'
+
 export default {
     components:{
-        Payment
+        Payment,
+        XCircleIcon,
+        CheckCircleIcon
     },
     data() {
         return {
             openSide: false,
             project: {},
-            projectId: '',
-            canCancel: ['X', 'escape']
+            projectId: ''
         }
     },
     methods: {
         showId() {
-            console.log("id", this.projectId)
+            // //("id", this.projectId)
         },
         dateFm(s) {
-
-            if(new Date(s) && !s.seconds) {
+            if(new Date(s) && (typeof s !== Object)) {
                 return s;
-            } else {
-                console.log("s", s.seconds)
+            } else if(s.seconds) {
+                // //("s", s.seconds)
                 return new Date(s.seconds * 1000)
             }
         },
@@ -88,10 +94,10 @@ export default {
             let end = this.$moment(this.dateFm(project.deadline));
             var duration = this.$moment.duration(now.diff(end));
             var days = Math.abs(duration.asHours());
-            console.log("days", days)
+            // //("days", days)
             if(days <= 24 ) {
                 let p = parseInt(project.pages * 10 + project.pages * 3.2)
-                console.log("p", p);
+                // //("p", p);
                 return p;
             } else {
                 let r = parseInt(project.pages * 10);
@@ -99,13 +105,27 @@ export default {
             }
         },
         cancel() {
-            console.log("cancel");
+            // //("cancel");
+        },
+        closeSide() {
+            if(this.openSide) {
+                this.openSide = false
+            } else {
+                return
+            }
         }
     },
     computed: {
         ...mapGetters({
             projectById: "projects/projectById"
         }),
+        paid () {
+            if(this.project.status && this.project.status.paid) {
+                return true
+            } else {
+                return false
+            }
+        }
     },
     mounted() {
        this.$nextTick(() => {
@@ -113,7 +133,7 @@ export default {
             this.openSide = arg1.show
             this.projectId = arg1.id
             this.project = this.projectById(arg1.id);
-            console.log("this id", this.project)
+            //("this id", this.project)
         }) 
        }) 
     }
@@ -128,5 +148,27 @@ export default {
             color: gray;
             font-size: small;
         }
+    }
+
+    .payBtn div:first-of-type {
+        width: 100% !important;
+    }
+
+    .p-absolute {
+        position: absolute;
+
+
+        &.icon {
+            top: 10px;
+            right: 15px;
+        }
+    }
+
+    .text-blue {
+        color: rgb(47, 151, 47);
+    }
+
+    .mr-1 {
+        margin-right: 15px;
     }
 </style>

@@ -11,7 +11,7 @@
       <div class="card mt-2">
         <div class="card-content">
           <b-table 
-            :data="data" 
+            :data="projects" 
             :columns="columns" 
             :per-page="perPage"
             paginated
@@ -28,30 +28,34 @@
 
     <div v-if="selected && showProjectModal" class="select-project">
       <div class="card">
-        <div class="card-header flex flex-column">
-          <p class="card-header-title">{{ selected.name }}</p>
-          <p class="card-header-subtitle">{{ selected.type }}</p>
+        <div class="card-header flex flex-column justify-between">
+          <div class="flex flex-column">
+            <p class="card-header-title">{{ selected.name }}</p>
+            <p class="card-header-subtitle">{{ selected.type }}</p>
+          </div>
+
+          <check-circle-icon size="1.5x" class="text-green"></check-circle-icon>
         </div>
         <div class="card-content">
           <p>{{ selected.description }}</p>
         </div>
         <div class="card-footer flex flex-column p-2">
           <b-field>
-              <b-radio-button v-model="selected.status"
+              <b-radio-button v-model="projectStatus"
                   native-value="OnProgress"
                   type="is-info">
                   <coffee-icon size="1x" class="icon-blue"></coffee-icon>
                   <span>Started</span>
               </b-radio-button>
 
-              <b-radio-button v-model="selected.status"
+              <b-radio-button v-model="projectStatus"
                   native-value="Completed"
                   type="is-success">
                   <check-icon size="1x" class="custom-class"></check-icon>
                   <span>Completed</span>
               </b-radio-button>
 
-              <b-radio-button v-model="selected.status"
+              <b-radio-button v-model="projectStatus"
                   native-value="Cancelled"
                   type="is-danger">
                   <x-square-icon size="1.5x" class="custom-class"></x-square-icon>
@@ -66,12 +70,14 @@
 </template>
 
 <script>
-import { CoffeeIcon, CheckIcon, XSquareIcon } from 'vue-feather-icons'
+import { CoffeeIcon, CheckIcon, XSquareIcon, CheckCircleIcon } from 'vue-feather-icons'
+import { mapState } from 'vuex'
 
 export default {
   components: {
     CoffeeIcon,
     CheckIcon,
+    CheckCircleIcon,
     XSquareIcon
   },
   data() {
@@ -81,11 +87,10 @@ export default {
                 { 'id': 3, 'name': 'British Ecosystem', 'type': 'CV', 'deadline': '2016-04-26 06:26:28', 'status': 'OnProgress', 'description': 'This is my simple project description about the project you should prpbably view it before starting out. It help in knowing what to do and where to do it.'},
                 { 'id': 4, 'name': 'MyCV', 'type': 'CV', 'deadline': '2016-04-10 10:28:46', 'status': 'OnProgress',  'description': 'This is my simple project description about the project you should prpbably view it before starting out. It help in knowing what to do and where to do it.'},
                 { 'id': 5, 'name': 'Research and Festivities', 'type': 'Assessment', 'deadline': '2016-12-06 14:38:38', 'status': 'Completed', 'description': 'This is my simple project description about the project you should prpbably view it before starting out. It help in knowing what to do and where to do it.' }
-            ]
+        ]
 
     return {
         data,
-        selected: data[1],
         showProjectModal: true,
         currentPage: 1,
         perPage: 3,
@@ -114,8 +119,7 @@ export default {
             },
             {
                 field: 'status',
-                label: 'Status',
-                searchable: true
+                label: 'Status'
             }
         ]
     }
@@ -126,6 +130,31 @@ export default {
         this.showProjectModal = false;
       } else {
         this.showProjectModal = true
+      }
+    }
+  },
+  computed: {
+    ...mapState({
+      gettingProjects: state => state.admin.status.gettingProjects,
+      projects: state => state.admin.Projects
+    }),
+    projectStatus() {
+      if(this.selected && (this.selected.status && this.selected.status.progress)) {
+        return 'started'
+      } else {
+        return this.selected.status
+      }
+    },
+    selected: {
+      get(i) {
+        if(i) {
+          return this.projects[i]
+        } else {
+          return this.projects[0]
+        }
+      },
+      set(i) {
+        return this.projects[i]
       }
     }
   }

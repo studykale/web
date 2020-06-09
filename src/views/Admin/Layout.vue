@@ -47,7 +47,7 @@
             </div>
             <div class="nav">
                 <div class="nav-title">
-                    <router-link to="/layout/settings"><span class="mr-2"><log-out-icon size="1x" class="purple"></log-out-icon> </span> Log Out</router-link>
+                    <div @click="logOut" class="btn no-outline no-border"><span class="mr-2"><log-out-icon size="1x" class="purple"></log-out-icon> </span> Log Out</div>
                 </div>
             </div>
         </div>
@@ -58,7 +58,7 @@
                     <div class="profile">
                         <bell-icon size="1.5x" class="bell"></bell-icon>
                         <div class="profile__name">
-                            <p>StudyKale</p>
+                            <p>{{ user.username }}</p>
                         </div>
                     </div>
                 </div>
@@ -71,7 +71,8 @@
 </template>
 
 <script>
-    import { CreditCardIcon, BellIcon, SettingsIcon, UsersIcon, SendIcon, BriefcaseIcon, LogOutIcon  } from 'vue-feather-icons'
+import { CreditCardIcon, BellIcon, SettingsIcon, UsersIcon, SendIcon, BriefcaseIcon, LogOutIcon  } from 'vue-feather-icons'
+import { mapState, mapActions } from 'vuex';
 
     export default {
         name: 'Layout',
@@ -83,6 +84,23 @@
             CreditCardIcon,
             BriefcaseIcon,
             LogOutIcon
+        },
+        methods: {
+            ...mapActions('user', ['signout']),
+            logOut() {
+                this.$buefy.dialog.confirm({
+                    message: "Are you sure you want leave?",
+                    confirmText: "Sign out",
+                    type: 'is-danger',
+                    hasIcon: true,
+                    onConfirm : () => { this.signout() }
+                })
+            }
+        },
+        computed: {
+            ...mapState({
+                user: state => state.user.user
+            })
         }
     }
 </script>
@@ -159,5 +177,21 @@
         &__name {
             font-weight: bold;;
         }
+    }
+
+    .no-border {
+        border: none;
+    }
+
+    .no-bg {
+        background: transparent;
+    }
+
+    .no-outline {
+        outline: none;
+    }
+
+    .btn:hover {
+        cursor: pointer;
     }
 </style>

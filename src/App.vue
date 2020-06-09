@@ -17,6 +17,11 @@
   font-family: "Muli", sans-serif;
 }
 
+.p-relative {
+  position: relative;
+}
+
+
 .bg-light {
         background-color: #F2F8FD;
   }
@@ -145,6 +150,8 @@
   flex-direction: row;
 }
 
+
+
 .leading-tight {
   line-height: 1.25; 
 }
@@ -207,6 +214,10 @@
   margin-bottom: 1.3em;
 }
 
+
+.mb-3sm {
+  margin-bottom: 0.75rem;
+}
 
 
 .mt-3 {
@@ -296,4 +307,49 @@
 .ml-3 {
   margin-left: 1.5em;
 }
+
+.ml-2 {
+  margin-left: 0.25em;
+}
+
+.leading-9 {
+ line-height: 2.25rem;
+}
+
+.text-gray-100 {
+  color: #a0aec0;
+}
+
+.pl-4 {
+  padding-left: 1rem;
+}
+
+.h-5 {
+  height: 1.5em;
+}
+
+.px-3 {
+  padding-right: 0.75rem;
+  padding-left: 0.75rem;
+}
+
+.my-10 {
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.mb-5 {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.h-48 {
+  height: 12rem;
+}
+
+.w-48 {
+  width: 12rem;
+}
+
+
 </style>

@@ -1,6 +1,6 @@
 
-import { LOGIN_USER, SIGNUP_USER, LOGIN_REQUEST, SIGNUP_USER_REQUEST, LOGIN_FAILURE, SIGNUP_USER_FAILURE } from "../MutationTypes"
-import { auth, newUser } from "../../db"
+import { LOGIN_USER, SIGNUP_USER, SIGNUP_USER_COMPLETE, LOGIN_REQUEST, SIGNUP_USER_REQUEST, LOGIN_FAILURE, SIGNUP_USER_FAILURE } from "../MutationTypes"
+import { auth, newUser, users } from "../../db"
 import { NotificationProgrammatic as Notification } from 'buefy'
 
 
@@ -15,11 +15,11 @@ import router from "../../router"
 // 	let credential = auth.EmailAuthProvider.credential(auth.currentUser.email, password);
 // 	auth.currentUser.reauthenticateWithCredential(credential)
 // 	.then(result => {
-// 		console.log("result", result)
+// 		//("result", result)
 // 		// User successfully reauthenticated. New ID tokens should be valid.
 // 	})
 // 	.catch(error => {
-// 		console.log("error token", error)
+// 		//("error token", error)
 // 	});
 // }
 
@@ -35,10 +35,10 @@ function sendVerificationEmail(user, url) {
 		})
 	})
 	.catch(error => {
-		console.log("email send", error)
+		//("email send", error)
 		Notification.open({
 			type: 'is-danger',
-			message: "An error coccured and we could not send an email. Please try again."
+			message: `${error.message}. Please try again`
 		})
 	})
 }
@@ -62,7 +62,7 @@ const User = {
 			}).catch(error => {
 				if(error.code == 'auth/id-token-expired' || error.code == 'auth/user-token-expired') {
 					// onIdTokenRevocation()
-					console.log("No")
+					//("No")
 				} else {
 					router.push('/auth/signin')
 				}
@@ -75,13 +75,14 @@ const User = {
 			
 				let user = result.user;
 				let userId = user.uid;
+
 				dispatch('projects/initProjects', { userId }, { root: true })
 				window.$cookies.set('loggedIn', true, '1d');
 				commit(LOGIN_USER, { username: user.displayName, email: user.email, verified: user.emailVerified, photoUrl: user.photoURL, userId: user.uid })
 				router.replace('/dashboard/projects');
 			})
 			.catch(error => {
-				console.log("error sign in", error)
+				//("error sign in", error)
 				if(error.code == "auth/user-not-found") {
 					Notification.open({
 						type: 'is-warning',
@@ -133,11 +134,16 @@ const User = {
 						type: 'is-info',
 						duration: 5000
 					})
-	
+					commit(SIGNUP_USER_COMPLETE)
 					router.push('/auth/signin')
 				})
 				.catch(error => {
-					console.log("error", error)
+					//("error", error)
+					Notification.open({
+						message: "Sorry we could not create an account " + error.message,
+						type: 'is-warning',
+						position: 'is-top-right'
+					})
 					commit(SIGNUP_USER_FAILURE)
 				})
 			})
@@ -166,11 +172,17 @@ const User = {
 			.then(() => {
 				commit('logout')
 				window.$cookies.remove('loggedIn');
-				localStorage.removeItem('vuex')
+				window.$cookies.remove('vuex')
+				window.localStorage.removeItem('vuex')
 				router.replace('/')
 			})
 			.catch(error => {
-				console.log("log out error", error)
+				//("log out error", error)
+				Notification.open({
+					message: "Sorry we could not log you out :"+error.message,
+					type: 'is-info',
+					position: 'is-top-right'
+				})
 			})
 		},
 		fetchUser({ commit }, user) {
@@ -179,6 +191,121 @@ const User = {
 			} else {
 				commit('setUser', null)
 			}
+		},
+		// Meant for ADMIN login.
+		createAdminAccount({ commit }, payload) {
+			commit(SIGNUP_USER_REQUEST);
+
+			auth.createUserWithEmailAndPassword(payload.email, payload.password)
+			.then(result => {
+
+				result.user.updateProfile({
+					displayName: payload.username
+				})
+				.then(() => {
+					
+					newUser(result.user.uid)
+					.set({
+						role: 'ADMIN',
+						username: payload.username,
+						email: payload.email,
+						profile: result.user.photoURL,
+					}, { merge: true })
+					.then(() => {
+						commit(SIGNUP_USER_COMPLETE)
+						router.push('/auth/signin')
+					})
+					.catch(error => {
+						//("error", error)
+						Notification.open({
+							message: "Sorry we could not create an account " + error.message,
+							type: 'is-warning',
+							position: 'is-top-right'
+						})
+						commit(SIGNUP_USER_FAILURE)
+					})
+				})
+				.catch(error => {
+					//("error", error)
+					Notification.open({
+						message: "Sorry we could not create an account " + error.message,
+						type: 'is-warning',
+						position: 'is-top-right'
+					})
+					commit(SIGNUP_USER_FAILURE)
+				})
+			})
+			.catch(error => {
+				commit(SIGNUP_USER_FAILURE)
+				if(error.code == "auth/network-request-failed") {
+					Notification.open({
+						type: 'is-warning',
+						position: 'is-top',
+						duration: 5000,
+						message: "Network error. Please check your internet connection"
+					})
+				} else if(error.code == "auth/email-already-in-use") {
+					Notification.open({
+						type: 'is-warning',
+						position: 'is-top',
+						duration: 5000,
+						message: "Please don't create an account if you are not an admin"
+					})
+				}
+			})
+		},
+		loginAdmin({ commit, dispatch }, payload) {
+			commit(LOGIN_REQUEST)
+
+			auth.signInWithEmailAndPassword(payload.email, payload.password)
+			.then(result => {
+				let user = result.user
+				let uid = user.uid;
+		
+				users
+				.doc(uid)
+				.get()
+				.then(res => {
+					if(res.exists) {	
+						let userId = res.id;
+						if(res.data().role !== 'ADMIN') {
+							Notification.open({
+								message: "You know you are not an admin. Stop trying."
+							});
+
+							router.push('/auth/signin');
+						} else {
+							dispatch('admin/initAdProjects', null, { root: true })
+							dispatch('admin/initAdUsers', null, { root: true })
+							dispatch('admin/initQuestions', null, { root: true })
+							commit(LOGIN_USER, { username: user.displayName, email: user.email, verified: user.emailVerified, photoUrl: user.photoURL, userId })
+							router.push('/admin/projects')
+						}
+					} else {	
+						Notification.open({
+							message: "Sorry we did not find your account.",
+							type: 'is-info',
+							hasIcon: true
+						})
+					}
+				})
+				.catch(error => {
+					Notification.open({
+						type: 'is-warning',
+						hasIcon: true,
+						position: 'is-top',
+						message: "Sorry we did not find your account. "+error.message
+					})
+				})
+			})
+			.catch(error => {
+				Notification.open({
+					type: 'is-warning',
+					hasIcon: true,
+					position: 'is-top',
+					message: "Sorry we did not find your account. "+error.message
+				})
+			})
 		}
 	},
 	mutations: {
@@ -203,6 +330,9 @@ const User = {
 		[SIGNUP_USER] (state, user) {
 			state.status = { loggedIn: true }
 			state.user = { user, isVerified: false };
+		},
+		[SIGNUP_USER_COMPLETE] (state) {
+			state.status = {}
 		},
 		[SIGNUP_USER_REQUEST] (state) {
 			state.status = {

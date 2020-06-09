@@ -118,12 +118,18 @@ const routes = [
         path: 'settings',
         component: () => import('@/views/Admin/Dashboard/try/Settings.vue')
       }
-    ]
+    ],
+    meta: {
+      requiresAuth: true
+    }
   },
   {
-    path: 'project-pay/:projectId/:type',
+    path: '/project-pay/:projectId/:type',
     name: 'ProjectPay',
-    component: () => import('@/views/PaymentResponse.vue')
+    component: () => import('@/views/PaymentResponse.vue'),
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "*",
@@ -137,6 +143,14 @@ const routes = [
     path: '/admin/login',
     name: 'AdminLogin',
     component: () => import('@/views/Admin/Login')
+  },
+  {
+    path: '/pay/:payAmount/:pid',
+    name: 'CompletePay',
+    component: () => import('@/views/RequestPayment'),
+    meta: {
+      requiresAuth: true
+    }
   }
 ];
 
@@ -146,27 +160,12 @@ const router = new VueRouter({
   routes
 });
 
-// router.beforeEach((to, from, next) => {
-//   let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-
-//   auth.onAuthStateChanged(user => {
-//     if(!requiresAuth && user) {
-//         next({path: `/dashboard/projects`})
-//     } else if (requiresAuth && user) { 
-//         next({
-//           path: '/dashboard/projects'
-//         })
-//     }
-//   })
-// })
-
-
 
 router.beforeEach((to, from, next) => {
   let isLoggedIn = window.$cookies.isKey('loggedIn')
-  console.log("loggedIn", isLoggedIn)
+  //("loggedIn", isLoggedIn)
   let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  // console.log("currentUser", currentUser)
+  // //("currentUser", currentUser)
   if (requiresAuth && !isLoggedIn) {  
     next('/auth/signin')
   }

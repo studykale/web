@@ -18,9 +18,9 @@
         :currency="currency"
         :country="country"
         >
-            <b-button class="flex" type="is-danger">
+            <b-button class="flex" type="is-danger" expanded>
                 <credit-card-icon size="1x" class="mr-2"></credit-card-icon>
-                <span class="text-white">Pay</span>
+                <span class="text-white">Pay ${{ paymentAmount }}</span>
             </b-button>
         </Rave>
   </div>
@@ -53,7 +53,7 @@ export default {
             currency: 'USD',
             hostedPayment: 1,
             country: "KE",
-            redirect: 'http://192.168.43.14:8080/dashboard/projects?projectId='+this.projectId
+            redirect: `https://us-central1-studykale-4466b.cloudfunctions.net/redirectToProject/${this.projectId}`
         }
     },
     computed: {
@@ -70,7 +70,8 @@ export default {
     methods: {
         callback: function(response){
                 var txref = response.data.txRef; // collect txRef returned and pass to a                    server page to complete status check.
-                console.log("This is the response returned after a charge", response);
+                // //("This is the response returned after a charge", response);
+                console.log("")
                 if (
                     response.data.chargeResponseCode == "00" ||
                     response.data.chargeResponseCode == "0"
@@ -92,6 +93,8 @@ export default {
 <style lang="scss" scoped>
 .paymentbtn {
         border: none;
-        background: none
+        background: none;
+        display: flex;
+        width: 100%;
     }
 </style>

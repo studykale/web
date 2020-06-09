@@ -52,7 +52,7 @@ export default {
                 this.email = "";
                 this.submitting = false;
                 this.emailSent = true;
-                console.log("sent")
+                //("sent")
             })
             .catch(error => {
                 this.email = ""
@@ -61,8 +61,8 @@ export default {
                     this.emailNotFound = true
                 }
 
-                console.log("error", error);
-                console.log("error", error)
+                //("error", error);
+                //("error", error)
             })
         }
     }

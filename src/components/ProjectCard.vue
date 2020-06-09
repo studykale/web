@@ -6,9 +6,6 @@
                 <h3 class="font-bold">{{ project.name }}</h3>
                 <h5>{{ project.paperType }}</h5>
               </div>
-              <div>
-                  <chevron-right-icon @click.prevent="showSide(project.id)" size="2x" class="icon"></chevron-right-icon>
-              </div>
           </div>
           
       </div>
@@ -17,7 +14,7 @@
           <p>{{ project.description }}</p>
       </div>
       <div class="link">
-          <p @click="showSide(project.id)" class="text-green">View details</p>
+          <b-button @click="showSide(project.id)" class="text-green" type="is-text">View details</b-button>
       </div>
    
     <b-field class="mt-2" grouped group-multiline>
@@ -31,7 +28,7 @@
         <div class="control">
             <b-taglist attached>
                 <b-tag type="is-dark">status</b-tag>
-                <b-tag type="is-primary">{{ project.status }}</b-tag>
+                <b-tag type="is-primary">{{ project.status.progress || project.status }}</b-tag>
             </b-taglist>
         </div>
     </b-field>
@@ -42,30 +39,22 @@
 <script>
 
 import VueScreenSize from 'vue-screen-size'
-import { ChevronRightIcon } from 'vue-feather-icons';
-
 
 export default {
     mixins: [VueScreenSize.VueScreenSizeMixin],
     props: {
        project: Object
     },
-    components: {
-        ChevronRightIcon,
-    },
     methods: {
         dateFm(s) {
-            console.log("s type", new Date(s))
-
             if(new Date(s) && !s.seconds) {
                 return s;
             } else {
-                console.log("s", s.seconds)
+                
                 return new Date(s.seconds * 1000)
             }
         },
         showSide(id) {
-            console.log("this id 1", id)
             this.$root.$emit('projDetailOpen', { show: true, id: id  })
         },
     }

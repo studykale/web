@@ -3,6 +3,7 @@ import { ADD_PROJECT, ADD_PROJECT_REQUEST, ADD_PROJECT_FAILURE,
 	ADD_DRAFT_PROJECT_FAILURE, GET_ALLDRAFTS, GET_ALLDRAFTS_FAIL, GET_ALLDRAFTS_REQUEST, GET_ALLPROJECTS, GET_ALLPROJECTSFAIL, GET_ALLPROJECTS_REQUEST } from "../MutationTypes";
 import { projectsCollection, draftsCollection, Timestamp, storageRef, TaskEvent, TaskState } from "../../db";
 import { NotificationProgrammatic as Notification } from 'buefy'
+import router from "../../router";
 // Generates a random key used to identify draft projects before submitting to the database.
 
 const tempId = length => {
@@ -15,6 +16,13 @@ const tempId = length => {
    return result;
 }
 
+const convertToDate = s => {
+	let date = new Date();
+	date.setSeconds(s);
+
+	return date;
+}
+
 function uploadFiles (file) {
 	let progress, status;
 	return new Promise((resolve, reject) => {
@@ -22,32 +30,32 @@ function uploadFiles (file) {
 
 		uploadTask.on(TaskEvent.STATE_CHANGED, (snapshot) => {
 			progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-			console.log('Upload is ' + progress + '% done');
+			// //('Upload is ' + progress + '% done');
 			switch (snapshot.state) {
 				case TaskState.PAUSED: // or 'paused'
-				console.log('Upload is paused');
+				// //('Upload is paused');
 				status = 'paused'
 				break;
 				case TaskState.RUNNING: // or 'running'
-				console.log('Upload is running');
+				// //('Upload is running');
 				status = 'running'
 				break;
 				case TaskState.SUCCESS:
-				status = "complete";
+				// status = "complete";
 				break;
 			}
 		}, (error) => {
 			switch(error.code) {
 				case 'storage/unauthorized':
 				// User doesn't have permission to access the object
-				console.log("You dont have permmission")
+				// //("You dont have permmission")
 				error = 'unauthorized';
 				reject(new Error('No permission'))
 				break;
 
 				case 'storage/canceled':
 				// User canceled the upload
-				console.log("error cancelled")
+				// //("error cancelled")
 				error = 'cancelled'
 				reject(new Error("Process cancelled"))
 				break;
@@ -56,18 +64,19 @@ function uploadFiles (file) {
 				// Unknown error occurred, inspect error.serverResponse
 				error = 'Error occurred'
 				reject(new Error('Error occured. Unknown'))
-				console.log("error unknown")
+				// //("error unknown")
 
 				break;
 			}
 		}, () => {
 			uploadTask.snapshot.ref.getDownloadURL()
 			.then(url => {
-				console.log("url", url)
+				// //("url", url)
 				resolve(url)
-				// console.log("files", filesUrl)
+				// //("files", filesUrl)
 			})
-			console.log("status", status);
+			console.log("status", { status, progress })
+			// //("status", status);
 		})
 	})
 }
@@ -81,6 +90,8 @@ const projects = {
 		gettingAllDraftsFail: false,
 		addingProject: false,
 		addingProjectFail: false,
+		updatingProject: false,
+		updatingProjectFail: false,
 		projects: [],
 		addingDraftProject: false,
 		addingDraftFail: false,
@@ -125,7 +136,9 @@ const projects = {
 		[GET_ALLPROJECTS] (state, payload) {
 			state.gettingAllProj = false;
 			state.gettingAllProjFail = false;
-			state.projects.push(payload)
+			if(state.projects.includes(payload) === false) {
+				state.projects.unshift(payload)
+			}
 		},
 		[GET_ALLPROJECTSFAIL] (state) {
 			state.gettingAllProjFail = true
@@ -159,6 +172,22 @@ const projects = {
 		},
 		uploadingFailed(state) {
 			state.uploadingFiles= false
+		},
+		updateProjectRequest(state) {
+			state.updatingProject = true
+		},
+		updateProject(state, payload) {
+			if(payload) {
+				delete payload.status.PayRef;
+				state.updatingProject = false;
+				state.updatingProjectFail = false;
+				let projIndex = state.projects.findIndex(p => p.id == payload.id);
+				state.projects.splice(projIndex, 1, payload)
+			}
+		},
+		updateProjectFail(state) {
+			state.updatingProject = false;
+			state.updatingProjectFail = true
 		}
     },
     actions: {
@@ -173,19 +202,27 @@ const projects = {
 					commit(GET_ALLDRAFTS_FAIL)
 					// No drafts found...
 					
-					console.log("No drafts yet");
+					// //("No drafts yet");
 
 				} else {
-					console.log("result", result);
+					// //("result", result);
 					let drafts = [];
 					result.forEach(r => {
 						let id = r.id;
-						console.log("r", r.data())
+						let { createdAt, deadline } = r.data()
+						createdAt = convertToDate(createdAt.seconds);
+						deadline = convertToDate(deadline.seconds)
+						
 						let dData = { ...r.data(), id }
-						drafts.push(dData)
+						dData.createdAt = createdAt;
+						dData.deadline = deadline;
+						
+						//("r", dData)
+						drafts.unshift(dData)
 					})
-					console.log("drafts", drafts);
+					//("drafts", drafts);
 					Notification.open({
+						queue: true,
 						type: 'is-info',
 						duration: 5000,
 						position: 'is-top-right',
@@ -195,12 +232,19 @@ const projects = {
 				}
 			})
 			.catch(error => {
-				console.log("error all drafts", error)
+				//("error all drafts", error)
+				Notification.open({
+					queue: true,
+					message: "Sorry we were unable to fetch the drafts :"+error.message,
+					position: 'is-top-right',
+					type: 'is-warning'
+				})
+				commit(GET_ALLDRAFTS_FAIL)
 			})
 		},
 		initProjects({ commit }, payload) {
 			commit(GET_ALLPROJECTS_REQUEST);
-			console.log("payload", payload)
+			//("payload", payload)
 			if(payload.userId) {
 				projectsCollection
 				.where('creator', '==', payload.userId)
@@ -208,6 +252,7 @@ const projects = {
 				.then(res => {
 					if(res.empty) {
 						Notification.open({
+							queue: true,
 							message: "You don't have any projects yet. Create one...",
 							duration: 10000,
 							type: 'is-warning',
@@ -229,11 +274,56 @@ const projects = {
 				})
 				.catch(error => {
 					console.log("error", error)
+					//("error", error)
+					Notification.open({
+						message: "Sorry we were unable to fetch the projects :"+error.message,
+						position: 'is-top-right',
+						queue: false,
+						type: 'is-warning'
+					})
 					commit(GET_ALLPROJECTSFAIL)
 				})
 			} else {
 				commit(GET_ALLPROJECTSFAIL)
 			}
+		},
+		initAllProjects({ commit }) {
+			commit(GET_ALLPROJECTS_REQUEST)
+
+			projectsCollection
+			.orderBy('created_at')
+			.get()
+			.then(projects => {
+				if(projects.empty) {
+					Notification.open({
+						message: "No projects have been submitted today.",
+						type: 'is-info',
+						queue: true,
+						hasIcon: true
+					})
+					commit(GET_ALLPROJECTSFAIL)
+				} else {
+					projects.forEach(p => {
+							let id = p.id;
+							let deadline = p.data()['deadline'].toDate()
+							delete p.data()['deadline']
+							
+							let pData = p.data()
+							pData.id = id;
+							pData.deadline = deadline;
+							commit(GET_ALLPROJECTS, pData)
+					})
+				}
+			})
+			.catch(error => {
+				Notification.open({
+					queue: true,
+					message: "Sorry we were unable to fetch the projects :"+error.message,
+					position: 'is-top-right',
+					type: 'is-warning'
+				})
+				commit(GET_ALLPROJECTSFAIL)
+			})
 		},
 		addProject({ commit }, data) {
 			commit(ADD_PROJECT_REQUEST);
@@ -243,8 +333,6 @@ const projects = {
 					Promise.all(
 						data.files.map(e => uploadFiles(e))
 					).then(res => {
-						
-						console.log("files", res);
 						commit(ADD_PROJECT_REQUEST)
 						projectsCollection.add({
 							name: data.name,
@@ -253,6 +341,7 @@ const projects = {
 							deadline: data.deadline,
 							paperType: data.paperType,
 							pages: data.pageNumber,
+							price: data.price,
 							creator: data.creator,
 							createdAt: Timestamp.now()
 						})
@@ -266,25 +355,45 @@ const projects = {
 								let data = { ...q.data(), dataId }
 								commit(ADD_PROJECT, data)
 								Notification.open({
+									queue: true,
 									type: 'is-success',
 									duration: 5000,
 									message: "Successfully added project",
 									position: "is-bottom-right"
 								})
+								router.push(`/pay/${data.price}/${dataId}`);
+								
 							}, (error) => {
-								console.log("error sn", error)
+								Notification.open({
+
+									message: "Sorry we were unable to complete adding the project :"+error.message,
+									position: 'is-top-right',
+									type: 'is-warning'
+								})
+								//("error sn", error)
 							})
 						}).catch(error => {
-							console.log("erro", error);
-							
+							//("erro", error);
+							Notification.open({
+								queue: true,
+								message: "Sorry we were unable to complete adding the project :"+error.message,
+								position: 'is-top-right',
+								type: 'is-warning'
+							})
 							commit(ADD_PROJECT_FAILURE)
 						})
 					})
 					.catch(error => {
-						console.log("error", error)
+						//("error", error)
+						Notification.open({
+							queue: true,
+							message: "Sorry we were unable to complete adding the project :"+error.message,
+							position: 'is-top-right',
+							type: 'is-warning'
+						})
 					})
 				} else {
-					console.log("yes")
+					//("yes")
 
 					commit(ADD_DRAFT_PROJECT_REQUEST)
 					projectsCollection.add({
@@ -302,21 +411,34 @@ const projects = {
 					.then(result => {
 						
 						result.onSnapshot(q => {
-							console.log("result", result)
+							//("result", result)
+							let dataId = q.id;
 							Notification.open({
+								queue: true,
 								type: 'is-success',
 								duration: 5000,
 								message: "Successfully added project",
 								position: "is-top-right"
 							})
 							commit(ADD_PROJECT, q.data());
+							router.push(`/pay/${data.price}/${dataId}`);
 						}, (error) => {
-							console.log("error sn", error);
+							//("error sn", error);
+							Notification.open({
+								message: "Sorry we were unable to complete adding the project :"+error.message,
+								position: 'is-top-right',
+								type: 'is-warning'
+							})
 							commit(ADD_PROJECT_FAILURE)
 						})
 					}).catch(error => {
-						console.log("erro", error);
-						
+						//("erro", error);
+						Notification.open({
+							queue: true,
+							message: "Sorry we were unable to complete adding the project :"+error.message,
+							position: 'is-top-right',
+							type: 'is-warning'
+						})
 						commit(ADD_PROJECT_FAILURE)
 					})
 				}
@@ -334,18 +456,163 @@ const projects = {
 				createdAt: Timestamp.now()
 			})
 			.then(result => {
-				console.log("result", result)
+				//("result", result)
+				result.onSnapshot(q => {
+					Notification.open({
+						queue: true,
+						message: "Successfully add project "+q.data().paperType,
+						position: 'is-top-right',
+						type: 'is-warning'
+					})
+				}, (error) => {
+					Notification.open({
+						queue: true,
+						message: "Sorry we failed to add the project "+error,
+						position: 'is-top-right',
+						type: 'is-warning'
+					})
+				}, () => {
+					router.push('/auth/signup')
+				})
 			})
 			.catch(error => {
-				console.log("error draft", error)
+				//("error draft", error)
+				Notification.open({
+					queue: true,
+					message: "Sorry we were unable to complete adding the project :"+error.message,
+					position: 'is-top-right',
+					type: 'is-warning'
+				})
 				commit(ADD_PROJECT_FAILURE)
 			})
+		},
+		updateProjects({ commit }, data) {
+			commit('updateProject')
+			
+			let project = projectsCollection.doc(data.pid)
+			
+			if(data.paymentUpdate) {
+				project
+				.get()
+				.then(result => {
+					if(result.exists) {
+						project
+						.update({
+							status: { progress: 'began', paid: true, payRef: data.ref }
+						})
+
+						
+						project
+						.get()
+						.then(result => {
+							if(result.exists) {
+								let id = result.id;
+								let data = result.data()
+								let res = { ...data, id };
+								console.log("res", res)
+								commit('updateProject', res)
+							} else {
+								Notification.open({
+									queue: true,
+									message: "Project not found"
+								})
+							}
+						})
+						.catch(error => {
+							Notification.open({
+								queue: true,
+								message: "Something went wrong "+error.message
+							})
+							commit('updateProjectFail')
+						})
+					} else {
+						Notification.open({
+							queue: true,
+							message: "It seems the project is not set up yet. Redirecting..."
+						})
+						commit('updateProjectFail')
+						router.push('/dashboard/projects');
+					}				
+				})
+				.catch(error => {
+					console.log("error", error)
+					commit('updateProjectFail')
+					Notification.open({
+						queue: true,
+						message: "We could not update the project :"+error.message
+					})
+				})
+			} else {
+				project
+				.get()
+				.then(result => {
+					if(result.exists) {
+						project.update({
+							description: data.description,
+							pages: data.pages,
+							deadline: data.deadline
+						})
+						project
+						.get()
+						.then(result => {
+							if(result.exists) {
+								let id = result.id;
+								let data = result.data()
+								data.id = id;
+								commit('updateProject', data)
+							} else {
+								Notification.open({
+									queue: true,
+									message: "Project not found"
+								})
+							}
+						})
+						.catch(error => {
+							Notification.open({
+								queue: true,
+								message: "Something went wrong "+error.message
+							})
+							commit('updateProjectFail')
+						})
+						
+					} else {
+						Notification.open({
+							queue: true,
+							message: "It seems the project is not set up yet. Redirecting..."
+						})
+						commit('updateProjectFail')
+						router.push('/dashboard/projects');
+					}
+				})
+				.catch(error => {
+					Notification.open({
+						queue: true,
+						message: "We could not update the project :"+error.message,
+						type: 'is-danger'
+					})
+				})
+			}
 		}
 	},
 	getters: {
 		projectById: (state) => (id) => { return state.projects.find(p => p.id == id)  },
 		completedProjects: state => {
 			return state.projects.filter(p => p.status == 'completed')
+		},
+		viableProjects: state => {
+			return state.projects.filter(p => {
+				let today = new Date();
+				let diffTime = new Date(p.deadline) - today;
+				//("difftime ", p.deadline);
+				return diffTime > 0
+			})
+		},
+		passedProjects: state => {
+			return state.projects.filter(p => {
+				let today = new Date();
+				let diffTime = new Date(p.deadline) - today;
+				return diffTime < 0
+			})
 		},
 		cancelled: state => {
 			return state.projects.filter(c => c.status == 'cancelled')

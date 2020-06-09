@@ -182,9 +182,6 @@ export default {
                 price: await this.calcPrice()
             }
 
-            console.log("files", this.dropFiles)
-            console.log("project", data)
-
             this.addProject(data)
             this.$parent.close();
         },
@@ -219,7 +216,7 @@ export default {
         }
 
         .card-content {
-            padding: .85rem;
+            padding: .25rem;
         }
 
         form {

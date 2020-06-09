@@ -5,6 +5,7 @@ export const LOGIN_FAILURE = "auth/login_fail"
 export const SIGNUP_USER = "auth/signup";
 export const SIGNUP_USER_REQUEST = "auth/signup_loading";
 export const SIGNUP_USER_FAILURE = "auth/signup_fail";
+export const SIGNUP_USER_COMPLETE = "auth/signup_complete";
 
 
 export const GET_ALLPROJECTS = "projects/getAll";

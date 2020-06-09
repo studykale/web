@@ -68,15 +68,12 @@ export default {
             if(this.$v.$invalid) {
                 this.submitStatus = 'ERROR'
             } else {
-                console.log("yes")
-
                 this.submitStatus = 'OKAY';
                 this.submitStatus = 'PENDING';
                 this.signUp(data);
                 this.email = "";
                 this.password = "";
                 this.username = "";
-                console.log("notes", this.Notify)
                 this.$v.$reset()
             }
         }

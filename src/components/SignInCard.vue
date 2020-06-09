@@ -1,56 +1,59 @@
 <template>
-
-      <div class="card">
-          <b-message type="is-warning" title="Error" v-if="submitStatus == 'ERROR'">
-              Please fill in the form correctly
-          </b-message>
-          <div class="card-content">
-              <form @submit.prevent="loginUser">
-                    
-                            <b-field
-                                label="Email"
-                                :type="{ 'is-danger': emailErrors.length > 0 }"
-                            >
-                                <b-input
-                                    type="email"
-                                    placeholder="Your email"
-                                    required
-                                    v-model.trim="$v.email.$model"
-                                    >
-                                </b-input>
-                            </b-field>
-
-                            <b-field label="Password" 
-                                :type="{ 'is-danger': passwordErrors.length > 0 }"
-                                :message="passwordErrors">
-                                <b-input
-                                    type="password"
-                                    password-reveal
-                                    placeholder="Your password"
-                                    v-model.trim="$v.password.$model"
-                                    
-                                    required>
-                                </b-input>
-                            </b-field>
-
-                            <router-link to="/auth/password-change-req" class="text-left text-purple d-block">Forgot Password</router-link>
-                            <button 
-                                :disabled="submitStatus === 'PENDING'" 
-                                :class="{ 'is-loading': loginStatus.loggingIn == true }"
-                                class="button is-primary" type="submit">Login</button>
+    <div>
+        <b-message title="Admin Sign In" :active="admin">
+            Please note you are signing in as an admin
+        </b-message>
+        <div class="card">
+            <b-message type="is-warning" title="Error" v-if="submitStatus == 'ERROR'">
+                Please fill in the form correctly
+            </b-message>
+            <div class="card-content">
+                <form @submit.prevent="loginUser">
                         
-                 
-                </form>
-          </div>
-          <div class="card-footer">                         
-            <p>Don't have an Account?
-                <span>
-                    <router-link to="/auth/signup">Sign Up</router-link>
-                </span>
-            </p>
-        </div>
-      </div>
+                                <b-field
+                                    label="Email"
+                                    :type="{ 'is-danger': emailErrors.length > 0 }"
+                                >
+                                    <b-input
+                                        type="email"
+                                        placeholder="Your email"
+                                        required
+                                        v-model.trim="$v.email.$model"
+                                        >
+                                    </b-input>
+                                </b-field>
 
+                                <b-field label="Password" 
+                                    :type="{ 'is-danger': passwordErrors.length > 0 }"
+                                    :message="passwordErrors">
+                                    <b-input
+                                        type="password"
+                                        password-reveal
+                                        placeholder="Your password"
+                                        v-model.trim="$v.password.$model"
+                                        
+                                        required>
+                                    </b-input>
+                                </b-field>
+
+                                <router-link to="/auth/password-change-req" class="text-left text-purple d-block">Forgot Password</router-link>
+                                <button 
+                                    :disabled="submitStatus === 'PENDING'" 
+                                    :class="{ 'is-loading': loginStatus.loggingIn == true }"
+                                    class="button is-primary" type="submit">Login</button>
+                            
+                    
+                    </form>
+            </div>
+            <div class="card-footer">                         
+                <p>Don't have an Account?
+                    <span>
+                        <router-link to="/auth/signup">Sign Up</router-link>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -71,7 +74,8 @@ export default {
         return {
             email: '',
             password: '',
-            submitStatus: null
+            submitStatus: null,
+            admin: this.$route.query.admin == 'true' && this.$route.query.key == "secret"
         }
     },
     validations: {
@@ -85,7 +89,7 @@ export default {
         }
     },
      methods: {
-        ...mapActions('user', ['login']),
+        ...mapActions('user', ['login', 'loginAdmin']),
         loginUser () {
             let data = {
                 email: this.email,
@@ -98,7 +102,11 @@ export default {
                 this.submitStatus = "PENDING";
                 setTimeout(() => {
                     this.submitStatus = "OKAY"
-                    this.login(data)
+                    if(!this.admin) {
+                        this.login(data)
+                    } else {
+                        this.loginAdmin(data)
+                    }
                     this.email = this.password = this.confirmation = "";
                     this.$v.$reset()
                 }, 2000)
@@ -135,7 +143,8 @@ export default {
             errors.push("Please enter a minimum of 7 characters")
             }
             return errors
-        }
+        },
+        
     }
     }
 </script>
