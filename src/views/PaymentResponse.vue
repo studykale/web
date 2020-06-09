@@ -47,7 +47,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions('projects', ['updateProjects']),
+        ...mapActions('projects', ['updateProjects', 'initProjects']),
         setId() {
             this.projectId = this.$route.params.projectId
             this.ref = this.$route.query.PayRef;
@@ -60,7 +60,8 @@ export default {
     },
     created() {
         this.setId()
-        this.updateProjects({ pid: this.projectId, paymentUpdate: true, ref: this.ref })
+        this.updateProjects({ pid: this.projectId, paymentUpdate: true, ref: this.ref }),
+        this.initProjects()
     }
 }
 </script>

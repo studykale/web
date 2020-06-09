@@ -21,7 +21,7 @@ app.post('/:projectId', (req, res) => {
         res.redirect(301, `https://studykale-test.netlify.app/project-pay/${projectId}/cancelled`)
     } else {
         let ref = req.query.flwref;
-        res.redirect(301, `https://studykale-text.netlify.app/project-pay/${projectId}/successful?PayRef=${ref}`)
+        res.redirect(301, `https://studykale-test.netlify.app/project-pay/${projectId}/successful?PayRef=${ref}`)
     }
 })
 
