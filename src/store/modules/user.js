@@ -273,6 +273,7 @@ const User = {
 								message: "You know you are not an admin. Stop trying."
 							});
 
+							commit(LOGIN_FAILURE)
 							router.push('/auth/signin');
 						} else {
 							dispatch('admin/initAdProjects', null, { root: true })
