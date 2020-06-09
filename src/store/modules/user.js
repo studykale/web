@@ -279,7 +279,10 @@ const User = {
 							dispatch('admin/initAdProjects', null, { root: true })
 							dispatch('admin/initAdUsers', null, { root: true })
 							dispatch('admin/initQuestions', null, { root: true })
+							window.$cookies.set('loggedIn', true, '1d');
+
 							commit(LOGIN_USER, { username: user.displayName, email: user.email, verified: user.emailVerified, photoUrl: user.photoURL, userId })
+							
 							router.push('/admin/projects')
 						}
 					} else {	
