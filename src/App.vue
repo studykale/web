@@ -109,30 +109,11 @@
   display: block;
 }
 
-.flex {
-  display: flex;
-}
 
 .flex-column {
   flex-direction: column;
 }
 
-
-.justify-around {
-  justify-content: space-around;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.justify-center {
-  justify-content: center;
-}
-
-.justify-around {
-  justify-content: space-around;
-}
 
 .items-center {
   align-items: center;
@@ -145,11 +126,6 @@
 .flex-wrap {
   flex-wrap: wrap;
 }
-
-.flex-row {
-  flex-direction: row;
-}
-
 
 
 .leading-tight {
@@ -351,5 +327,84 @@
   width: 12rem;
 }
 
+
+mx-a {
+  margin: 0 auto;
+}
+.my-a {
+  margin: auto 0;
+}
+
+// End display styles
+
+
+
+// Text styling
+.font-bold {
+  font-weight: bold;
+}
+
+
+
+// end text styling
+
+
+  .flex {
+    display: flex;
+  }
+
+  .flex-row {
+    flex-flow: row wrap;
+  }
+
+  .flex-row_reverse {
+    flex-direction: row-reverse;
+  }
+
+  .flex-column {
+    flex-direction: column;
+  }
+
+  .justify-start {
+    justify-content: flex-start;
+  }
+
+  .justify-even {
+    justify-content: space-evenly;
+  }
+
+  .justify-between {
+    justify-content: space-between;
+  }
+
+  .justify-center {
+    justify-content: center;
+  }
+  
+  .justify-end {
+    justify-content: flex-end;
+  }
+
+  .container {
+    width: 90%;
+
+    @media screen and (max-width: 640px) {
+      max-width: calc(640px - 20vw);
+    }
+
+    @media screen and (max-width: 768px) {
+      max-width: calc(768px - 20vw);
+    }
+
+    @media screen and (max-width: 1024px) {
+      max-width: calc(1024px - 20vw);
+    }
+  }
+
+  // grid
+  .grid {
+    display: grid;
+    grid-gap: 10px;
+  }
 
 </style>
