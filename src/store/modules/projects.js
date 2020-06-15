@@ -23,10 +23,10 @@ const convertToDate = s => {
 	return date;
 }
 
-function uploadFiles (file) {
+const uploadFiles =  (file, dir) => {
 	let progress, status;
 	return new Promise((resolve, reject) => {
-		let uploadTask = storageRef.child(`files/${file.name}`).put(file, { contentType: file.type })
+		let uploadTask = storageRef.child(`${dir}/${file.name}`).put(file, { contentType: file.type })
 
 		uploadTask.on(TaskEvent.STATE_CHANGED, (snapshot) => {
 			progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -331,7 +331,7 @@ const projects = {
 				// let newProject = projectsCollection.doc()
 				if(data.files.length > 0) {
 					Promise.all(
-						data.files.map(e => uploadFiles(e))
+						data.files.map(e => uploadFiles(e, 'files'))
 					).then(res => {
 						commit(ADD_PROJECT_REQUEST)
 						projectsCollection.add({
@@ -497,34 +497,44 @@ const projects = {
 				.then(result => {
 					if(result.exists) {
 						project
-						.update({
-							status: { progress: 'began', paid: true, payRef: data.ref }
-						})
-
-						
-						project
-						.get()
-						.then(result => {
-							if(result.exists) {
-								let id = result.id;
-								let data = result.data()
-								let res = { ...data, id };
-								console.log("res", res)
-								commit('updateProject', res)
-							} else {
+						.set({
+							status: "began",
+							payRef: data.ref,
+							paid: true
+						}, { merge: true })
+						.then(() => {
+							project
+							.get()
+							.then(result => {
+								if(result.exists) {
+									let id = result.id;
+									let data = result.data()
+									let res = { ...data, id };
+									console.log("res", res)
+									commit('updateProject', res)
+								} else {
+									Notification.open({
+										queue: true,
+										message: "Project not found"
+									})
+								}
+							})
+							.catch(error => {
 								Notification.open({
 									queue: true,
-									message: "Project not found"
+									message: "Something went wrong "+error.message
 								})
-							}
+								commit('updateProjectFail')
+							})
 						})
 						.catch(error => {
 							Notification.open({
-								queue: true,
-								message: "Something went wrong "+error.message
+								type: "is-warning",
+								message: "Sorry we were unable to update teh payment. We are reviewing what happenend. "+error.message
 							})
-							commit('updateProjectFail')
 						})
+
+						
 					} else {
 						Notification.open({
 							queue: true,
@@ -624,3 +634,6 @@ const projects = {
 }
 
 export default projects;
+export {
+	uploadFiles
+}

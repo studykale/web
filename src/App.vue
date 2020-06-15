@@ -23,7 +23,7 @@
 
 
 .bg-light {
-        background-color: #F2F8FD;
+        background-color: transparent;
   }
 
   .p-1 {

@@ -1,55 +1,63 @@
 <template>
-  <div class="bg-light h-100">
-    <section class="hero is-small is-primary">
-      <div class="hero-head">
-        <Navbar :username="loggedInUser.username" :photoURL="loggedInUser.photoURL"/>
+   <div class="dashboard">
+      <div class="sidebar">
+          <section class="top">
+              <div class="wrapper">
+                  <div class="links">
+                      <ul>
+                          <router-link to="/dashboard/projects" class="flex flex-row top-links">
+                              <span><award-icon size="1.5x" class="text-white"></award-icon></span>
+                              <span>Tasks</span>
+                          </router-link>
+                          <router-link to="/dashboard/notifications" class="flex flex-row top-links">
+                              <span><bell-icon size="1.5x" class="text-white"></bell-icon></span>
+                              <span>Notifications</span>
+                          </router-link>
+                          <router-link to="/dashboard/chats" class="flex flex-row top-links">
+                              <span>
+                                <message-circle-icon size="1.5x" class="custom-class"></message-circle-icon>
+                              </span>
+                              <span>Chats</span>
+                          </router-link>
+                      </ul>
+                  </div>
+              </div>
+          </section>
+          <section class="bottom">
+              <div class="links">
+                  <ul>
+                      <router-link to="/dashboard/profile" class="profile">
+                            <span>{{ userInitials }}</span>
+                      </router-link>
+                      <router-link to="/dashboard/settings" class="flex flex-row">
+                            <span><settings-icon size="1.5x" class="custom-class"></settings-icon></span>
+                            <span>Settings</span>
+                      </router-link>
+                      <li @click="signout" class="flex flex-row">
+                            <span><log-out-icon size="1.5x" class="custom-class"></log-out-icon></span>
+                            <span>Log Out</span>
+                      </li>
+                  </ul>
+              </div>
+          </section>
       </div>
-    
-      <div class="hero-foot">
-        <nav class="tabs is-boxed is-small">
-          <div class="container">
-            <ul>
-              <li v-bind:class="[currentPage.includes('projects') ? activeClass : '']">
-                <router-link to="/dashboard/projects">
-                 Projects
-                </router-link>
-              </li>
-              <li v-bind:class="[currentPage.includes('drafts') ? activeClass : '']">
-                <router-link to="/dashboard/drafts">
-                  Drafts
-                </router-link>
-              </li>
-              <li v-bind:class="[currentPage.includes('chats') ? activeClass : '']">
-                <router-link to="/dashboard/chats">
-                  Chats
-                </router-link>
-              </li>
-              <li class="banner" v-bind:class="[currentPage.includes('notifications') ? activeClass : '']">
-                <router-link to="/dashboard/notifications">
-                 Notifications
-                </router-link>
-              </li>
-            </ul>
-          </div>
-        </nav>
+      <div class="main_view">
+         <router-view></router-view>
       </div>
-    </section>
-    <div class="container">
-      <div class="my-5 px-2">
-          <router-view></router-view>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
-
-import Navbar from "@/components/Dashboard/DashNav.vue";
 import { mapActions, mapState } from "vuex";
+import { AwardIcon, BellIcon, MessageCircleIcon, SettingsIcon, LogOutIcon } from 'vue-feather-icons'
 
 export default {
   components: {
-    Navbar
+    SettingsIcon,
+    AwardIcon,
+    BellIcon,
+    LogOutIcon,
+    MessageCircleIcon
   },
   data() {
     return {
@@ -62,6 +70,12 @@ export default {
   methods: {
     ...mapActions('projects', ['initDrafts', 'initProjects']),
     ...mapActions('user', ['signout']),
+    goto(link) {
+      console.log("link", link)
+      if(link) {
+        this.$router.push(link)
+      }
+    }
   },
   computed: {
     ...mapState({
@@ -69,6 +83,9 @@ export default {
     }),
     currentPage() {
       return this.$route.path;
+    },
+    userInitials() {
+      return this.loggedInUser.username.substring(0, 2).toUpperCase()
     }
   },
   created () {
@@ -82,26 +99,84 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .my-5 {
-    margin: 2em 0;
-  }
+  .dashboard {
+        display: grid;
+        height: 100vh;
+        grid-template-columns: 20% 1fr;
+        
 
-  .px-2 {
-    padding: 0 1em;
-  }
+        .sidebar {
+           background-color: #761CEA;
+           padding: 1em;
+           position: sticky;
+           top: 0;
+           left: 0;
+           color: white;
 
-  .banner {
-    position: relative;
+           display: grid;
+        }
 
-    &::before {
-      position: absolute;
-      content: "";
-      height: 5px;
-      width: 5px;
-      background-color: red;
-      border-radius: 2.5px;
-      top: 4px;
-      right: 5px;
+        .sidebar .top {
+            grid-row-start: 1;
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+
+            .wrapper .top-links {
+                color: white;
+                margin-bottom: 14px;
+                font-size: .85rem;
+
+                span:not(:last-of-type) {
+                    margin-right: 1em;
+                }
+            }
+        }
+
+        .sidebar .bottom {
+            grid-row-start: 5;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            justify-content: center;
+
+            .links {
+                ul a, ul li {
+                    margin-top: 14px;
+                    list-style-type: none;
+                    transition: ease-in 250ms;
+                    font-size: .85rem;
+                }
+
+                a {
+                  color: white;
+                }
+
+                a span:not(:last-of-type) {
+                    margin-right: 15px;
+                }
+
+                li span:not(:last-of-type) {
+                    margin-right: 15px;
+                }
+            }
+
+            .profile {
+                padding: 10px;
+                background-color: #FFC11E;
+                border-radius: 50%;
+                width: 35px;
+                text-align: center;
+                height: 35px;
+                font-size: .75rem !important;
+                display: flex;
+                justify-content: center;
+            }
+        }
+
+        .main_view {
+            background: #F1F2F2;
+            padding: 1.3em;
+        }
     }
-  }
 </style>

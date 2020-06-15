@@ -6,7 +6,7 @@
         <div class="card w-100 mt-2">
           <div class="card-header p-1">
             <div class="w-full flex flex-row flex-wrap justify-between items-center">
-              <p class="subtitle my-a">Brian</p>
+              <p class="subtitle my-a">{{ loggedInUser.username }}</p>
               <b-button @click="openModal" type="is-danger"><span> <edit-icon size="1x" class="custom-class"></edit-icon> </span> Edit</b-button>
             </div>
           </div>
@@ -16,8 +16,8 @@
                 <img src="https://avatars.dicebear.com/api/bottts/smile.svg" alt="Profile photo">
               </div>
               <div class="flex flex-column">
-                <h3><span class="font-bold">Username</span>  Brian</h3>
-                <h3><span class="font-bold">Email</span> brn@gmail.com</h3>
+                <h3><span class="font-bold">Username</span>  {{ loggedInUser.username }}</h3>
+                <h3><span class="font-bold">Email</span> {{ loggedInUser.email }}</h3>
               </div>
             </div>
           </div>
@@ -58,6 +58,7 @@
 
 <script>
 import { EditIcon } from 'vue-feather-icons'
+import { mapState, mapActions } from "vuex"
 
  export default {
    components: {
@@ -71,6 +72,7 @@ import { EditIcon } from 'vue-feather-icons'
         }
     },
     methods: {
+      ...mapActions('user', ['updateUserProfile']),
       openModal() {
         if(this.showModal) {
           this.showModal = false
@@ -85,9 +87,15 @@ import { EditIcon } from 'vue-feather-icons'
         }
 
         console.log("date", data)
+
         this.file = null;
         this.username = "";
       }
+    },
+    computed: {
+      ...mapState({
+        loggedInUser: state => state.user.user
+      })
     }
 }
 </script>

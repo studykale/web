@@ -12,7 +12,6 @@
         <div class="card-content">
           <b-table 
             :data="projects" 
-            :columns="columns" 
             :per-page="perPage"
             paginated
             pagination-position="bottom"
@@ -21,6 +20,20 @@
             :mobile-cards="true"
             :selected.sync="selected"
           >
+            <template slot-scope="props">
+              <b-table-column field="id" label="ID">
+                    {{ props.row.id }}
+                </b-table-column>
+                <b-table-column field="name" label="Name">
+                    {{ props.row.name }}
+                </b-table-column>
+                <b-table-column field="status" label="Status">
+                    {{ props.status.began ? props.status.began : props.status }}
+                </b-table-column>
+                <b-table-column field="deadline" label="Due date">
+                    {{ new Date(props.deadline.seconds).toDateString() }}
+                </b-table-column>
+            </template>
           </b-table>
         </div>
       </div>
@@ -71,7 +84,8 @@
 
 <script>
 import { CoffeeIcon, CheckIcon, XSquareIcon, CheckCircleIcon } from 'vue-feather-icons'
-import { mapState } from 'vuex'
+import { mapState } from 'vuex';
+import db from "../../../../db";
 
 export default {
   components: {
@@ -90,39 +104,43 @@ export default {
         ]
 
     return {
+        proj: [],
         data,
         showProjectModal: true,
         currentPage: 1,
         perPage: 3,
         checkboxCustom: 'Yes',
-        columns: [
-            {
-                field: 'id',
-                label: 'ID',
-                width: '40',
-                numeric: true,
-                visible: false
-            },
-            {
-                field: 'name',
-                label: 'Name',
-                searchable: true
-            },
-            {
-                field: 'type',
-                label: 'Paper Type',
-            },
-            {
-                field: 'deadline',
-                label: 'Deadline',
-                centered: true
-            },
-            {
-                field: 'status',
-                label: 'Status'
-            }
-        ]
+        // columns: [
+        //     {
+        //         field: 'id',
+        //         label: 'ID',
+        //         width: '40',
+        //         numeric: true,
+        //         visible: false
+        //     },
+        //     {
+        //         field: 'name',
+        //         label: 'Name',
+        //         searchable: true
+        //     },
+        //     {
+        //         field: 'type',
+        //         label: 'Paper Type',
+        //     },
+        //     {
+        //         field: 'deadline',
+        //         label: 'Deadline',
+        //         centered: true
+        //     },
+        //     {
+        //         field: 'status',
+        //         label: 'Status'
+        //     }
+        // ]
     }
+  },
+  firestore: {
+    proj: db.collection('projects')
   },
   methods: {
     showProject() {

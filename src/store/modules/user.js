@@ -1,10 +1,11 @@
 
 import { LOGIN_USER, SIGNUP_USER, SIGNUP_USER_COMPLETE, LOGIN_REQUEST, SIGNUP_USER_REQUEST, LOGIN_FAILURE, SIGNUP_USER_FAILURE } from "../MutationTypes"
-import { auth, newUser, users } from "../../db"
+import { auth, newUser, users, currentUser } from "../../db"
 import { NotificationProgrammatic as Notification } from 'buefy'
 
 
 import router from "../../router"
+import { uploadFiles } from "./projects"
 // function getRandomInt() {
 // 	return Math.floor(Math.random() * 100)
 // }
@@ -49,7 +50,7 @@ const User = {
 		status: {
 			loggedIn: false
 		},
-		user: null
+		user: null,
 	},
 	actions: {
 		init({commit}) {
@@ -191,6 +192,79 @@ const User = {
 			} else {
 				commit('setUser', null)
 			}
+		},
+		updateUserProfile({ commit }, data) {
+			commit('updateProfileRequest')
+			if(data.type == "photo") {
+				uploadFiles(data.image, 'photo')
+				.then(file => {
+					currentUser.updateProfile({
+						photoURL: file
+					})
+					.then(() => {
+						commit("updateProfile", currentUser.photoURL)
+						console.log("photoUrl",currentUser.photoURL)
+					})
+					.catch(error => {
+						Notification.open({
+							message: "Sorry we could not update the profile. "+error.message
+						})
+						commit("updateProfileFail")
+					})
+				})
+				.catch(error => {
+					Notification.open({
+						message: "Profile was not updated :"+error.message
+					})
+					commit("updateProfileFail")
+				})
+			} else if(data.type == "email") {
+				commit('updateEmailRequest')
+				currentUser.updateEmail(data.email)
+				.then(() => {
+					commit("updateEmail", currentUser.email)
+				})
+				.catch(error => {
+					commit("updateEmailFail")
+					if(error.type == "invalid-email") {
+						Notification.open({
+							message: "Sorry but that is an invalid password.",
+							type: "is-warning"
+						})
+					} else if(error.type == "requires-recent-login") {
+						Notification.open({
+							message: "You need to have logged In",
+							type: "is-danger"
+						})
+					} else if(error.type == "email-already-in-use") {
+						Notification.open({
+							message: "Sorry that email is already in use",
+							type: "is-warning"
+						})
+					}
+				})
+			} else if(data.type == "password") {
+				commit("upatePasswordRequest")
+				currentUser.updatePassword(data.password)
+				.then(() => {
+					commit("updatePasswordComplete")
+				})
+				.catch(error => {
+					commit("updatePasswordFail")
+					if(error.type == "auth/weak-password") {
+						Notification.open({
+							type: "is-info",
+							message: "Your password was very weak please add a stronger password."
+						})
+					} else if(error.type == "auth/requires-recent-login") {
+						Notification.open({
+							type: "is-info",
+							message: "You need to logout and login again to change your password"
+						})
+					}
+				})
+			}
+			
 		},
 		// Meant for ADMIN login.
 		createAdminAccount({ commit }, payload) {
@@ -346,6 +420,35 @@ const User = {
 		[SIGNUP_USER_FAILURE] (state) {
 			state.status = {}
 			state.user = {}
+		},
+		updateProfileRequest(state) {
+			state.status.updatingProfile = true
+		},
+		updateProfile(state, url) {
+			state.status.updatingProfile = false;
+			state.user.photoURL = url
+		},
+		updateProfileFail(state) {
+			state.status.updatingProfile = false
+		},
+		updateEmail(state, email) {
+			state.status.updatingEmail = false;
+			state.user.email = email
+		},
+		updateEmailRequest(state) {
+			state.status.updatingEmail = true
+		},
+		updateEmailFail(state) {
+			state.status.updatingEmail = false
+		},
+		updatePasswordRequest(state) {
+			state.status.updatingPassword = true;
+		},
+		updatePasswordFail(state) {
+			state.status.updatingPassword = false;
+		},
+		updatePasswordComplete(state) {
+			state.status.updatePassword = false;
 		},
 		logout(state) {
 			state.status = {

@@ -38,14 +38,14 @@
                 <div class="control">
                     <b-taglist attached>
                         <b-tag type="is-dark">Status</b-tag>
-                        <b-tag type="is-info">{{ project.status.progress || project.status }}</b-tag>
+                        <b-tag type="is-info">{{ project.status }}</b-tag>
                     </b-taglist>
                 </div>
             </b-field>
         </div>
         <p class="mb-2">Completion <span class="text-red">{{ dateFm(project.deadline) | moment('from', 'now') }}</span></p>
         
-        <div v-if="!paid" class="flex flex-wrap items-center">
+        <div v-if="!project.paid" class="flex flex-wrap items-center">
             <Payment :projectId="projectId" :paymentAmount="project.price ? project.price : calcPrice(project)"/>
             <b-button @click="showId" type="is-warning">Update</b-button>
         </div>
@@ -119,13 +119,6 @@ export default {
         ...mapGetters({
             projectById: "projects/projectById"
         }),
-        paid () {
-            if(this.project.status && this.project.status.paid) {
-                return true
-            } else {
-                return false
-            }
-        }
     },
     mounted() {
        this.$nextTick(() => {
