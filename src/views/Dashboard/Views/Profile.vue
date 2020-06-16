@@ -25,6 +25,9 @@
         <b-modal
           :active.sync="showModal"
           trap-focus
+          aria-role="dialog"
+          :destroy-on-hide="true"
+          @close="closeModal"
         >
           <div class="card mx-auto">
             <div class="card-header p-1">
@@ -32,22 +35,28 @@
             </div>
             <div class="card-content">
               <form @submit.prevent="updateProfile">
-                <b-field label="Username"
-                  >
-                  <b-input v-model="username" place maxlength="30" placeholder="Username"></b-input>
-                </b-field>
-                <b-field label="" class="file">
-                  <b-upload v-model="file" accept="image/png, image/jpeg, image/jpg">
-                      <a class="button is-primary">
-                          <b-icon icon="upload"></b-icon>
-                          <span>Click to upload</span>
-                      </a>
+                <div v-if="imageUrl == null">
+                  <b-upload 
+                    v-model="file"
+                    @input="displayPhoto"
+                    drag-drop>
+                    <section class="section">
+                        <div class="content has-text-centered">
+                            <p>
+                                <b-icon
+                                    icon="upload"
+                                    size="is-large">
+                                </b-icon>
+                            </p>
+                            <p>Drop your files here or click to upload</p>
+                        </div>
+                    </section>
                   </b-upload>
-                  <span class="file-name" v-if="file">
-                      {{ file.name }}
-                  </span>
-                </b-field>
-                <button class="button is-fullwidth is-primary mr-2">Upload</button>
+                </div>
+                <div v-else>
+                  <img :src="imageUrl" alt="Preview">
+                </div>
+                <button :disabled="!fileUploaded" class="button is-fullwidth is-primary mt-2" type="submit">Upload</button>
               </form>
             </div>
           </div>
@@ -68,7 +77,9 @@ import { mapState, mapActions } from "vuex"
         return {
             file: null,
             username: "",
-            showModal: false
+            fileUploaded: false,
+            showModal: false,
+            imageUrl : null
         }
     },
     methods: {
@@ -82,15 +93,34 @@ import { mapState, mapActions } from "vuex"
       },
       updateProfile() {
         let data = {
-          file : this.file,
-          username: this.username
+          type: "photo",
+          image : this.file,
         }
 
         console.log("date", data)
+        this.updateUserProfile(data)
+        this.showModal = false;
 
         this.file = null;
         this.username = "";
-      }
+        this.fileUploaded = false;
+        this.imageUrl = false;
+      },
+      displayPhoto(f) {
+        if(f.size / (1024 * 1024) < 2) {
+          this.fileUploaded = true
+          this.imageUrl = URL.createObjectURL(f);
+        } else {
+          this.$buefy.toast.open({ type: 'is-warning', message: "You file exceeded 3mb" })
+        }
+      },
+      closeModal() {
+        this.imageUrl = null;
+        this.file = null;
+        this.fileUploaded = null;
+        this.$buefy.toast.open("You did not upload the image...")
+      },
+      
     },
     computed: {
       ...mapState({

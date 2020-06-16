@@ -57,7 +57,7 @@
         </div>
         <div class="card-content">
           <p>Please not that this action is irrevocable once done</p>
-          <b-button type="is-danger">
+          <b-button @click="deleteAccount" type="is-danger">
             Delete my Account
           </b-button>
         </div>
@@ -133,6 +133,21 @@ export default {
           this.newPassword = "";
           this.passwordSubmitStatus = null;
         }
+      },
+      deleteAccount() {
+        this.$buefy.dialog.confirm({
+          title: "Delete account",
+          messsage: "Enter the word delete to delete your account.",
+          inputAttrs: {
+            placeholder: "Enter the word delete here.",
+            maxlength: 6
+          },
+          confirmText: 'Delete',
+          type: 'is-danger',
+          hasIcon: true,
+          message: "Are you sure you want to delete your account?",
+          onConfirm: () => this.$buefy.toast.open({message: "Delete could not execute.", type: "is-danger", position: "is-bottom-right"})
+        })
       }
     },
     computed: {
