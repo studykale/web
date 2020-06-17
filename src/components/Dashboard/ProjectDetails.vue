@@ -43,7 +43,7 @@
                 </div>
             </b-field>
         </div>
-        <p class="mb-2">Completion <span class="text-red">{{ dateFm(project.deadline) | moment('from', 'now') }}</span></p>
+        <p class="mb-2">Completion <span class="text-red">{{ dateFm(project.deadline) }}</span></p>
         
         <div v-if="!project.paid" class="flex flex-wrap items-center">
             <Payment :projectId="projectId" :paymentAmount="project.price ? project.price : calcPrice(project)"/>
@@ -64,6 +64,9 @@ import Payment from "./Payment";
 import { XCircleIcon, CheckCircleIcon } from 'vue-feather-icons'
 
 export default {
+    props: {
+        projects: Array
+    },
     components:{
         Payment,
         XCircleIcon,
@@ -82,7 +85,8 @@ export default {
         },
         dateFm(s) {
             if(new Date(s) && (typeof s !== Object)) {
-                return s;
+                console.log("seconds", s)
+                return new Date(s.seconds * 1000).toDateString();
             } else if(s.seconds) {
                 // //("s", s.seconds)
                 return new Date(s.seconds * 1000)
@@ -123,10 +127,9 @@ export default {
     mounted() {
        this.$nextTick(() => {
           this.$root.$on('projDetailOpen', (arg1) => {
-            this.openSide = arg1.show
-            this.projectId = arg1.id
-            this.project = this.projectById(arg1.id);
-            //("this id", this.project)
+            this.openSide = arg1.show;
+            this.projectId = arg1.id;
+            this.project = this.projects.find(p => p.name == arg1.id);
         }) 
        }) 
     }

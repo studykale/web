@@ -365,6 +365,10 @@ mx-a {
     flex-direction: column;
   }
 
+  .justify-around {
+    justify-content: space-around;
+  }
+
   .justify-start {
     justify-content: flex-start;
   }

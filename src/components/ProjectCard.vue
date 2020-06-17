@@ -1,41 +1,6 @@
 <template>
-  <!-- <div class="project-card">
-      <div class="p-title">
-          <div class="flex justify-between">
-              <div>
-                <h3 class="font-bold">{{ project.name }}</h3>
-                <h5>{{ project.paperType }}</h5>
-              </div>
-          </div>
-          
-      </div>
-      <div class="dropdown-divider"></div>
-      <div class="p-content">
-          <p>{{ project.description }}</p>
-      </div>
-      <div class="link">
-          <b-button @click="showSide(project.id)" class="text-green" type="is-text">View details</b-button>
-      </div>
-   
-    <b-field class="mt-2" grouped group-multiline>
-        <div class="control">
-            <b-taglist attached>
-                <b-tag type="is-dark">pages</b-tag>
-                <b-tag type="is-info">{{ project.pages }}</b-tag>
-            </b-taglist>
-        </div>
-
-        <div class="control">
-            <b-taglist attached>
-                <b-tag type="is-dark">status</b-tag>
-                <b-tag type="is-primary">{{ project.status.progress || project.status }}</b-tag>
-            </b-taglist>
-        </div>
-    </b-field>
-    <p class="text-sm"><span class="text-red">Deadline</span> {{ dateFm(project.deadline) | moment('from')  }}</p>
-  </div> -->
-   <div>
-      <div @click="showSide(project.id)" class="project-card">
+   <div @click="showSide(project.name)">
+      <div  class="project-card">
           <div class="head">
               <h2 class="title">{{ project.name }}</h2>
           </div>
@@ -53,8 +18,11 @@
 </template>
 
 <script>
-
+import  { CalendarIcon } from "vue-feather-icons"
 export default {
+    components: {
+        CalendarIcon
+    },
     props: {
        project: Object
     },
@@ -67,8 +35,8 @@ export default {
                 return new Date(s.seconds * 1000).toDateString()
             }
         },
-        showSide(id) {
-            this.$root.$emit('projDetailOpen', { show: true, id: id  })
+        showSide(name) {
+            this.$root.$emit('projDetailOpen', { show: true, id: name  })
         },
     }
 }

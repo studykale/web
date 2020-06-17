@@ -158,9 +158,7 @@ const projects = {
 		[ADD_PROJECT] (state, payload) {
 			state.addingProject = false;
 			state.addingProjectFail = false;
-			if(state.projects.includes(payload) === false) {
-				state.projects.push(payload);
-			}
+			state.projects.unshift(payload);
 		},
 		uploading(state) {
 			state.uploadingFiles = true
@@ -291,7 +289,6 @@ const projects = {
 			commit(GET_ALLPROJECTS_REQUEST)
 
 			projectsCollection
-			.orderBy('created_at')
 			.get()
 			.then(projects => {
 				if(projects.empty) {
@@ -327,76 +324,77 @@ const projects = {
 		},
 		addProject({ commit }, data) {
 			commit(ADD_PROJECT_REQUEST);
-
 				// let newProject = projectsCollection.doc()
-				if(data.files.length > 0) {
-					Promise.all(
-						data.files.map(e => uploadFiles(e, 'files'))
-					).then(res => {
-						commit(ADD_PROJECT_REQUEST)
-						projectsCollection.add({
-							name: data.name,
-							status: 'pending',
-							description: data.description || '',
-							deadline: data.deadline,
-							paperType: data.paperType,
-							pages: data.pageNumber,
-							price: data.price,
-							creator: data.creator,
-							createdAt: Timestamp.now()
-						})
-						.then(result => {
-							result.set({
-								files: res
-							}, { merge: true })
+				// if(data.files) {
+				// 	Promise.all(
+				// 		data.files.map(e => uploadFiles(e, 'files'))
+				// 	).then(res => {
+				// 		commit(ADD_PROJECT_REQUEST)
+				// 		projectsCollection.add({
+				// 			name: data.name,
+				// 			status: 'pending',
+				// 			description: data.description || '',
+				// 			deadline: data.deadline,
+				// 			paperType: data.paperType,
+				// 			pages: data.pageNumber,
+				// 			price: data.price,
+				// 			creator: data.creator,
+				// 			createdAt: Timestamp.now()
+				// 		})
+				// 		.then(result => {
+				// 			result.set({
+				// 				files: res
+				// 			}, { merge: true })
 							
-							result.onSnapshot(q => {
-								let dataId = q.id;
-								let data = { ...q.data(), dataId }
-								commit(ADD_PROJECT, data)
-								Notification.open({
-									queue: true,
-									type: 'is-success',
-									duration: 5000,
-									message: "Successfully added project",
-									position: "is-bottom-right"
-								})
-								router.push(`/pay/${data.price}/${dataId}`);
+				// 			result.onSnapshot(q => {
+				// 				let dataId = q.id;
+				// 				let data = { ...q.data(), dataId }
+				// 				commit(ADD_PROJECT, data)
+				// 				Notification.open({
+				// 					queue: true,
+				// 					type: 'is-success',
+				// 					duration: 5000,
+				// 					message: "Successfully added project",
+				// 					position: "is-bottom-right"
+				// 				})
+				// 				router.push(`/pay/${data.price}/${dataId}`);
 								
-							}, (error) => {
-								Notification.open({
+				// 			}, (error) => {
+				// 				Notification.open({
 
-									message: "Sorry we were unable to complete adding the project :"+error.message,
-									position: 'is-top-right',
-									type: 'is-warning'
-								})
-								//("error sn", error)
-							})
-						}).catch(error => {
-							//("erro", error);
-							Notification.open({
-								queue: true,
-								message: "Sorry we were unable to complete adding the project :"+error.message,
-								position: 'is-top-right',
-								type: 'is-warning'
-							})
-							commit(ADD_PROJECT_FAILURE)
-						})
-					})
-					.catch(error => {
-						//("error", error)
-						Notification.open({
-							queue: true,
-							message: "Sorry we were unable to complete adding the project :"+error.message,
-							position: 'is-top-right',
-							type: 'is-warning'
-						})
-					})
-				} else {
+				// 					message: "Sorry we were unable to complete adding the project :"+error.message,
+				// 					position: 'is-top-right',
+				// 					type: 'is-warning'
+				// 				})
+				// 				//("error sn", error)
+				// 			})
+				// 		}).catch(error => {
+				// 			//("erro", error);
+				// 			Notification.open({
+				// 				queue: true,
+				// 				message: "Sorry we were unable to complete adding the project :"+error.message,
+				// 				position: 'is-top-right',
+				// 				type: 'is-warning'
+				// 			})
+				// 			commit(ADD_PROJECT_FAILURE)
+				// 		})
+				// 	})
+				// 	.catch(error => {
+				// 		//("error", error)
+				// 		Notification.open({
+				// 			queue: true,
+				// 			message: "Sorry we were unable to complete adding the project :"+error.message,
+				// 			position: 'is-top-right',
+				// 			type: 'is-warning'
+				// 		})
+				// 	})
+				// } else {
 					//("yes")
-
+					console.time("we added a project")
+					console.log("adding a project")
 					commit(ADD_DRAFT_PROJECT_REQUEST)
-					projectsCollection.add({
+					const docId = tempId(6)
+					projectsCollection.doc(docId).set({
 						name: data.name,
 						status: 'pending',
 						description: data.description || '',
@@ -408,28 +406,18 @@ const projects = {
 						createdAt: Timestamp.now(),
 						creator: data.creator
 					})
-					.then(result => {
-						
-						result.onSnapshot(q => {
-							//("result", result)
-							let dataId = q.id;
-							Notification.open({
-								queue: true,
-								type: 'is-success',
-								duration: 5000,
-								message: "Successfully added project",
-								position: "is-top-right"
-							})
-							commit(ADD_PROJECT, q.data());
-							router.push(`/pay/${data.price}/${dataId}`);
-						}, (error) => {
-							//("error sn", error);
-							Notification.open({
-								message: "Sorry we were unable to complete adding the project :"+error.message,
-								position: 'is-top-right',
-								type: 'is-warning'
-							})
+					.then(()=> {
+						projectsCollection.doc(docId)
+						.get()
+						.then(res => {
+							let id = res.id;
+							let d = res.data();
+							let data = { ...d, id };
+							console.log("data p", data)
 							commit(ADD_PROJECT_FAILURE)
+						})
+						.catch(error => {
+							console.log("error", error)
 						})
 					}).catch(error => {
 						//("erro", error);
@@ -441,7 +429,7 @@ const projects = {
 						})
 						commit(ADD_PROJECT_FAILURE)
 					})
-				}
+				// }
 		},
 		addDraftProject({ commit }, data) {
 			commit(ADD_DRAFT_PROJECT_REQUEST);

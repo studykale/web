@@ -122,7 +122,6 @@
 // import { validationMixin } from "vuelidate";
 import { mapActions, mapState } from "vuex";
 import { AlertCircleIcon } from 'vue-feather-icons';
-
 export default {
     props: {
         showNewProject: Boolean,
@@ -171,6 +170,7 @@ export default {
         ...mapActions('projects', ['addProject']),
         async newProject() {
             let data = {
+                genId: this.randomId(8),
                 name: this.projectName,
                 description: this.projectDescription,
                 deadline: this.deadline,
@@ -198,6 +198,15 @@ export default {
                 return this.orderPages * this.pricePerPage + this.orderPages * 3.2
             }
             return this.orderPages * this.pricePerPage;
+        },
+        randomId(length) {
+            var result           = '';
+            var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for ( var i = 0; i < length; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
         }
     },
     computed: {
