@@ -7,7 +7,7 @@
                 </div>
                 <ul>
                     <li>
-                        <router-link to="/layout/projects">Completed</router-link> 
+                        <router-link to="/admin/projects">Overview</router-link> 
                     </li>
                 </ul>
             </div>
@@ -17,13 +17,13 @@
                 </div>
                 <ul>
                     <li>
-                        <router-link to="/layout/chats">Clients</router-link> 
+                        <router-link to="/admin/chats">Clients</router-link> 
                     </li>
                     <li>
-                        <router-link to="/layout/chats">Contact Us</router-link> 
+                        <router-link to="/admin/chats#contact">Contact Us</router-link> 
                     </li>
                     <li>
-                        <router-link to="/layout/chats">Notifications</router-link> 
+                        <router-link to="/admin/notifications">Notifications</router-link> 
                     </li>
                 </ul>
             </div>
@@ -33,16 +33,13 @@
                 </div>
                 <ul>
                     <li>
-                        <router-link to="/layout/chats"><span class="mr-2"><users-icon size="1x" class="purple"></users-icon> </span> Users</router-link> 
-                    </li>
-                    <li>
-                        <router-link to="/layout/chats"><span class="mr-2"><credit-card-icon size="1x" class="purple"></credit-card-icon> </span> Payment</router-link> 
+                        <router-link to="/admin/payments"><span class="mr-2"><credit-card-icon size="1x" class="purple"></credit-card-icon> </span> Payment</router-link> 
                     </li>
                 </ul>
             </div>
             <div class="nav">
                 <div class="nav-title">
-                    <router-link to="/layout/settings"><span class="mr-2"><settings-icon size="1x" class="purple"></settings-icon> </span>Settings</router-link>
+                    <router-link to="/admin/settings"><span class="mr-2"><settings-icon size="1x" class="purple"></settings-icon> </span>Settings</router-link>
                 </div>
             </div>
             <div class="nav">
@@ -56,9 +53,11 @@
                 <div class="flex justify-between flex-row">
                     <h3 class="font-bold">Admin</h3>
                     <div class="profile">
-                        <bell-icon size="1.5x" class="bell"></bell-icon>
+                        <router-link to="/admin/notifications">
+                            <bell-icon size="1.5x" class="bell"></bell-icon>
+                        </router-link>
                         <div class="profile__name">
-                            <p>{{ user.username }}</p>
+                            <router-link to="/admin/profile">{{ user.username }}</router-link>
                         </div>
                     </div>
                 </div>
@@ -71,7 +70,7 @@
 </template>
 
 <script>
-import { CreditCardIcon, BellIcon, SettingsIcon, UsersIcon, SendIcon, BriefcaseIcon, LogOutIcon  } from 'vue-feather-icons'
+import { CreditCardIcon, BellIcon, SettingsIcon, SendIcon, BriefcaseIcon, LogOutIcon  } from 'vue-feather-icons'
 import { mapState, mapActions } from 'vuex';
 
     export default {
@@ -79,7 +78,6 @@ import { mapState, mapActions } from 'vuex';
         components: {
             BellIcon,
             SettingsIcon,
-            UsersIcon,
             SendIcon,
             CreditCardIcon,
             BriefcaseIcon,

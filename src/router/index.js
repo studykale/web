@@ -1,8 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-// import firebase from 'firebase';
-// import { currentUser } from "../db"
 import Dashboard from "../views/Dashboard/DashHome.vue";
 import Settings from "../views/Dashboard/Views/Settings";
 import Profile from "../views/Dashboard/Views/Profile";
@@ -112,11 +110,30 @@ const routes = [
       },
       {
         path: 'chats',
-        component: () => import('@/views/Admin/Dashboard/try/Project2.vue')
+        component: () => import('@/views/Admin/Dashboard/try/Chat.vue')
       },
       {
         path: 'settings',
         component: () => import('@/views/Admin/Dashboard/try/Settings.vue')
+      },
+      {
+        path: 'notifications',
+        name: 'AdminSettings',
+        component: () => import('@/views/Admin/Dashboard/try/Notifications.vue')
+      },
+      {
+        path: 'payments',
+        name: "AdminUsersPayments",
+        component: () => import('@/views/Admin/Dashboard/try/Payments.vue')
+      },
+      {
+        path: 'profile',
+        name: 'AdminProfile',
+        component: () => import('@/views/Admin/Dashboard/try/Profile.vue')
+      },
+      {
+        path: '*',
+        redirect: '/admin/projects'
       }
     ],
     meta: {

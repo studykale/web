@@ -1,7 +1,7 @@
 
 import { LOGIN_USER, SIGNUP_USER, SIGNUP_USER_COMPLETE, LOGIN_REQUEST, SIGNUP_USER_REQUEST, LOGIN_FAILURE, SIGNUP_USER_FAILURE } from "../MutationTypes"
 import { auth, newUser, users, currentUser } from "../../db"
-import { NotificationProgrammatic as Notification } from 'buefy'
+import { SnackbarProgrammatic as Snack, NotificationProgrammatic as Notification } from 'buefy'
 
 
 import router from "../../router"
@@ -289,6 +289,11 @@ const User = {
 					}, { merge: true })
 					.then(() => {
 						commit(SIGNUP_USER_COMPLETE)
+						Snack.open({
+							message: "You have signed up as an admin. You can now sign in",
+							type: 'is-info',
+							position: 'is-bottom-right'
+						})
 						router.push('/auth/signin')
 					})
 					.catch(error => {
@@ -367,6 +372,7 @@ const User = {
 							type: 'is-info',
 							hasIcon: true
 						})
+						commit(LOGIN_FAILURE)
 					}
 				})
 				.catch(error => {
@@ -376,6 +382,7 @@ const User = {
 						position: 'is-top',
 						message: "Sorry we did not find your account. "+error.message
 					})
+					commit(LOGIN_FAILURE)
 				})
 			})
 			.catch(error => {
@@ -385,6 +392,8 @@ const User = {
 					position: 'is-top',
 					message: "Sorry we did not find your account. "+error.message
 				})
+				commit(LOGIN_FAILURE)
+
 			})
 		}
 	},

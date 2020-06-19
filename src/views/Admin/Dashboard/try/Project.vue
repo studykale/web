@@ -1,17 +1,44 @@
 <template>
   <div class="projects">
     <div class="mt-2">
-      <div class="card border-top-blue">
-        <div class="card-content">
-          <h5 class="subtitle">Projects</h5>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. A expedita quasi veritatis, doloremque libero corrupti ipsam recusandae fugit quo laudantium?</p>
-          <b-button type="is-info" size="is-small" @click="showProject">Details</b-button>
+      <h2 class="head">Projects</h2>
+      <div class="flex flex-row justify-around">
+        <div class="statistics">
+          <h3 class="font-bold">
+            {{ proj.length }}
+          </h3>
+          <p>Projects submitted so far</p>
+        </div>
+        <div class="statistics">
+          <h3 class="font-bold">
+            {{ users.length }}
+          </h3>
+          <p>Users signed up</p>
+        </div>
+        <div class="statistics">
+          <h3 class="font-bold">
+            {{ complete.length }}
+          </h3>
+          <p>Projects completed</p>
+        </div>
+        <div class="statistics">
+          <h3 class="font-bold">
+            {{ incomplete.length }}
+          </h3>
+          <p>Incomplete projects.</p>
         </div>
       </div>
+      
+      <div class="my-2">
+          <b-button type="is-info" @click="showProject">Details</b-button>
+      </div>
+
       <div class="card mt-2">
+        <div class="card__header">
+        </div>
         <div class="card-content">
           <b-table 
-            :data="projects" 
+            :data="proj" 
             :per-page="perPage"
             paginated
             pagination-position="bottom"
@@ -28,10 +55,13 @@
                     {{ props.row.name }}
                 </b-table-column>
                 <b-table-column field="status" label="Status">
-                    {{ props.status.began ? props.status.began : props.status }}
+                    {{ props.row.status }}
                 </b-table-column>
-                <b-table-column field="deadline" label="Due date">
-                    {{ new Date(props.deadline.seconds).toDateString() }}
+                <b-table-column field="pages" label="Pages">
+                    {{ props.row.pages }}
+                </b-table-column>
+                <b-table-column field="status" label="Deadline">
+                    {{ props.row.deadline.seconds ? formatDate(props.row.deadline.seconds) : 'today' }}
                 </b-table-column>
             </template>
           </b-table>
@@ -44,16 +74,22 @@
         <div class="card-header flex flex-column justify-between">
           <div class="flex flex-column">
             <p class="card-header-title">{{ selected.name }}</p>
-            <p class="card-header-subtitle">{{ selected.type }}</p>
+            <p class="card-header-subtitle">{{ selected.paperType }} <span v-if="!selected.paid">
+                <b-tag type="is-info">Not paid</b-tag>
+              </span> </p>
           </div>
-
-          <check-circle-icon size="1.5x" class="text-green"></check-circle-icon>
+          <check-circle-icon v-if="selected.status == 'paid'" size="1.5x" class="text-green paid-icon"></check-circle-icon>
         </div>
-        <div class="card-content">
+        <div class="card-content p-small">
           <p>{{ selected.description }}</p>
-        </div>
-        <div class="card-footer flex flex-column p-2">
-          <b-field>
+          <div v-if="selected.files.length > 0" class="mt-2 flex flex-row">
+            <div v-for="(file, i) in selected.files" :key="i">
+              <a :href="file" target="_blank">
+                <b-tag type="is-primary">{{ i + 1 }} file</b-tag>
+              </a>
+            </div>
+          </div>
+          <b-field class="mt-2">
               <b-radio-button v-model="projectStatus"
                   native-value="OnProgress"
                   type="is-info">
@@ -75,7 +111,17 @@
                   <span>Cancel</span>
               </b-radio-button>
           </b-field>
-          <b-button size="is-small" type="is-danger" @click="showProject">Close</b-button>
+        </div>
+        <div class="card-footer flex flex-column p-2">
+          <div class="owner">
+            <div class="profile-info flex flex-column">
+              <small class="font-bold">{{ projectOwner.username }}</small>
+              <small>{{ projectOwner.email }}</small>
+            </div>
+          </div>
+          <div class="dropdown-divider"></div>
+          <b-button type="is-success" class="mb-2">Upload completed files</b-button>
+          <b-button type="is-danger" @click="showProject">Close</b-button>
         </div>
       </div>
     </div>
@@ -85,7 +131,7 @@
 <script>
 import { CoffeeIcon, CheckIcon, XSquareIcon, CheckCircleIcon } from 'vue-feather-icons'
 import { mapState } from 'vuex';
-import db from "../../../../db";
+import db, { users } from "../../../../db";
 
 export default {
   components: {
@@ -95,48 +141,14 @@ export default {
     XSquareIcon
   },
   data() {
-    const data = [
-                { 'id': 1, 'name': 'African Politics', 'type': 'Research Paper', 'deadline': '2016-10-15 13:43:27', 'status': 'Pending', 'description': 'This is my simple project description about the project you should prpbably view it before starting out. It help in knowing what to do and where to do it.'},
-                { 'id': 2, 'name': 'History and Economics', 'type': 'Assessment', 'deadline': '2016-12-15 06:00:53', 'status': 'OnProgress', 'description': 'This is my simple project description about the project you should prpbably view it before starting out. It help in knowing what to do and where to do it.' },
-                { 'id': 3, 'name': 'British Ecosystem', 'type': 'CV', 'deadline': '2016-04-26 06:26:28', 'status': 'OnProgress', 'description': 'This is my simple project description about the project you should prpbably view it before starting out. It help in knowing what to do and where to do it.'},
-                { 'id': 4, 'name': 'MyCV', 'type': 'CV', 'deadline': '2016-04-10 10:28:46', 'status': 'OnProgress',  'description': 'This is my simple project description about the project you should prpbably view it before starting out. It help in knowing what to do and where to do it.'},
-                { 'id': 5, 'name': 'Research and Festivities', 'type': 'Assessment', 'deadline': '2016-12-06 14:38:38', 'status': 'Completed', 'description': 'This is my simple project description about the project you should prpbably view it before starting out. It help in knowing what to do and where to do it.' }
-        ]
-
     return {
         proj: [],
-        data,
+        users: [],
         showProjectModal: true,
         currentPage: 1,
         perPage: 3,
         checkboxCustom: 'Yes',
-        // columns: [
-        //     {
-        //         field: 'id',
-        //         label: 'ID',
-        //         width: '40',
-        //         numeric: true,
-        //         visible: false
-        //     },
-        //     {
-        //         field: 'name',
-        //         label: 'Name',
-        //         searchable: true
-        //     },
-        //     {
-        //         field: 'type',
-        //         label: 'Paper Type',
-        //     },
-        //     {
-        //         field: 'deadline',
-        //         label: 'Deadline',
-        //         centered: true
-        //     },
-        //     {
-        //         field: 'status',
-        //         label: 'Status'
-        //     }
-        // ]
+        selected: []
     }
   },
   firestore: {
@@ -149,6 +161,12 @@ export default {
       } else {
         this.showProjectModal = true
       }
+    },
+    formatDate(s) {
+      let date = new Date(null);
+      date.setSeconds(s)
+
+      return date.toDateString()
     }
   },
   computed: {
@@ -157,24 +175,21 @@ export default {
       projects: state => state.admin.Projects
     }),
     projectStatus() {
-      if(this.selected && (this.selected.status && this.selected.status.progress)) {
-        return 'started'
-      } else {
-        return this.selected.status
-      }
+      return this.selected.status
     },
-    selected: {
-      get(i) {
-        if(i) {
-          return this.projects[i]
-        } else {
-          return this.projects[0]
-        }
-      },
-      set(i) {
-        return this.projects[i]
-      }
+    incomplete() {
+     return this.proj.filter(p => p.status == "pending")
+    },
+    complete() {
+      return this.proj.filter(p => p.status == "completed")
+    },
+    projectOwner() {
+      return this.users.find(u => u.id === this.selected.creator)
     }
+  },
+  created() {
+    this.selected = this.proj[0]
+    this.$bind('users', users.where('role', '==', 'CLIENT'))
   }
 }
 </script>
@@ -185,6 +200,12 @@ export default {
 
     position: relative;
 
+    .head {
+      margin-bottom: 1em;
+      font-size: x-large;
+      font-weight: bold;
+    }
+
     .select-project {
       position: absolute;
       top: -15px;
@@ -194,16 +215,39 @@ export default {
       max-width: 350px; 
       .card {
         width: 100% !important; 
+        border-radius: 4px;
+
+        .card-header {
+          position: relative;
+        }
+
+        .paid-button {
+          position: absolute;
+          top: .75em;
+          right: .75em;
+        }
+
+        .card-header-title {
+          padding: 0.75rem 0.75em 0 0.75em;
+        }
 
         .card-header p:nth-child(2) {
-          padding: .2em .8em;
+          padding: .2em .75em .75em;
         }
 
 
         .p-2 {
           padding: 1em;
         }
+
+        .card-content.p-small {
+          padding: .85em !important;
+        }
       }
+    }
+
+    .my-2 {
+      margin: 2em 0;
     }
 
     &.mt-2 {
@@ -212,7 +256,7 @@ export default {
 
     .card {
       border-radius: 4px;
-      width: 80% !important;
+      width: auto !important;
     }
 
     .card.border-top-red {
@@ -225,6 +269,20 @@ export default {
 
     .card.border-top-green {
       border-top: 2px solid #00CF91;
+    }
+  }
+
+  .statistics {
+    padding: .75em;
+    border-radius: 4px;
+    display: inline-block;
+    width: 15em;
+    background: #111;
+    color: white;
+    
+    h3 {
+      color: #6943d0;
+      font-size: 2em;
     }
   }
 </style>
