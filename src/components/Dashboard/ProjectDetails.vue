@@ -84,11 +84,13 @@ export default {
             // //("id", this.projectId)
         },
         dateFm(s) {
-            if(new Date(s) && (typeof s !== Object)) {
-                console.log("seconds", s)
-                return new Date(s.seconds * 1000).toDateString();
+            if(new Date(s) && (typeof s !== Object) && s != null) {
+                
+                let t = new Date(null)
+                t.setSeconds(s.seconds)
+                return t.toDateString();
             } else if(s.seconds) {
-                // //("s", s.seconds)
+                //("s", s.seconds)
                 return new Date(s.seconds * 1000)
             }
         },

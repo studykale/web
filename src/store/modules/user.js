@@ -198,6 +198,8 @@ const User = {
 			if(data.type == "photo") {
 				uploadFiles(data.image, 'photo')
 				.then(file => {
+					console.log("file", file);
+					console.log("profile", currentUser)
 					currentUser.updateProfile({
 						photoURL: file
 					})

@@ -26,8 +26,11 @@
           <section class="bottom">
               <div class="links">
                   <ul>
-                      <router-link to="/dashboard/profile" class="profile">
+                      <router-link v-if="!loggedInUser.photoURL" to="/dashboard/profile" class="profile">
                             <span>{{ userInitials }}</span>
+                      </router-link>
+                      <router-link to="/dashboard/profile" class="profile present" v-else>
+                          <img :src="loggedInUser.photoURL" alt="User profile photo">
                       </router-link>
                       <router-link to="/dashboard/settings" class="flex flex-row">
                             <span><settings-icon size="1.5x" class="custom-class"></settings-icon></span>
@@ -162,7 +165,6 @@ export default {
             }
 
             .profile {
-                padding: 10px;
                 background-color: #FFC11E;
                 border-radius: 50%;
                 width: 35px;
@@ -171,6 +173,15 @@ export default {
                 font-size: .75rem !important;
                 display: flex;
                 justify-content: center;
+
+                &.present {
+                  background-color: white;
+                }
+
+                img {
+                  border-radius: 50%;
+                  object-fit: cover;
+                }
             }
         }
 

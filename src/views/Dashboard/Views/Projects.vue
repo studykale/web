@@ -22,15 +22,16 @@
                 <ProjectCard @click="showProjectDetail(project)" :project="project" />
               </div>
             </div>
-            <div class="text-center my-2" v-else>
-              <h2>You don't have any projects yet.</h2>
+            <div class="text-center my-2 no-projects" v-else>
+              <div class="flex justify-center items-center">
+                <img src="../../../assets/illustrations/grow_grades.svg" alt="Create task">
+                <b-button type="is-warning" size="is-medium" @click="createProject">Create first task</b-button>
+              </div>
             </div>
       </section>
-      <div v-if="addingProject">  
-        <b-message class="p-absolute msg-notify" title="Info" type="is-info">
-              Adding your project
-        </b-message>
-      </div>
+      <b-message class="p-absolute msg-notify" title="Processing" :active.sync="addingProject" aria-close-label="Close message">
+            Hey just setting things up...
+      </b-message>
     </div>
         <b-modal :active.sync="showNewProject">
           <NewProject :showNewProject="showProjectModal" :currentUser="loggedInUser"/>
@@ -74,9 +75,6 @@ export default {
         this.showNewProject = true
       }
     },
-    showProjectDetail() {
-      
-    }
   },
   firestore: {
     proj: projectsCollection
@@ -86,7 +84,7 @@ export default {
       loggedInUser: state => state.user.user,
       gettingProjects: state => state.projects.gettingAllProj,
       projects: state => state.projects.projects,
-      addingProject: state => state.projects.addingProject
+      addingProject: state => state.projects.creatingProject
     }),
     ...mapGetters({
       viableProjects: 'projects/viableProjects',
@@ -235,5 +233,17 @@ export default {
       position: absolute;
       bottom: 100px;
       right: 20px;
+    }
+
+    .no-projects {
+      img {
+        height: 350px;
+        width: 350px;
+        object-fit: cover;
+      }
+
+      button {
+        margin-top: 3em;
+      }
     }
 </style>

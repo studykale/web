@@ -12,8 +12,11 @@
           </div>
           <div class="card-content">
             <div class="flex flex-row flex-wrap">
-              <div class="profile-img">
+              <div v-if="!loggedInUser.photoURL" class="profile-img">
                 <img src="https://avatars.dicebear.com/api/bottts/smile.svg" alt="Profile photo">
+              </div>
+              <div v-else class="profile-img">
+                <img :src="loggedInUser.photoURL" alt="Profile photo">
               </div>
               <div class="flex flex-column">
                 <h3><span class="font-bold">Username</span>  {{ loggedInUser.username }}</h3>
@@ -146,12 +149,12 @@ import { mapState, mapActions } from "vuex"
       height: 90px;
       width: 90px;
       background: #F2F8FD;
-      padding: 1em;
+     
       margin-right: 2em;
 
       img {
-        width: 80px;
-        margin: auto;
+        border-radius: 50%;
+        object-fit: cover;
       }
     }
 

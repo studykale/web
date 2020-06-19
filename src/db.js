@@ -29,7 +29,7 @@ const { TaskEvent, TaskState } = firebase.storage
 // Firebase Collections.
 const projectsCollection = db.collection('projects');
 const draftsCollection = db.collection('drafts');
-const currentUser = auth.currentUser;
+let currentUser;
 const newUser = uid => db.collection('users').doc(`${uid}`)
 const users = db.collection('users');
 const chats = db.collection('chats');
@@ -40,6 +40,9 @@ const reviews = db.collection('reviews')
 
 
 auth.onAuthStateChanged((user) => {
+    if(user) {
+        currentUser = user
+    }
     store.dispatch('user/fetchUser', user, { root: true })
 })
 

@@ -1,8 +1,8 @@
 import { ADD_PROJECT, ADD_PROJECT_REQUEST, ADD_PROJECT_FAILURE, 
 	ADD_DRAFT_PROJECT, ADD_DRAFT_PROJECT_REQUEST, 
 	ADD_DRAFT_PROJECT_FAILURE, GET_ALLDRAFTS, GET_ALLDRAFTS_FAIL, GET_ALLDRAFTS_REQUEST, GET_ALLPROJECTS, GET_ALLPROJECTSFAIL, GET_ALLPROJECTS_REQUEST } from "../MutationTypes";
-import { projectsCollection, draftsCollection, Timestamp, storageRef, TaskEvent, TaskState } from "../../db";
-import { NotificationProgrammatic as Notification } from 'buefy'
+import { projectsCollection, draftsCollection, Timestamp, storageRef, TaskEvent, TaskState, notifications } from "../../db";
+import { SnackbarProgrammatic as Snackbar, NotificationProgrammatic as Notification } from 'buefy'
 import router from "../../router";
 // Generates a random key used to identify draft projects before submitting to the database.
 
@@ -88,7 +88,7 @@ const projects = {
 		gettingAllProjFail: false,
 		gettingAllDrafts: false,
 		gettingAllDraftsFail: false,
-		addingProject: false,
+		creatingProject: false,
 		addingProjectFail: false,
 		updatingProject: false,
 		updatingProjectFail: false,
@@ -101,10 +101,10 @@ const projects = {
     },
     mutations: {
 		[ADD_PROJECT_REQUEST] (state) {
-			state.addingProject = true;
+			state.creating = true;
 		},
 		[ADD_PROJECT_FAILURE] (state) {
-			state.addingProject = false;
+			state.creatingProject = false;
 			state.addingDraftFail = true;
 		},
 		[ADD_DRAFT_PROJECT] (state, data) {
@@ -156,10 +156,14 @@ const projects = {
 			state.gettingAllDraftsFail = true;
 		},
 		[ADD_PROJECT] (state, payload) {
-			state.addingProject = false;
+			state.creatingProject = false;
 			state.addingProjectFail = false;
 			state.projects.unshift(payload);
 		},
+		addProjectComplete(state) {
+			state.creatingProject = false;
+			state.addingProjectFail = false
+		},	
 		uploading(state) {
 			state.uploadingFiles = true
 		},
@@ -219,11 +223,11 @@ const projects = {
 						drafts.unshift(dData)
 					})
 					//("drafts", drafts);
-					Notification.open({
-						queue: true,
+					Snackbar.open({
+						
 						type: 'is-info',
 						duration: 5000,
-						position: 'is-top-right',
+						position: 'is-bottom-right',
 						message: "You have "+ drafts.length + " drafts. Please complete to publish them."
 					})
 					commit(GET_ALLDRAFTS, drafts);
@@ -285,116 +289,75 @@ const projects = {
 				commit(GET_ALLPROJECTSFAIL)
 			}
 		},
-		initAllProjects({ commit }) {
-			commit(GET_ALLPROJECTS_REQUEST)
-
-			projectsCollection
-			.get()
-			.then(projects => {
-				if(projects.empty) {
-					Notification.open({
-						message: "No projects have been submitted today.",
-						type: 'is-info',
-						queue: true,
-						hasIcon: true
-					})
-					commit(GET_ALLPROJECTSFAIL)
-				} else {
-					projects.forEach(p => {
-							let id = p.id;
-							let deadline = p.data()['deadline'].toDate()
-							delete p.data()['deadline']
-							
-							let pData = p.data()
-							pData.id = id;
-							pData.deadline = deadline;
-							commit(GET_ALLPROJECTS, pData)
-					})
-				}
-			})
-			.catch(error => {
-				Notification.open({
-					queue: true,
-					message: "Sorry we were unable to fetch the projects :"+error.message,
-					position: 'is-top-right',
-					type: 'is-warning'
-				})
-				commit(GET_ALLPROJECTSFAIL)
-			})
-		},
 		addProject({ commit }, data) {
 			commit(ADD_PROJECT_REQUEST);
 				// let newProject = projectsCollection.doc()
-				// if(data.files) {
-				// 	Promise.all(
-				// 		data.files.map(e => uploadFiles(e, 'files'))
-				// 	).then(res => {
-				// 		commit(ADD_PROJECT_REQUEST)
-				// 		projectsCollection.add({
-				// 			name: data.name,
-				// 			status: 'pending',
-				// 			description: data.description || '',
-				// 			deadline: data.deadline,
-				// 			paperType: data.paperType,
-				// 			pages: data.pageNumber,
-				// 			price: data.price,
-				// 			creator: data.creator,
-				// 			createdAt: Timestamp.now()
-				// 		})
-				// 		.then(result => {
-				// 			result.set({
-				// 				files: res
-				// 			}, { merge: true })
+				if(data.files) {
+					Promise.all(
+						data.files.map(e => uploadFiles(e, 'files'))
+					).then(res => {
+						commit(ADD_PROJECT_REQUEST)
+						const docId = tempId(6)
+						projectsCollection.doc(docId).set({
+							pid: docId,
+							name: data.name,
+							status: 'pending',
+							description: data.description || '',
+							deadline: data.deadline,
+							paperType: data.paperType,
+							pages: data.pageNumber,
+							files: res,
+							price: data.price,
+							createdAt: Timestamp.now(),
+							creator: data.creator
+						})
+						.then(result => {
+							result.set({
+								files: res
+							}, { merge: true })
 							
-				// 			result.onSnapshot(q => {
-				// 				let dataId = q.id;
-				// 				let data = { ...q.data(), dataId }
-				// 				commit(ADD_PROJECT, data)
-				// 				Notification.open({
-				// 					queue: true,
-				// 					type: 'is-success',
-				// 					duration: 5000,
-				// 					message: "Successfully added project",
-				// 					position: "is-bottom-right"
-				// 				})
-				// 				router.push(`/pay/${data.price}/${dataId}`);
-								
-				// 			}, (error) => {
-				// 				Notification.open({
-
-				// 					message: "Sorry we were unable to complete adding the project :"+error.message,
-				// 					position: 'is-top-right',
-				// 					type: 'is-warning'
-				// 				})
-				// 				//("error sn", error)
-				// 			})
-				// 		}).catch(error => {
-				// 			//("erro", error);
-				// 			Notification.open({
-				// 				queue: true,
-				// 				message: "Sorry we were unable to complete adding the project :"+error.message,
-				// 				position: 'is-top-right',
-				// 				type: 'is-warning'
-				// 			})
-				// 			commit(ADD_PROJECT_FAILURE)
-				// 		})
-				// 	})
-				// 	.catch(error => {
-				// 		//("error", error)
-				// 		Notification.open({
-				// 			queue: true,
-				// 			message: "Sorry we were unable to complete adding the project :"+error.message,
-				// 			position: 'is-top-right',
-				// 			type: 'is-warning'
-				// 		})
-				// 	})
-				// } else {
-					//("yes")
-					console.time("we added a project")
-					console.log("adding a project")
+							projectsCollection.doc(docId)
+							.get()
+							.then(newProject => {
+								let id = newProject.id;
+								let d =  newProject.data();
+								let data = { ...d, id };
+								console.log("data p", data);
+								commit('addProjectComplete')
+							})
+							.catch(() => {
+								Notification.open({
+									position: 'is-top-right',
+									type: 'is-warning',
+									message: "Sorry we coould not set up the payment. You'll have to set it up manually"
+								})
+							})							
+							
+						}).catch(error => {
+							//("erro", error);
+							Notification.open({
+								queue: true,
+								message: "Sorry we were unable to complete adding the project :"+error.message,
+								position: 'is-top-right',
+								type: 'is-warning'
+							})
+							commit(ADD_PROJECT_FAILURE)
+						})
+					})
+					.catch(error => {
+						//("error", error)
+						Notification.open({
+							queue: true,
+							message: "Sorry we were unable to complete adding the project :"+error.message,
+							position: 'is-top-right',
+							type: 'is-warning'
+						})
+					})
+				} else {
 					commit(ADD_DRAFT_PROJECT_REQUEST)
 					const docId = tempId(6)
 					projectsCollection.doc(docId).set({
+						pid: docId,
 						name: data.name,
 						status: 'pending',
 						description: data.description || '',
@@ -410,11 +373,8 @@ const projects = {
 						projectsCollection.doc(docId)
 						.get()
 						.then(res => {
-							let id = res.id;
-							let d = res.data();
-							let data = { ...d, id };
-							console.log("data p", data)
-							commit(ADD_PROJECT_FAILURE)
+							router.push(`/pay/${res.data().price}/${res.id}`)
+							commit('addProjectComplete')
 						})
 						.catch(error => {
 							console.log("error", error)
@@ -430,6 +390,7 @@ const projects = {
 						commit(ADD_PROJECT_FAILURE)
 					})
 				// }
+				}
 		},
 		addDraftProject({ commit }, data) {
 			commit(ADD_DRAFT_PROJECT_REQUEST);
@@ -498,8 +459,23 @@ const projects = {
 									let id = result.id;
 									let data = result.data()
 									let res = { ...data, id };
+									
+									let notId = tempId(4)
+
+									let newNote = notifications.doc(notId)
+									let today = new Date()
+								
+									newNote.set({
+										name: "Payment successful",
+										date: today,
+										read: false,
+										type: "Payment",
+										description: "Your task" + data.name +  " has been paid successfully. And has been received by the team we will begin working on it immediately."
+									})
+									
 									console.log("res", res)
 									commit('updateProject', res)
+								
 								} else {
 									Notification.open({
 										queue: true,
