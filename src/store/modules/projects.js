@@ -324,14 +324,13 @@ const projects = {
 							createdAt: Timestamp.now(),
 							creator: data.creator
 						})
-						.then(result => {
-							result.set({
+						.then(() => {
+							projectsCollection.doc(docId).set({
 								files: res
 							}, { merge: true })
 
 							router.push(`/pay/${data.price}/${docId}`);
 							commit('addProjectComplete')							
-							
 						}).catch(error => {
 							//("erro", error);
 							Notification.open({

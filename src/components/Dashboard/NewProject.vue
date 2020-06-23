@@ -187,6 +187,13 @@ export default {
 
             this.addProject(data)
             this.$parent.close();
+            
+            this.$buefy.notification.open({
+                message: "Processing payment...",
+                type: 'is-info',
+                position: 'is-bottom-right',
+                duration: 10000
+            })
         },
          deleteDropFile(index) {
             this.dropFiles.splice(index, 1);

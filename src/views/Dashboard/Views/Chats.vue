@@ -60,10 +60,8 @@ export default {
         }
     },
     created() {
-        this.$bind('chats', chats.doc(currentUser.uid).get().then(ch => {
-            
-            
-            console.log("chats", ch.data())
+        this.$bind('chats', chats.where('id', '==', currentUser.uid).then(ch => {
+            console.log("chats", ch)
         }))
     }
 }

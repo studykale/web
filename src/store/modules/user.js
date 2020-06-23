@@ -1,6 +1,6 @@
 
 import { LOGIN_USER, SIGNUP_USER, SIGNUP_USER_COMPLETE, LOGIN_REQUEST, SIGNUP_USER_REQUEST, LOGIN_FAILURE, SIGNUP_USER_FAILURE } from "../MutationTypes"
-import { auth, newUser, users, currentUser, chats } from "../../db"
+import { auth, newUser, users, currentUser, chats, Timestamp } from "../../db"
 import { SnackbarProgrammatic as Snack, NotificationProgrammatic as Notification } from 'buefy'
 
 
@@ -136,7 +136,13 @@ const User = {
 						type: 'is-info',
 						duration: 5000
 					})
-					chats.doc(data.user.uid).collection('messages')
+					chats.doc(data.user.uid).set({
+						user: currentUser.displayName,
+						message: "Welcome to studykale...you can talk to us any time",
+						read: false,
+						id: currentUser.uid,
+						time: Timestamp.now()
+					})
 					.then(() => {
 						commit(SIGNUP_USER_COMPLETE)
 						router.push('/auth/signin')
