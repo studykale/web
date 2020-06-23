@@ -53,13 +53,12 @@
         </div>
         <div v-else>
             <div class="flex flex-row my-2"><span class="mr-1">Paid</span> <check-circle-icon size="1.5x" class="text-blue"></check-circle-icon></div>
-            <b-button type="is-info" @click="showId" expanded>Update</b-button>
         </div>
         <x-circle-icon @click="closeSide" size="1x"  class="p-absolute icon"></x-circle-icon>
       </div>    
     </b-sidebar>
     <b-modal :active.sync="isProjectUpdateActive" :width="640" scroll="keep">
-        <UpdateCard :closeModal="isProjectUpdateActive" :name="project.name" :description="project.description" :deadline="toDate(dateFm(project.deadline.seconds))"/>
+        <UpdateCard :id="project.id" @complete="complete"/>
     </b-modal>
 </div>
   
@@ -88,6 +87,7 @@ export default {
             project: {},
             projectId: '',
             isProjectUpdateActive: false,
+            
         }
     },
     methods: {
@@ -132,12 +132,19 @@ export default {
             } else {
                 return
             }
+        },
+        complete() {
+            this.isProjectUpdateActive = !this.isProjectUpdateActive
         }
     },
     computed: {
         ...mapGetters({
             projectById: "projects/projectById"
         }),
+        todate() {
+            console.log("date", this.project.deadline.toDate())
+            return this.project.deadline.toDate()
+        }
     },
     mounted() {
        this.$nextTick(() => {

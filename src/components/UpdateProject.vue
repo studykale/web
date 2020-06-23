@@ -9,20 +9,20 @@
           <div class="card-content">
               <form @submit.prevent="updateSingleProject">
                     <b-field label="Project name">
-                        <b-input required minLength="5" maxLength="55" v-model="name" v-on:change="changed"></b-input>
+                        <b-input required minLength="5" maxLength="55" v-model="project.name" v-on:change="changed"></b-input>
                     </b-field>
                      <b-field label="Project description"
                         >
-                        <b-input maxlength="300" type="textarea" v-model="description" expanded placeholder="Project description" v-on:change="changed"></b-input>
+                        <b-input maxlength="300" type="textarea" v-model="project.description"  expanded placeholder="Project description" v-on:change="changed"></b-input>
                     </b-field>
                     <b-field class="mt-2" label="Select datetime">
                             <b-datepicker
-                                :name="deadline"
+                                :name="project.deadline.toDate()"
                                 v-model="deadline"
                                 v-on:change="changed"
                                 placeholder="Select a date"
                                 icon="calendar-today"
-                                :min-date="deadline"
+                                :min-date="project.deadline.toDate()"
                                 >
                             </b-datepicker>
                             <!-- <b-datetimepicker v-model="datetime" inline></b-datetimepicker> -->
@@ -36,45 +36,46 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { projectsCollection, Timestamp } from '../db'
 
 export default {
-    props: {
-        name: {
-            type: String,
-            required: true
-        },
-        description: {
-            type: String,
-            required: true
-        },
-        deadline: {
-            type: Date,
-            reqiured: true
-        },
-        closeModal: Boolean
-    },
+    props: ['id'],
     data() {
         return {
-            changedValues: false
+            changedValues: false,
+            project: null
         }
     },
     name: 'UpdateProjectCard',
     methods: {
         ...mapActions('projects', ['updateProjects']),
         updateSingleProject() {
-            let data = {
-                name: this.name,
-                deadline: this.deadline,
-                description: this.description
-            }
-
-            this.updateProjects(data)
+        
+            projectsCollection.doc(this.id).update({
+                name: this.project.name,
+                description: this.project.description,
+                deadline: Timestamp.fromDate(this.deadline)
+            })
             this.changedValues = false,
             this.closeModal = false
+            this.$emit('complete')
         },
         changed() {
             this.changedValues = true;
         }
+    },
+    computed: {
+        deadline: {
+            get() {
+                return this.project.deadline.toDate()
+            },
+            set(newDl) {
+                return newDl
+            }
+        }
+    },
+    created() {
+        this.$bind('project', projectsCollection.doc(this.id))
     }
 }
 </script>
