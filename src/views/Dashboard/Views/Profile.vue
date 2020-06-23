@@ -108,6 +108,12 @@ import { mapState, mapActions } from "vuex"
         this.username = "";
         this.fileUploaded = false;
         this.imageUrl = false;
+        this.$buefy.toast.open({
+          position: 'is-top-right',
+          message: "We are uploading please wait",
+          duration: 5000,
+          type: 'is-info'
+        })
       },
       displayPhoto(f) {
         if(f.size / (1024 * 1024) < 2) {

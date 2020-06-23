@@ -1,5 +1,6 @@
 <template>
-  <b-sidebar
+<div>
+    <b-sidebar
       fullheight
       overlay
       right
@@ -8,6 +9,7 @@
       class="sidebar"
     >
       <div class="p-1 p-relative">
+          
         <div class="mb-2">
             <p>Project title</p>
             <h4 class="font-bold">{{ project.name }}</h4>
@@ -47,7 +49,7 @@
         
         <div v-if="!project.paid" class="flex flex-wrap items-center">
             <Payment :projectId="projectId" :paymentAmount="project.price ? project.price : calcPrice(project)"/>
-            <b-button @click="showId" type="is-warning">Update</b-button>
+            <b-button @click="isProjectUpdateActive = !isProjectUpdateActive" type="is-warning">Update</b-button>
         </div>
         <div v-else>
             <div class="flex flex-row my-2"><span class="mr-1">Paid</span> <check-circle-icon size="1.5x" class="text-blue"></check-circle-icon></div>
@@ -56,32 +58,43 @@
         <x-circle-icon @click="closeSide" size="1x"  class="p-absolute icon"></x-circle-icon>
       </div>    
     </b-sidebar>
+    <b-modal :active.sync="isProjectUpdateActive" :width="640" scroll="keep">
+        <UpdateCard :closeModal="isProjectUpdateActive" :name="project.name" :description="project.description" :deadline="toDate(dateFm(project.deadline.seconds))"/>
+    </b-modal>
+</div>
+  
+
 </template>
 
 <script>
 import { mapGetters } from "vuex"
 import Payment from "./Payment";
 import { XCircleIcon, CheckCircleIcon } from 'vue-feather-icons'
-
+import UpdateCard from "../UpdateProject";
 export default {
     props: {
         projects: Array
     },
+    template: {},
     components:{
         Payment,
         XCircleIcon,
-        CheckCircleIcon
+        CheckCircleIcon,
+        UpdateCard
     },
     data() {
         return {
             openSide: false,
             project: {},
-            projectId: ''
+            projectId: '',
+            isProjectUpdateActive: false,
         }
     },
     methods: {
-        showId() {
+        updateSingleProject() {
             // //("id", this.projectId)
+            this.isProjectUpdateActive = !this.isProjectUpdateActive;
+
         },
         dateFm(s) {
             if(new Date(s) && (typeof s !== Object) && s != null) {
@@ -93,6 +106,9 @@ export default {
                 //("s", s.seconds)
                 return new Date(s.seconds * 1000)
             }
+        },
+        toDate(d) {
+            return new Date(d)
         },
         calcPrice(project) {
             
@@ -109,9 +125,6 @@ export default {
                 let r = parseInt(project.pages * 10);
                 return r;
             }
-        },
-        cancel() {
-            // //("cancel");
         },
         closeSide() {
             if(this.openSide) {

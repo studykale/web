@@ -1,10 +1,10 @@
 <template>
   <div>
-      <div>
+      <div class="m-2">
         <h2 class="title">
             Notifications
         </h2>
-        <p>Get notified of your project here</p>
+        <p>Get notified of projects and updates here</p>
       </div>
       <div class="Notifications">
           <div v-if="notifications.length > 0">
@@ -106,6 +106,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.m-2 {
+    margin: 1em;
+}
  .Notications {
         margin-top: 1em;
     }

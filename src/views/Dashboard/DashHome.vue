@@ -9,6 +9,8 @@
                               <span><award-icon size="1.5x" class="text-white"></award-icon></span>
                               <span>Tasks</span>
                           </router-link>
+  
+
                           <router-link to="/dashboard/notifications" class="flex flex-row top-links">
                               <span><bell-icon size="1.5x" class="text-white"></bell-icon></span>
                               <span>Notifications</span>
@@ -78,7 +80,8 @@ export default {
       if(link) {
         this.$router.push(link)
       }
-    }
+    },
+    
   },
   computed: {
     ...mapState({
@@ -106,6 +109,8 @@ export default {
         display: grid;
         height: 100vh;
         grid-template-columns: 20% 1fr;
+        grid-template-rows: 1fr;
+        overflow: hidden;
         
 
         .sidebar {
@@ -134,7 +139,15 @@ export default {
                     margin-right: 1em;
                 }
             }
-        }
+
+            .wrapper .project-links {
+              margin-bottom: 14px;
+              margin-left: auto;
+              display: flex;
+              flex-direction: column;
+              
+            }
+          }
 
         .sidebar .bottom {
             grid-row-start: 5;
@@ -188,6 +201,21 @@ export default {
         .main_view {
             background: #F1F2F2;
             padding: 1.3em;
+            overflow-y: scroll;
+
+            ::-webkit-scrollbar {
+                width: 12px;
+            }
+            
+            ::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+                border-radius: 10px;
+            }
+            
+            ::-webkit-scrollbar-thumb {
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+            }
         }
     }
 </style>

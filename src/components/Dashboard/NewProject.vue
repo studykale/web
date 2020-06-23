@@ -5,7 +5,7 @@
                 <span>
                     Creating a new project
                 </span>
-                <span class="font-bold"> <span class="text-red">{{ calcPrice() }}</span> USD per page </span>
+                <span class="font-bold"> <span class="text-red">{{ calcPrice() }}</span> AUD</span>
             </div>
         </div>
         <div class="card-content">
@@ -104,7 +104,7 @@
                         <h2 class="subtitle" v-if="projectName && paperType">Awesome the project is set.</h2>
                         <h2 class="subtitle" v-else>Please complete setting up the project</h2>
                         <hr class="dropdown-divider"/>
-                        <div class="text-center">
+                        <div class="text-left">
                         <h2>Pages: {{ orderPages }}</h2>
                         <h4><span class="font-bold">Name: </span><span>{{ projectName || 'Please set a name' }}</span></h4>
                         <h4><span class="font-bold">Paper type: </span><span>{{ paperType || 'Please set the type otf paper' }}</span></h4>
@@ -125,7 +125,10 @@ import { AlertCircleIcon } from 'vue-feather-icons';
 export default {
     props: {
         showNewProject: Boolean,
-        currentUser: Object
+        currentUser: Object,
+        pType: String,
+        completion: String,
+        pages: String
     },
     components: {
         AlertCircleIcon
@@ -161,7 +164,7 @@ export default {
             deadline: new Date(),
             orderPages: 1,
             maxOrderPages: 100,
-            pricePerPage: 12,
+            pricePerPage: 20,
             currency: 'AUD',
             totalPrice: 0
         }
@@ -195,7 +198,7 @@ export default {
             var days = duration.asDays();
             
             if(days.toFixed() >= 0 ) {
-                return this.orderPages * this.pricePerPage + this.orderPages * 3.2
+                return this.orderPages * 25
             }
             return this.orderPages * this.pricePerPage;
         },

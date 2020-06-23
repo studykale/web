@@ -1,15 +1,32 @@
 <template>
   <div class="projects">
-      <div class="flex flex-row">
-        <div id="chat" class="card">
+      <div class="flex flex-row-single">
+        <div id="chat" class="card mr-1">
           <div class="card-header">
-            <div class="card-header-title">
-              Chats
+            <div class="card-header-title flex flex-row">
+                <b-field label="Select user to start a chat">
+                    <b-select 
+                    v-model="selectedUser"
+                    expanded
+                    placeholder="Select a name">
+                        <option
+                            v-for="option in users"
+                            :value="option.id"
+                            :key="option.id">
+                            {{ option.username }}
+                        </option>
+                    </b-select>
+                </b-field>
             </div>
           </div>
           <div class="card-content">
-              <p>Card content</p>
+            <div v-if="userChats.length <= 0" class="flex items-center justify-center">
+              <p>You dont have any chats from this user</p>
             </div>
+            <ul class="messages" v-chat-scroll="{always: false, smooth: true, scrollonremoved:true}">
+              <li class="message" v-for="(n, i) in userChats" :key="i">{{ n }}</li>
+            </ul>  
+          </div>
         </div>
         <div id="contact">
           <h2 class="font-bold">
@@ -60,12 +77,16 @@
 </template>
 
 <script>
-import { contactCollection } from '../../../../db'
+import { contactCollection, users, chats } from '../../../../db'
 
 export default {
   data() {
     return {
       queries: [],
+      users: [],
+      chats: [],
+      selectedChats: [],
+      selectedUser: null,
       isOpen:0,
       current: 1,
       perPage: 4
@@ -82,9 +103,17 @@ export default {
       let pageNumber = this.current - 1;
       console.log("queries", this.queries.slice(pageNumber * this.perPage, this.current * this.perPage))
       return this.queries.slice(pageNumber * this.perPage, this.current * this.perPage)
+    },
+    userChats() {
+      return chats.find(c => c.id == this.selectedUser)
     }
+  },
+  created() {
+    this.$bind('users', users.where('role', '==', 'CLIENT')).then(users => {
+      this.selectedUser = users[0].id
+    }),
+    this.$bind('chats', chats)
   }
-
 }
 </script>
 
@@ -117,5 +146,13 @@ export default {
   #chat {
     display: flex;
     flex-direction: column;
+  }
+
+  .flex-row-single {
+    flex-direction: row;
+  }
+
+  .mr-1 {
+    margin-right: 15px;
   }
 </style>

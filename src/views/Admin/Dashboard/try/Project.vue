@@ -120,11 +120,14 @@
             </div>
           </div>
           <div class="dropdown-divider"></div>
-          <b-button type="is-success" class="mb-2">Upload completed files</b-button>
+          <b-button @click="uploadComplete" type="is-success" class="mb-2">Upload completed files</b-button>
           <b-button type="is-danger" @click="showProject">Close</b-button>
         </div>
       </div>
     </div>
+    <b-modal :active.sync="showModalUpload" :width="640" scroll="keep">
+      <UploadDocs />
+    </b-modal>
   </div>
 </template>
 
@@ -132,19 +135,22 @@
 import { CoffeeIcon, CheckIcon, XSquareIcon, CheckCircleIcon } from 'vue-feather-icons'
 import { mapState } from 'vuex';
 import db, { users } from "../../../../db";
+import UploadDocs from "@/components/Admin/UploadComplete";
 
 export default {
   components: {
     CoffeeIcon,
     CheckIcon,
     CheckCircleIcon,
-    XSquareIcon
+    XSquareIcon,
+    UploadDocs
   },
   data() {
     return {
         proj: [],
         users: [],
         showProjectModal: true,
+        showModalUpload: false,
         currentPage: 1,
         perPage: 3,
         checkboxCustom: 'Yes',
@@ -161,6 +167,9 @@ export default {
       } else {
         this.showProjectModal = true
       }
+    },
+    showUploadModal() {
+      this.showModalUpload = !this.showModalUpload
     },
     formatDate(s) {
       let date = new Date(null);

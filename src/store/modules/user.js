@@ -1,6 +1,6 @@
 
 import { LOGIN_USER, SIGNUP_USER, SIGNUP_USER_COMPLETE, LOGIN_REQUEST, SIGNUP_USER_REQUEST, LOGIN_FAILURE, SIGNUP_USER_FAILURE } from "../MutationTypes"
-import { auth, newUser, users, currentUser } from "../../db"
+import { auth, newUser, users, currentUser, chats } from "../../db"
 import { SnackbarProgrammatic as Snack, NotificationProgrammatic as Notification } from 'buefy'
 
 
@@ -55,6 +55,7 @@ const User = {
 	actions: {
 		init({commit}) {
 			auth.onAuthStateChanged(user => {
+				
 				if(user) {
 					commit('authUser', { username: user.displayName, email: user.email, id: user.uid,  verified: user.emailVerified })
 				} else {
@@ -135,8 +136,11 @@ const User = {
 						type: 'is-info',
 						duration: 5000
 					})
-					commit(SIGNUP_USER_COMPLETE)
-					router.push('/auth/signin')
+					chats.doc(data.user.uid).collection('messages')
+					.then(() => {
+						commit(SIGNUP_USER_COMPLETE)
+						router.push('/auth/signin')
+					})
 				})
 				.catch(error => {
 					//("error", error)

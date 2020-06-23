@@ -11,22 +11,18 @@
               </li>
           </ul>
       </div>
-      <div class="messages">
-          <div class="msg msg-right">
-            <div class="bubbles bubbles-dark">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur, aliquam.</p>
+      <div v-chat-scroll="{smooth: true, notSmoothOnInit: true}" class="messages">
+          <div v-for="(message, i) in chats" :key="i" v-bind:class="{ 'msg-right' : message.id == currentUser , 'msg-left': message.id != currentUser.id  }" class="msg">
+            <div class="bubbles" v-bind:class="{ 'bubbles-dark': message.id == currentUser.id , 'bubbles-light': message.id != currentUser.id }">
+                <p>{{ message.message }}</p>
+                <small>{{ message.time.toDate() | moment('from', 'now') }}</small>
             </div>
-          </div>
-          <div class="msg msg-left">
-              <div class="bubbles bubbles-light">
-                  <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quaerat atque voluptate beatae corrupti incidunt maxime numquam at excepturi consequatur quia!</p>
-              </div>
           </div>
       </div>
       <div class="text-view">
-          <form>
-              <input placeholder="Start chat"/>
-              <button class="round">
+          <form @submit.prevent="sendChat">
+              <input placeholder="Start chat" v-model="text" required/>
+              <button type="submit" class="round">
                   <navigation-icon size="1.5x" class="purple"></navigation-icon>
               </button>
           </form>
@@ -36,10 +32,39 @@
 
 <script>
 import { NavigationIcon } from 'vue-feather-icons'
+import { chats, currentUser, Timestamp } from '../../../db'
 
 export default {
     components: {
         NavigationIcon
+    },
+    data() {
+        return {
+            chats: [],
+            text: ""
+        }
+    },
+    methods: {
+        sendChat() {
+            console.log("currentUser", currentUser)
+            if(this.text.length > 2) {
+                chats.doc(currentUser.uid).set({
+                    user: currentUser.displayName,
+                    message: this.text,
+                    id: currentUser.uid,
+                    read: false,
+                    time: Timestamp.now()
+                })
+                this.text = ""
+            }
+        }
+    },
+    created() {
+        this.$bind('chats', chats.doc(currentUser.uid).get().then(ch => {
+            
+            
+            console.log("chats", ch.data())
+        }))
     }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="h-100">
       <div class="flex items-center flex-column">
-          <div v-if="$route.params.type != 'cancelled'">
+          <div v-if="$route.params.type != 'cancelled' || $route.query.PayRef">
             <div class="paymentImg">
                 <img src="@/assets/images/success.png" alt="Payment Image">
             </div>

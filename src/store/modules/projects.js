@@ -97,7 +97,9 @@ const projects = {
 		addingDraftFail: false,
 		draftProjects: [],
 		pFileProgess: 0,
-		uploadingFiles : false
+		uploadingFiles : false,
+		uploadingCompleteFiles: false,
+		uploadingCompleteFilesFail: false
     },
     mutations: {
 		[ADD_PROJECT_REQUEST] (state) {
@@ -190,6 +192,17 @@ const projects = {
 		updateProjectFail(state) {
 			state.updatingProject = false;
 			state.updatingProjectFail = true
+		},
+		uploadingFC(state) {
+			state.uploadingCompleteFiles = true
+		},
+		uploadFCFinished(state) {
+			state.uploadingCompleteFiles = false
+			state.uploadingCompleteFilesFail = false
+		},
+		uploadFCFail(state) {
+			state.uploadingCompleteFiles = false;
+			state.uploadingCompleteFilesFail = true
 		}
     },
     actions: {
@@ -315,23 +328,9 @@ const projects = {
 							result.set({
 								files: res
 							}, { merge: true })
-							
-							projectsCollection.doc(docId)
-							.get()
-							.then(newProject => {
-								let id = newProject.id;
-								let d =  newProject.data();
-								let data = { ...d, id };
-								console.log("data p", data);
-								commit('addProjectComplete')
-							})
-							.catch(() => {
-								Notification.open({
-									position: 'is-top-right',
-									type: 'is-warning',
-									message: "Sorry we coould not set up the payment. You'll have to set it up manually"
-								})
-							})							
+
+							router.push(`/pay/${data.price}/${docId}`);
+							commit('addProjectComplete')							
 							
 						}).catch(error => {
 							//("erro", error);
@@ -439,7 +438,8 @@ const projects = {
 			commit('updateProject')
 			
 			let project = projectsCollection.doc(data.pid)
-			
+			// This will update the payment status of a project to began and paid to true. 
+			// It is specifically for payments
 			if(data.paymentUpdate) {
 				project
 				.get()
@@ -523,8 +523,8 @@ const projects = {
 					if(result.exists) {
 						project.update({
 							description: data.description,
-							pages: data.pages,
-							deadline: data.deadline
+							deadline: data.deadline,
+							name: data.name
 						})
 						project
 						.get()
@@ -566,6 +566,27 @@ const projects = {
 					})
 				})
 			}
+		},
+		updateProjectCompleteFiles({ commit }, data) {
+			commit('uploadingFC')
+			Promise.all(
+				data.files.forEach(f => uploadFiles(f, 'files'))
+			)
+			.then(completeFiles => {
+				projectsCollection.doc(data.id)
+				.set({
+						completeFiles
+				}, { merge: true })
+				commit('uploadFCFinished')
+			})
+			.catch(error => {
+				commit('uploadFCFail')
+				Notification.open({
+					message: 'Sorry the file(s) were not uploaded '+error,
+					position: 'is-top-right',
+					type: 'is-danger'
+				})
+			})
 		}
 	},
 	getters: {

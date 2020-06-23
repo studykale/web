@@ -72,6 +72,7 @@
 const { required, sameAs, minLength, email } =  require('vuelidate/lib/validators');
 import { validationMixin } from 'vuelidate'
 import { mapActions, mapState } from "vuex"
+import { currentUser } from '../../../db';
 
 export default {
     mixins: [validationMixin],
@@ -193,6 +194,9 @@ export default {
         }
         return errors
       }
+    },
+    created() {
+      this.newEmail = currentUser.email
     }
 }
 </script>

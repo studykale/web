@@ -50,7 +50,7 @@ export default {
             plan: 2928,
             fname: 'Brian',
             lname: 'Mwangi',
-            currency: 'USD',
+            currency: 'AUD',
             hostedPayment: 1,
             country: "KE",
             redirect: `https://us-central1-studykale-4466b.cloudfunctions.net/redirectToProject/${this.projectId}`
@@ -71,7 +71,7 @@ export default {
         callback: function(response){
                 var txref = response.data.txRef; // collect txRef returned and pass to a                    server page to complete status check.
                 // //("This is the response returned after a charge", response);
-                console.log("")
+                console.log("pay response", response)
                 if (
                     response.data.chargeResponseCode == "00" ||
                     response.data.chargeResponseCode == "0"

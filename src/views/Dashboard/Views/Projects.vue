@@ -16,14 +16,61 @@
           </div>
       </div>
       <section class="projects-list">
-            
-            <div v-if="proj.length > 0">
-              <div v-for="(project, i) in proj" :key="i">
-                <ProjectCard @click="showProjectDetail(project)" :project="project" />
+            <div class="mb-2" v-if="drafts.length > 0">
+              <h2 class="title font-bold">All drafts</h2>
+              <p class="mb-2">All your drafted projects appear here.</p>
+              <div class="d-inline" v-for="(draft, i) in drafts" :key="i">
+                <DraftCard :paperType="draft.paperType" :pages="draft.pages" :deadline="draft.deadline" />
               </div>
             </div>
+            <div v-if="proj.length > 0">
+              <h2 class="title font-bold mb-2">All</h2>
+              <p class="mb-2">All your projects appear here.</p>
+              <div class="p-wrapper" v-for="(project, i) in proj" :key="i">
+                <ProjectCard @click="showProjectDetail(project)" :project="project" />
+              </div>
+              <div id="completed" class="mt-2">
+                  <h2 class="title">Completed Projects</h2>
+                  <p>Your completed projects appear here</p>
+                  <div class="p-wrapper" v-if="cProjects.length > 0">
+                    <div v-for="(project, i) in cProjects" :key="i">
+                      <ProjectCard @click="showProjectDetail(project)" :project="project"/>
+                    </div>
+                  </div>
+                  <div class="flex justify-center items-center p-4" v-else>
+                    <p class="text-center font-bold">It seems you don't have any completed projects. You can still create one</p>
+                  </div>
+              </div>
+
+              <div id="pending" class="mt-2">
+                  <h2 class="title">Pending Projects</h2>
+                  <p>Your pending projects appear here. They include <b>unpaid projects</b></p>
+                  <div class="mt-2" v-if="pProjects.length > 0">
+                    <div class="p-wrapper" v-for="(project, i) in pProjects" :key="i">
+                      <ProjectCard @click="showProjectDetail(project)" :project="project"/>
+                    </div>
+                  </div>
+                  <div class="flex justify-center items-center p-2" v-else>
+                    <p class="font-bold text-center p-4">It seems you don't have any pending projects. You can still create one</p>
+                  </div>
+              </div>
+
+              <div id="paid" class="mt-2">
+                  <h2 class="title">Paid Projects</h2>
+                  <p>Your projects that are on course appear here as per the deadlines set</p>
+                  <div class="mt-2" v-if="paidP.length > 0">
+                    <div class="p-wrapper" v-for="(project, i) in paidP" :key="i">
+                      <ProjectCard @click="showProjectDetail(project)" :project="project"/>
+                    </div>
+                  </div>
+                  <div class="flex justify-center items-center p-2" v-else>
+                    <p class="font-bold text-center p-4">It seems you don't have any paid projects. If you have pending projects click any to continue with payment.</p>
+                  </div>
+              </div>
+          
+            </div>
             <div class="text-center my-2 no-projects" v-else>
-              <div class="flex justify-center items-center">
+              <div class="flex justify-center items-center flex-column">
                 <img src="../../../assets/illustrations/grow_grades.svg" alt="Create task">
                 <b-button type="is-warning" size="is-medium" @click="createProject">Create first task</b-button>
               </div>
@@ -45,13 +92,15 @@ import NewProject from '@/components/Dashboard/NewProject.vue'
 import { mapState, mapGetters } from "vuex"
 import ProjectDetails from "@/components/Dashboard/ProjectDetails.vue";
 import  ProjectCard from "@/components/ProjectCard"
-import { projectsCollection } from "../../../db";
+import { projectsCollection, draftsCollection } from "../../../db";
+import DraftCard from "../../../components/DraftCard";
 
 export default {
   components: {
     NewProject,
     ProjectDetails,
-    ProjectCard
+    ProjectCard,
+    DraftCard
   },
   props: {
     showProjectModal: Boolean
@@ -63,6 +112,7 @@ export default {
       projectType: "All",
       singleProject: {},
       proj: [],
+      drafts: [],
       openSide: false,
     }
   },
@@ -106,16 +156,47 @@ export default {
   created() {
     this.$bind('proj', projectsCollection.where('creator', '==', this.loggedInUser.userId))
     .then(docs => {
+      
       this.$buefy.snackbar.open({
         type: 'is-info',
         message: "You have "+docs.length+ " projects"
       })
+    })
+    this.$bind('drafts', draftsCollection.where('email', '==', this.loggedInUser.email)).then(dr => {
+      // let date = new Date(null);
+      let today = new Date()
+      
+
+      this.$buefy.snackbar.open({
+        type: 'is-info',
+        message: "Please not that drafts that pass deadlines will be automatically deleted. Please update it to a complete project to avoid this.",
+        duration: 8000
+      })
+      
+      for (let i = 0; i < dr.length; i++) {
+        let d = dr[i]
+        // let dline = date.setSeconds(d.deadline.seconds)
+        
+        // let dlineDate = new Date(dline)
+        let time =  new Date(d.deadline.toDate()) - today
+        if(time <= 0) {
+          draftsCollection.doc(d.id).delete()
+        }
+      }      
     })
   }
 }
 </script>
 
 <style lang="scss" scoped>
+  .p-wrapper {
+    display: inline-block;
+
+  }
+
+  .p-4 {
+    padding: 8em;
+  }
     .project-cards {
 
         .start {

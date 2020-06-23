@@ -21,6 +21,10 @@
   position: relative;
 }
 
+.d-inline {
+  display: inline-block;
+}
+
 
 .bg-light {
         background-color: transparent;

@@ -114,12 +114,12 @@ const routes = [
       },
       {
         path: 'settings',
-        component: () => import('@/views/Admin/Dashboard/try/Settings.vue')
+        component: () => import('@/views/Dashboard/Views/Settings.vue')
       },
       {
         path: 'notifications',
         name: 'AdminSettings',
-        component: () => import('@/views/Admin/Dashboard/try/Notifications.vue')
+        component: () => import('@/views/Dashboard/Views/Notifications')
       },
       {
         path: 'payments',
@@ -129,7 +129,7 @@ const routes = [
       {
         path: 'profile',
         name: 'AdminProfile',
-        component: () => import('@/views/Admin/Dashboard/try/Profile.vue')
+        component: () => import('@/views/Dashboard/Views/Profile.vue')
       },
       {
         path: '*',
@@ -148,18 +148,14 @@ const routes = [
       requiresAuth: true
     }
   },
+  
   {
-    path: "*",
-    name: '404',
-    component: () => import('@/views/404.vue'),
+    path: '/auth/admin/login',
+    name: 'AdminLogin',
+    component: () => import('@/views/Admin/Login'),
     meta: {
       requiresAuth: false
     }
-  },
-  {
-    path: '/admin/login',
-    name: 'AdminLogin',
-    component: () => import('@/views/Admin/Login')
   },
   {
     path: '/pay/:payAmount/:pid',
@@ -168,13 +164,31 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: "*",
+    name: '404',
+    component: () => import('@/views/404.vue'),
+    meta: {
+      requiresAuth: false
+    }
   }
 ];
 
 const router = new VueRouter({
   mode: 'history',
   base: '/',
-  routes
+  routes,
+  scrollBehavior (to, from, savedPosition) {
+    //https://router.vuejs.org/guide/advanced/scroll-behavior.html
+    if (to.hash) {
+            return { selector: to.hash }
+        } else if (savedPosition) {
+            return savedPosition;
+        } else {
+            return { x: 0, y: 0 }
+        }
+  }
 });
 
 

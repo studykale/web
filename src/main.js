@@ -7,13 +7,15 @@ import VueMoment from "vue-moment"
 import "./plugins/buefy";
 import { firestorePlugin } from 'vuefire';
 import { auth } from "./db";
-
+import VueChatScroll from 'vue-chat-scroll'
+Vue.use(VueChatScroll)
 
 Vue.config.productionTip = false;
 
 Vue.use(firestorePlugin);
 Vue.use(VueMoment);
 Vue.use(VueCookies);
+
 
 auth.onAuthStateChanged(() => {
   new Vue({
