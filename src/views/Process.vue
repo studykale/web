@@ -106,7 +106,8 @@ export default {
     width: 60% !important;
 
     @media screen and (max-width: 520px) {
-        width: 100%;
+        width: 100% !important;
+        padding: 1em;
     }
 
     ul {

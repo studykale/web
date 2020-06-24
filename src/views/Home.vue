@@ -325,6 +325,10 @@ export default {
     width: 60%;
     padding: 4em;
 
+    @media screen and (max-width: 640px) {
+      padding: 1.5em;
+    }
+
     ul {
       margin: 2em 1em;
       
@@ -360,6 +364,12 @@ export default {
   border-top-left-radius: 250px;
   /* background-color: white; */
   border-top-right-radius: 250px;
+
+  @media screen and (max-width: 520px) {
+    border-top-left-radius: 50px;
+    /* background-color: white; */
+    border-top-right-radius: 50px;
+  }
 
   .container {
     width: 80%;
