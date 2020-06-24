@@ -15,12 +15,6 @@
                     <b-navbar-item tag="router-link" to="/aboutus">
                         About Us
                     </b-navbar-item>
-                    <b-navbar-item tag="router-link" to="/reviews">
-                        Reviews
-                    </b-navbar-item>
-                    <b-navbar-item tag="router-link" to="/blog">
-                        Blog
-                    </b-navbar-item>
                 </template>
 
                 <template slot="end">
