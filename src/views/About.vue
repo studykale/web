@@ -7,7 +7,7 @@
             <h3 class="font-bold leading-tight mb-2 text-purple">Know more about Us</h3>
           </div>
           <div class="header-content">
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio reprehenderit fugit velit nisi adipisci, doloremque beatae illum consequuntur odit iure quas inventore, exercitationem quos eaque accusamus. A deleniti possimus atque.</p>
+            <p>We are a team of friends and we patner to make other student work easier and ease of the workload. We are now dedicated to helping students get more time to meet and have fun.</p>
           </div>
         </div>
       </div>
@@ -86,15 +86,15 @@ export default {
       collapses: [
         {
             title: 'How do I pay?',
-            text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam nam ab praesentium? Dicta?'
+            text: 'Payment process is safe and automatic. You only need to have a card. Once you add a task it will direct you to adding a new payment..'
         },
         {
             title: "Can I cancel before work is started?",
-            text: 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quo?'
+            text: 'You can still cancel before work is started but you`d better check our policies on this'
         },
         {
             title: 'Do you accept Cards?',
-            text: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium alias officiis vitae earum, commodi sit.'
+            text: 'Yes we do accept cards.'
         }
       ]
     }

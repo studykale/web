@@ -176,6 +176,9 @@ export default {
       date.setSeconds(s)
 
       return date.toDateString()
+    },
+    uploadComplete() {
+      this.showModalUpload = !this.showModalUpload;
     }
   },
   computed: {

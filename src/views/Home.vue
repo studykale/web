@@ -148,7 +148,7 @@
             <div class="flex flex-column justify-start">
               <div class="cta__message">
                 <h2 class="title font-bold">Start Creating tasks</h2>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui necessitatibus sint, earum perferendis nobis impedit.</p>
+                <p>Its as simple as Getting started!!</p>
               </div>
               <div class="cta__actions">
                 <button @click="goContact" class="contact">Contact Us</button>
