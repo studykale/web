@@ -76,6 +76,25 @@ import Layout from "./Default.vue";
 import Contact from "@/components/Contact.vue";
 
 export default {
+  metaInfo() {
+    return {
+      title: "About Us",
+      meta: [
+        {
+          name: "description",
+          vmid: "description",
+          content: this.description
+        }, {
+          author: "Studykale",
+          content: "This site was developed by studykale developers."
+        },
+        {
+          name: "Keywords",
+          content: "Study, Students, Exams, Essay service"
+        }
+      ]
+    }
+  },
   components: {
     Layout,
     Contact
@@ -83,6 +102,7 @@ export default {
   data() {
     return {
       isOpen: 0,
+      description: "Know more about how we help students.",
       collapses: [
         {
             title: 'How do I pay?',

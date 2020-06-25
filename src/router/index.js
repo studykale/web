@@ -4,6 +4,16 @@ import Home from "../views/Home.vue";
 import Dashboard from "../views/Dashboard/DashHome.vue";
 import Settings from "../views/Dashboard/Views/Settings";
 import Profile from "../views/Dashboard/Views/Profile";
+import Meta from 'vue-meta'
+Vue.use(Meta, {
+  keyName: 'metaInfo',
+  attribute: 'data-vue-meta',
+  ssrAttribute: 'data-vue-meta-server-rendered',
+  tagIDKeyName: 'vmid',
+  refreshOnceOnNavigation: true
+});
+
+
 
 
 Vue.use(VueRouter);
