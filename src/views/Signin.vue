@@ -11,7 +11,7 @@
             </span>
             <span>
               <h2 class="text-purple font-bold">
-                Works
+                Kale
               </h2>
             </span>
           </div>

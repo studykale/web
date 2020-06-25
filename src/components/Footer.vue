@@ -5,7 +5,7 @@
               <div>
                   <div class="brand">
                       <router-link to="/" class="subtitle font-bold">
-                          StudyWorks
+                          StudyKale
                       </router-link>
                   </div>
                   <div class="links">
