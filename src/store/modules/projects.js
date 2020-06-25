@@ -402,31 +402,19 @@ const projects = {
 				draft: true,
 				createdAt: Timestamp.now()
 			})
-			.then(result => {
-				//("result", result)
-				result.onSnapshot(q => {
-					Notification.open({
-						queue: true,
-						message: "Successfully add project "+q.data().paperType,
-						position: 'is-top-right',
-						type: 'is-warning'
-					})
-				}, (error) => {
-					Notification.open({
-						queue: true,
-						message: "Sorry we failed to add the project "+error,
-						position: 'is-top-right',
-						type: 'is-warning'
-					})
-				}, () => {
-					router.push('/auth/signup')
-				})
-			})
-			.catch(error => {
-				//("error draft", error)
+			.then(() => {
 				Notification.open({
 					queue: true,
-					message: "Sorry we were unable to complete adding the project :"+error.message,
+					message: "Successfully add project ",
+					position: 'is-top-right',
+					type: 'is-warning'
+				});
+				router.push('/auth/signup')
+			})
+			.catch(() => {
+				Notification.open({
+					queue: true,
+					message: "Sorry we were unable to complete adding the project.",
 					position: 'is-top-right',
 					type: 'is-warning'
 				})
