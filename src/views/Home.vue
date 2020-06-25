@@ -174,9 +174,12 @@ import OrderCard from "@/components/OrderCard.vue";
 import Footer from "@/components/Footer.vue";
 
 export default {
-  metaInfo: {
-    title: "Home",
-    titleTemplate: '%s | Studykale'
+  metaInfo() {
+    return {
+      title: "Home",
+      titleTemplate: '%s | Studykale'
+      
+    }
   },
   components: {
     navbar: Navbar,
