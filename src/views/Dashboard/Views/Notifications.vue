@@ -120,12 +120,14 @@ export default {
     created() {
         this.$bind('notifications', notifications.doc(this.loggedInUser.userId)).then(note => {
             let count = false;
-            note.map(n => {
-                if(!n.read) {
-                    count = true
-                }
-            })
-            this.$root.$emit('notCount', count)
+            if(note) {
+                note.map(n => {
+                    if(!n.read) {
+                        count = true
+                    }
+                })
+                this.$root.$emit('notCount', count)
+            }
         })
     }
 }

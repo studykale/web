@@ -100,7 +100,6 @@ import { mapState, mapActions } from "vuex"
           image : this.file,
         }
 
-        console.log("date", data)
         this.updateUserProfile(data)
         this.showModal = false;
 

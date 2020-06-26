@@ -130,7 +130,7 @@
       </div>
     </div>
     <b-modal :active.sync="showModalUpload" :width="640" scroll="keep">
-      <UploadDocs />
+      <UploadDocs :selected="selected" />
     </b-modal>
   </div>
 </template>

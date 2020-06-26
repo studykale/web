@@ -50,7 +50,7 @@ export default {
     
     methods: {
         sendChat() {
-            console.log("currentUser", currentUser)
+            
             if(this.text.length > 2) {
                 chats.add({
                     user: currentUser.displayName,
@@ -67,8 +67,8 @@ export default {
         }
     },
     created() {
-        this.$bind('chats', chats.where('uid', '==', currentUser.uid).orderBy('time')).then(ch => {
-            console.log("ch", ch)
+        this.$bind('chats', chats.where('uid', '==', currentUser.uid).orderBy('time')).then(() => {
+            
             this.me = currentUser.uid;
         })
     }

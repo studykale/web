@@ -9,10 +9,10 @@
         <div class="container flex justify-around flex-wrap flex-row">
           <div class="has-text-left content">
             <h1 class="title font-bold">Build your grades, Save time, with our essay service.</h1>
-            <h4 class="subtitle">
+            <p class="subtitle">
               Use our writing service to have best scores.
               No matter what type of paper you need,
-            </h4>
+            </p>
             <div class="buttons">
               <b-button
                 tag="router-link"
@@ -32,7 +32,7 @@
         <div class="container p-5">
           <div class="flex flex-row justify-between">
             <div class="side">
-              <h2 class="title">We help you to meet your deadlines at affordable price.</h2>
+              <h2 class="title">At studykale, we help you to meet your deadlines at affordable price.</h2>
               <p
                 class="mt-2"
               >We help you get all your assignments done one place. Do not worry if you have no ideas or if you are overloaded with assignments, we are the solution and we will help get amazing grades.</p>
@@ -54,7 +54,7 @@
               </ul>
             </div>
             <div class="img">
-              <img src="../assets/illustrations/track.svg" alt="Results" />
+              <img src="../assets/illustrations/track.svg" alt="Results to track on studykale" />
             </div>
           </div>
         </div>
@@ -73,7 +73,7 @@
                 </div>
               </div>
               <div class="feature__img">
-                <img src="@/assets/illustrations/24-7.svg" alt="Feature image" />
+                <img src="@/assets/illustrations/24-7.svg" alt="Studykale Feature image" />
               </div>
             </div>
             <div class="feature flex-row_reverse">
@@ -89,7 +89,7 @@
                 </div>
               </div>
               <div class="feature__img">
-                <img src="@/assets/illustrations/easy_start.svg" alt="Feature image" />
+                <img src="@/assets/illustrations/easy_start.svg" alt="Illustration showing easy start" />
               </div>
             </div>
             <div class="feature">
@@ -102,7 +102,7 @@
                 </div>
               </div>
               <div class="feature__img">
-                <img src="@/assets/illustrations/results.svg" alt="Feature image" />
+                <img src="@/assets/illustrations/results.svg" alt="Feature image showing results" />
               </div>
             </div>
             <div class="feature flex-row_reverse">
@@ -115,7 +115,7 @@
                 </div>
               </div>
               <div class="feature__img">
-                <img src="@/assets/illustrations/team.svg" alt="Feature image" />
+                <img src="@/assets/illustrations/team.svg" alt="Feature image showing team work" />
               </div>
             </div>
           </div>
@@ -131,7 +131,7 @@
                   <p>{{t.testify}}</p>
                   <div class="flex flex-column">
                     <span class="rating">
-                      <img src="@/assets/illustrations/star.svg" alt="Star" />
+                      <img src="@/assets/illustrations/star.svg" alt="Rating for work done" />
                       {{ t.rating }}
                     </span>
                   </div>
@@ -157,7 +157,7 @@
               </div>
             </div>
             <div class="cta__img">
-              <img src="@/assets/illustrations/hero.svg" alt="Hero flying" />
+              <img src="@/assets/illustrations/hero.svg" alt="Studykale get started hero" />
             </div>
           </div>
         </div>
@@ -174,22 +174,7 @@ import OrderCard from "@/components/OrderCard.vue";
 import Footer from "@/components/Footer.vue";
 
 export default {
-  metaInfo() {
-    return {
-      title: 'Essay writing service',
-      titleTemplate: '%s | Studykale',
-      meta: [
-        {
-          vmid: 'description',
-          name: 'description',
-          content: "Top Essay and writing service. We help you to meet your deadlines at affordable price."
-        },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { charset: 'utf-8' },
-        { name: "keywords", content: "Paper, Top, ewriters, essay bid" }
-      ]
-    }
-  },
+  
   components: {
     navbar: Navbar,
     OrderCard,

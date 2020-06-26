@@ -45,6 +45,18 @@
                 </div>
             </b-field>
         </div>
+        <div v-if="project.completeFiles && project.completeFiles.length > 0" class="mb-2">
+            <b-field>
+                <div class="control">
+                    <b-taglist v-for="(file, i) in project.completeFiles" :key="i" attached>
+                        <b-tag type="is-dark">
+                            <a :href="file" target="blank">{{ i }}</a>
+                        </b-tag>
+                    </b-taglist>
+                </div>
+                
+            </b-field>
+        </div>
         <p class="mb-2">Completion <span class="text-red">{{ dateFm(project.deadline) }}</span></p>
         
         <div v-if="!project.paid" class="flex flex-wrap items-center">
@@ -142,7 +154,6 @@ export default {
             projectById: "projects/projectById"
         }),
         todate() {
-            console.log("date", this.project.deadline.toDate())
             return this.project.deadline.toDate()
         }
     },

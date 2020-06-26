@@ -5,6 +5,8 @@ import Dashboard from "../views/Dashboard/DashHome.vue";
 import Settings from "../views/Dashboard/Views/Settings";
 import Profile from "../views/Dashboard/Views/Profile";
 import Meta from 'vue-meta'
+
+
 Vue.use(Meta, {
   keyName: 'metaInfo',
   attribute: 'data-vue-meta',
@@ -12,8 +14,6 @@ Vue.use(Meta, {
   tagIDKeyName: 'vmid',
   refreshOnceOnNavigation: true
 });
-
-
 
 
 Vue.use(VueRouter);
@@ -201,35 +201,21 @@ const router = new VueRouter({
   }
 });
 
-function getRoutesList(routes, pre) {
-  return routes.reduce((array, route) => {
-    const path = `${pre}${route.path}`;
+// function getRoutesList(routes, pre) {
+//   return routes.reduce((array, route) => {
+//     const path = `${pre}${route.path}`;
 
-    if (route.path !== '*') {
-      array.push(path);
-    }
+//     if (route.path !== '*') {
+//       array.push(path);
+//     }
 
-    if (route.children) {
-      array.push(...getRoutesList(route.children, `${path}/`));
-    }
+//     if (route.children) {
+//       array.push(...getRoutesList(route.children, `${path}/`));
+//     }
 
-    return array;
-  }, []);
-}
-
-function getRouteXML() {
-  const list = getRoutesList(routes, 'https://studykale-test.netlify.app')
-                .map(route => `<url><loc>${route}</loc></url>`)
-                .join('\r\n')
-    
-return `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-          ${list}
-        </urlset>`;
-
-}
-
-getRouteXML()
-
+//     return array;
+//   }, []);
+// }
 router.beforeEach((to, from, next) => {
   let isLoggedIn = window.$cookies.isKey('loggedIn')
   let isAdmin = window.$cookies.isKey('kadm')

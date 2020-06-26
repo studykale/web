@@ -209,14 +209,13 @@ const User = {
 			if(data.type == "photo") {
 				uploadFiles(data.image, 'photo')
 				.then(file => {
-					console.log("file", file);
-					console.log("profile", currentUser)
+					
 					currentUser.updateProfile({
 						photoURL: file
 					})
 					.then(() => {
 						commit("updateProfile", currentUser.photoURL)
-						console.log("photoUrl",currentUser.photoURL)
+					
 					})
 					.catch(error => {
 						Notification.open({

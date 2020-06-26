@@ -24,24 +24,36 @@ const convertToDate = s => {
 }
 
 const uploadFiles =  (file, dir) => {
-	let progress, status;
+	// let progress, status;
 	return new Promise((resolve, reject) => {
 		let uploadTask = storageRef.child(`${dir}/${file.name}`).put(file, { contentType: file.type })
 
 		uploadTask.on(TaskEvent.STATE_CHANGED, (snapshot) => {
-			progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+			// let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 			// //('Upload is ' + progress + '% done');
 			switch (snapshot.state) {
 				case TaskState.PAUSED: // or 'paused'
 				// //('Upload is paused');
-				status = 'paused'
+				Notification.open({
+					message: "Sorry the upload process paused..",
+					type: 'is-warning'
+				})
+		
 				break;
 				case TaskState.RUNNING: // or 'running'
 				// //('Upload is running');
-				status = 'running'
+				Notification.open({
+					message: "Uploading...",
+					type: 'is-info'
+				})
+				
 				break;
 				case TaskState.SUCCESS:
 				// status = "complete";
+				Notification.open({
+					message: "Successfully uploaded just finishing up",
+					type: "is-success"
+				})
 				break;
 			}
 		}, (error) => {
@@ -75,8 +87,6 @@ const uploadFiles =  (file, dir) => {
 				resolve(url)
 				// //("files", filesUrl)
 			})
-			console.log("status", { status, progress })
-			// //("status", status);
 		})
 	})
 }
@@ -288,8 +298,7 @@ const projects = {
 					}
 				})
 				.catch(error => {
-					console.log("error", error)
-					//("error", error)
+					
 					Notification.open({
 						message: "Sorry we were unable to fetch the projects :"+error.message,
 						position: 'is-top-right',
@@ -374,8 +383,14 @@ const projects = {
 							router.push(`/pay/${res.data().price}/${res.id}`)
 							commit('addProjectComplete')
 						})
-						.catch(error => {
-							console.log("error", error)
+						.catch((error) => {
+							Notification.open({
+								queue: true,
+								message: "Sorry we were unable to complete adding the project :"+error.message,
+								position: 'is-top-right',
+								type: 'is-warning'
+							})
+							commit(ADD_PROJECT_FAILURE)
 						})
 					}).catch(error => {
 						//("erro", error);
@@ -460,7 +475,7 @@ const projects = {
 										description: "Your task" + data.name +  " has been paid successfully. And has been received by the team we will begin working on it immediately."
 									})
 									
-									console.log("res", res)
+						
 									commit('updateProject', res)
 								
 								} else {
@@ -496,7 +511,7 @@ const projects = {
 					}				
 				})
 				.catch(error => {
-					console.log("error", error)
+					
 					commit('updateProjectFail')
 					Notification.open({
 						queue: true,
@@ -608,7 +623,7 @@ const projects = {
 		updateProjectCompleteFiles({ commit }, data) {
 			commit('uploadingFC')
 			Promise.all(
-				data.files.forEach(f => uploadFiles(f, 'files'))
+				data.files.map(f => uploadFiles(f, 'files'))
 			)
 			.then(completeFiles => {
 				projectsCollection.doc(data.id)
@@ -618,6 +633,7 @@ const projects = {
 				commit('uploadFCFinished')
 			})
 			.catch(error => {
+				console.log("error", error)
 				commit('uploadFCFail')
 				Notification.open({
 					message: 'Sorry the file(s) were not uploaded '+error,

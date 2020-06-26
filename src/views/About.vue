@@ -84,7 +84,8 @@ export default {
           name: "description",
           vmid: "description",
           content: this.description
-        }, {
+        }, 
+        {
           author: "Studykale",
           content: "This site was developed by studykale developers."
         },

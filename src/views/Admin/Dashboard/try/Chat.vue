@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import { contactCollection, users, chats, Timestamp, currentUser } from '../../../../db'
+import { contactCollection, users, chats, Timestamp, currentUser, notifications } from '../../../../db'
 import { NavigationIcon } from 'vue-feather-icons'
 
 
@@ -127,7 +127,7 @@ export default {
     },
     paginatedItems() {
       let pageNumber = this.current - 1;
-      console.log("queries", this.queries.slice(pageNumber * this.perPage, this.current * this.perPage))
+    
       return this.queries.slice(pageNumber * this.perPage, this.current * this.perPage)
     },
     byUser() {
@@ -138,8 +138,6 @@ export default {
     replyChat() {
       let name = this.users.find(u => u.id == this.selectedUser).username
       if(this.text.length > 2) {
-        console.log("name", name);
-        
         chats.add({
             user: name,
             message: this.text,
@@ -147,11 +145,9 @@ export default {
             read: false,
             time: Timestamp.now(),
             respondent: this.me.uid
-        }).then(result => {
-          console.log("log", result)
         })
         .catch(error => {
-          console.log("error ", error)
+          this.$buefy.toast.open('Could not Send reply' + error)
         })
         // .then(() => {
         this.text = ""
@@ -173,6 +169,12 @@ export default {
       this.me = currentUser
     }),
     this.$bind('chats', chats.orderBy('time'))
+    notifications.add({
+      date: Timestamp.now(),
+      read: false,
+      name: "Getting started...",
+      description: "Welcome "+currentUser.displayName+"Get all your info"
+    })
   }
 }
 </script>
@@ -210,6 +212,7 @@ export default {
         font-size: 1rem;
         max-width: 80%;
         display: flex;
+        background: none;
       }
     }
 

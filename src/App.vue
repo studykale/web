@@ -6,6 +6,26 @@
 
 <script>
   export default {  
+      name: 'App',
+      metaInfo() {  
+        return {
+          // if no subcomponents specify a metaInfo.title, this title will be used
+          title: 'Studykale',
+          // all titles will be injected into this template
+          titleTemplate: '%s | Essay Service',
+          meta: [
+            {
+              vmid: 'description',
+              name: 'description',
+              content: "Top Essay and writing service. We help you to meet your deadlines at affordable price."
+            },
+            { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+            { charset: 'utf-8' },
+            { name: "keywords", content: "Paper, Top, ewriters, essay bid" }
+          ]
+        
+      }
+    }
   }
 </script>
 

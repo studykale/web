@@ -77,7 +77,7 @@ export default {
     ...mapActions('projects', ['initDrafts', 'initProjects']),
     ...mapActions('user', ['signout']),
     goto(link) {
-      console.log("link", link)
+     
       if(link) {
         this.$router.push(link)
       }
