@@ -148,7 +148,7 @@
             <div class="flex flex-column justify-start">
               <div class="cta__message">
                 <h2 class="title font-bold">Start Creating tasks</h2>
-                <p>.We promise get results and a wonderful time and ...Its as simple as Getting started!!</p>
+                <p>We promise get results and a wonderful time. Its as simple as Getting started!!</p>
 
               </div>
               <div class="cta__actions">

@@ -20,10 +20,10 @@
                               <router-link to="/aboutus#FAQ">FAQS</router-link>
                           </li>
                           <li>
-                              <router-link to="https://www.facebook.com/studykale/">FaceBook</router-link>
+                              <a href="https://www.facebook.com/studykale/" target="blank">FaceBook</a>
                           </li>
                           <li>
-                              <router-link to="https://www.instagram.com/studykale/">Instagram</router-link>
+                              <a target="blank" href="https://www.instagram.com/studykale/">Instagram</a>
                           </li>
                       </ul>
                   </div>

@@ -4,7 +4,7 @@
                 <template slot="brand">
                     <b-navbar-item tag="router-link" :to="{ path: '/' }">
                         <h2 class="logo">
-                            StudyWorks
+                            StudyKale
                         </h2>
                     </b-navbar-item>
                     <a class="navbar-item" href="https://www.facebook.com/studykale/">
