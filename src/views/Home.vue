@@ -176,7 +176,7 @@ import Footer from "@/components/Footer.vue";
 export default {
   metaInfo() {
     return {
-      title: "Home",
+      title: 'Essay writing service',
       titleTemplate: '%s | Studykale',
       meta: [
         {
