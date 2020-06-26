@@ -7,6 +7,12 @@
                             StudyWorks
                         </h2>
                     </b-navbar-item>
+                    <a class="navbar-item" href="https://www.facebook.com/studykale/">
+                        <facebook-icon size="1.5x" class="text-white"></facebook-icon>
+                    </a>
+                    <a class="navbar-item" href="https://www.instagram.com/studykale/">
+                        <instagram-icon size="1.5x" class="text-white"></instagram-icon>
+                    </a>
                 </template>
                 <template slot="start" class="start">
                     <b-navbar-item tag="router-link" to="/how-it-works">
@@ -49,6 +55,7 @@
 
 <script>
 import SignInCard from "./SignInCard"
+import { FacebookIcon, InstagramIcon  } from 'vue-feather-icons'
 
 export default {
     name: 'navbar',
@@ -56,7 +63,9 @@ export default {
         type: String
     },
     components: {
-        SignInCard
+        SignInCard,
+        FacebookIcon,
+        InstagramIcon
     }
 }
 </script>

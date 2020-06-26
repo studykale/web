@@ -183,6 +183,7 @@ const User = {
 			.then(() => {
 				commit('logout')
 				window.$cookies.remove('loggedIn');
+				if(window.$cookies.isKey('kadm'))  window.$cookies.remove('loggedIn');
 				window.$cookies.remove('vuex')
 				window.localStorage.removeItem('vuex')
 				router.replace('/')
@@ -371,7 +372,7 @@ const User = {
 							dispatch('admin/initAdUsers', null, { root: true })
 							dispatch('admin/initQuestions', null, { root: true })
 							window.$cookies.set('loggedIn', true, '1d');
-
+							window.$cookies.set('kadm', true, '1d')
 							commit(LOGIN_USER, { username: user.displayName, email: user.email, verified: user.emailVerified, photoUrl: user.photoURL, userId })
 							
 							router.push('/admin/projects')

@@ -20,12 +20,30 @@
             </div>
           </div>
           <div class="card-content">
-            <div v-if="userChats.length <= 0" class="flex items-center justify-center">
+            <div v-if="byChats.length <= 0" class="flex items-center justify-center">
               <p>You dont have any chats from this user</p>
             </div>
-            <ul class="messages" v-chat-scroll="{always: false, smooth: true, scrollonremoved:true}">
-              <li class="message" v-for="(n, i) in userChats" :key="i">{{ n }}</li>
-            </ul>  
+            <div v-else>
+              <ul class="messages" v-chat-scroll="{smooth: true, scrollonremoved:true, smoothonremoved: false}">
+                <li class="message" v-for="(n, i) in byChats" :key="i">
+                  <div class="msg" :class="{ 'light': n.respondent }">
+                    <small v-if="n.respondent">Me</small>
+                    <p>{{ n.message }}</p>
+                    <small>{{ n.time.toDate() | moment('from', 'now')  }}</small>
+                  </div>
+                </li>
+              </ul>  
+            </div>
+          </div>
+          <div class="card-footer">
+            
+                <form @submit.prevent="replyChat">
+                    <input placeholder="Start chat" v-model="text" required/>
+                    <button type="submit" class="round">
+                        <navigation-icon size="1.5x" class="purple"></navigation-icon>
+                    </button>
+                </form>
+            
           </div>
         </div>
         <div id="contact">
@@ -77,9 +95,14 @@
 </template>
 
 <script>
-import { contactCollection, users, chats } from '../../../../db'
+import { contactCollection, users, chats, Timestamp, currentUser } from '../../../../db'
+import { NavigationIcon } from 'vue-feather-icons'
+
 
 export default {
+  components: {
+    NavigationIcon
+  },
   data() {
     return {
       queries: [],
@@ -88,8 +111,11 @@ export default {
       selectedChats: [],
       selectedUser: null,
       isOpen:0,
+      text: "",
       current: 1,
-      perPage: 4
+      perPage: 4,
+      byChats: [],
+      me: null
     }
   },
   firestore: {
@@ -104,15 +130,49 @@ export default {
       console.log("queries", this.queries.slice(pageNumber * this.perPage, this.current * this.perPage))
       return this.queries.slice(pageNumber * this.perPage, this.current * this.perPage)
     },
-    userChats() {
-      return chats.find(c => c.id == this.selectedUser)
+    byUser() {
+      return this.chats.filter(c => c.uid == this.selectedUser)
     }
+  },
+  methods: {
+    replyChat() {
+      let name = this.users.find(u => u.id == this.selectedUser).username
+      if(this.text.length > 2) {
+        console.log("name", name);
+        
+        chats.add({
+            user: name,
+            message: this.text,
+            uid: this.selectedUser,
+            read: false,
+            time: Timestamp.now(),
+            respondent: this.me.uid
+        }).then(result => {
+          console.log("log", result)
+        })
+        .catch(error => {
+          console.log("error ", error)
+        })
+        // .then(() => {
+        this.text = ""
+        // })
+      }
+    }
+  },
+  watch: {
+    selectedUser: {
+      immediate: true,
+      handler(newVal) {
+        this.byChats = this.chats.filter(chats => chats.uid == newVal)
+      },
+    },
   },
   created() {
     this.$bind('users', users.where('role', '==', 'CLIENT')).then(users => {
       this.selectedUser = users[0].id
+      this.me = currentUser
     }),
-    this.$bind('chats', chats)
+    this.$bind('chats', chats.orderBy('time'))
   }
 }
 </script>
@@ -132,6 +192,54 @@ export default {
       flex-direction: row;
       padding: .6em;
     }
+
+    .card-content {
+      height: 100%;
+
+      .messages {
+        max-height: 350px;
+        overflow-y: scroll;
+      }
+
+      .messages ul li {
+        display: inline-block;
+      }
+
+      .message {
+        border-radius: 4px;
+        font-size: 1rem;
+        max-width: 80%;
+        display: flex;
+      }
+    }
+
+    .card-footer {
+      form {
+        width: 100%;
+        display: flex;
+      }
+
+      form input {
+        width: 100%;
+        padding: 1em;
+        border: solid #0260E8;
+        border-radius: 4px;
+      }
+
+      form button {
+        border-radius: 50%;
+        height: 50px;
+        width: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #0260E8;
+        outline: none;
+        border: none;
+        color: white;
+        margin: auto 10px;
+      }
+    }
   }
 
   #contact {
@@ -143,9 +251,42 @@ export default {
     }
   }
 
+  .card-footer {
+    padding: 5px;
+    border-radius: 4px;
+    border: none;
+  }
+
   #chat {
     display: flex;
     flex-direction: column;
+  }
+
+  .msg {
+    border-radius: 0 5px 5px 5px;
+    background: #0260E8;
+    padding: 1.2em;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    
+    @media screen and (max-width: 640px) {
+      max-width: 90%;
+    }
+  }
+
+  .light {
+    background: #E5F0FF !important;
+    color: #111 !important;
+  }
+
+  .msg-left {
+    opacity: .85;
+  }
+
+  .msg-right {
+    justify-content: flex-end;
   }
 
   .flex-row-single {

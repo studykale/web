@@ -11,8 +11,8 @@
                           </router-link>
   
 
-                          <router-link to="/dashboard/notifications" class="flex flex-row top-links">
-                              <span><bell-icon size="1.5x" class="text-white"></bell-icon></span>
+                          <router-link  to="/dashboard/notifications" :class="{ 'notbell': notifications }"  class="flex flex-row top-links">
+                              <span><bell-icon size="1.5x" class="text-white "></bell-icon></span>
                               <span>Notifications</span>
                           </router-link>
                           <router-link to="/dashboard/chats" class="flex flex-row top-links">
@@ -69,7 +69,8 @@ export default {
       activeClass: "is-active",
       dashUrl: `/dashboard/projects`,
       username: "brian",
-      windowWidth: 0
+      windowWidth: 0,
+      notifications: false
     }
   },
   methods: {
@@ -82,6 +83,13 @@ export default {
       }
     },
     
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.$root.$on('notCount', (arg) => {
+        console.log("args", arg)
+      })
+    })
   },
   computed: {
     ...mapState({
@@ -217,5 +225,21 @@ export default {
                 -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
             }
         }
+    }
+
+    .notbell {
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 60px;
+        height: 5px;
+        z-index: 2;
+        width: 5px;
+        border-radius: 2.5px;
+        background-color: yellow;
+      }
     }
 </style>

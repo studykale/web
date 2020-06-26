@@ -450,11 +450,11 @@ const projects = {
 									let notId = tempId(4)
 
 									let newNote = notifications.doc(notId)
-									let today = new Date()
+									
 								
 									newNote.set({
 										name: "Payment successful",
-										date: today,
+										date: Timestamp.now(),
 										read: false,
 										type: "Payment",
 										description: "Your task" + data.name +  " has been paid successfully. And has been received by the team we will begin working on it immediately."
@@ -553,6 +553,57 @@ const projects = {
 					})
 				})
 			}
+		},
+		updateProjectStatus({ commit }, data) {
+			commit('updateProject')
+			let project = projectsCollection.doc(data.pid)
+				project
+				.get()
+				.then(result => {
+					if(result.exists && result.data().paid) {
+						
+						project.update({
+							status: data.status
+						})
+						project
+						.get()
+						.then(result => {
+							if(result.exists) {
+								let id = result.id;
+								let data = result.data()
+								data.id = id;
+								commit('updateProject', data)
+							} else {
+								Notification.open({
+									queue: true,
+									message: "Project not found"
+								})
+							}
+						})
+						.catch(error => {
+							Notification.open({
+								queue: true,
+								message: "Something went wrong "+error.message
+							})
+							commit('updateProjectFail')
+						})
+						
+					} else {
+						Notification.open({
+							queue: true,
+							message: "The project is not paid yet..."
+						})
+						commit('updateProjectFail')
+						
+					}
+				})
+				.catch(error => {
+					Notification.open({
+						queue: true,
+						message: "We could not update the project :"+error.message,
+						type: 'is-danger'
+					})
+				})
 		},
 		updateProjectCompleteFiles({ commit }, data) {
 			commit('uploadingFC')

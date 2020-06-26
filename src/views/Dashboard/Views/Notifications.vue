@@ -8,6 +8,7 @@
       </div>
       <div class="Notifications">
           <div v-if="notifications.length > 0">
+            <b-button class="mt-2 mb-2" :type="{'is-success': checkedNotifications.length > 0, 'is-light': checkedNotifications.length <= 0 }" @click="markSelected">Mark as read</b-button>
             <b-table
                 :data="notifications"
                 ref="table"
@@ -36,7 +37,7 @@
 
                     <b-table-column field="date" label="Date" sortable centered>
                         <span class="tag is-success">
-                            {{ new Date(props.row.date).toLocaleDateString() }}
+                            {{ props.row.date.toDate() | moment('from', 'now') }}
                         </span>
                     </b-table-column>
 
@@ -93,14 +94,39 @@ export default {
     },
     firestore: {
         notifications: notifications
-            },
+    },
+    methods: {
+        markSelected() {
+            if(this.checkedNotifications.length <= 0) {
+                this.$buefy.toast.open({
+                    message: "Sorry but you need to select at least one first"
+                })
+            }
+            this.checkedNotifications.map(note => {
+                notifications.doc(note.id).set({
+                    read: true
+                }, { merge: true })
+            })
+            this.$buefy.toast.open({
+                message: "Success.."
+            })
+        }
+    },
     computed: {
         ...mapState({
             loggedInUser: state => state.user.user
         })
     },
     created() {
-        this.$bind('notifications', notifications.doc(this.loggedInUser.userId))
+        this.$bind('notifications', notifications.doc(this.loggedInUser.userId)).then(note => {
+            let count = false;
+            note.map(n => {
+                if(!n.read) {
+                    count = true
+                }
+            })
+            this.$root.$emit('notCount', count)
+        })
     }
 }
 </script>

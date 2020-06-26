@@ -2,7 +2,7 @@
   <div class="projects">
     <div class="mt-2">
       <h2 class="head">Projects</h2>
-      <div class="flex flex-row justify-around">
+      <div class="flex flex-row justify-between">
         <div class="statistics">
           <h3 class="font-bold">
             {{ proj.length }}
@@ -90,23 +90,27 @@
             </div>
           </div>
           <b-field class="mt-2">
-              <b-radio-button v-model="projectStatus"
+              <b-radio-button 
+                  
+                  @input="updatePstatus('started')"
                   native-value="OnProgress"
-                  type="is-info">
+                  >
                   <coffee-icon size="1x" class="icon-blue"></coffee-icon>
                   <span>Started</span>
               </b-radio-button>
 
-              <b-radio-button v-model="projectStatus"
+              <b-radio-button 
+                  @input="updatePstatus('complete')"
                   native-value="Completed"
-                  type="is-success">
+                  >
                   <check-icon size="1x" class="custom-class"></check-icon>
                   <span>Completed</span>
               </b-radio-button>
 
-              <b-radio-button v-model="projectStatus"
+              <b-radio-button 
+                  @input="updatePstatus('cancelled')"
                   native-value="Cancelled"
-                  type="is-danger">
+                  >
                   <x-square-icon size="1.5x" class="custom-class"></x-square-icon>
                   <span>Cancel</span>
               </b-radio-button>
@@ -133,9 +137,10 @@
 
 <script>
 import { CoffeeIcon, CheckIcon, XSquareIcon, CheckCircleIcon } from 'vue-feather-icons'
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import db, { users } from "../../../../db";
 import UploadDocs from "@/components/Admin/UploadComplete";
+
 
 export default {
   components: {
@@ -152,7 +157,7 @@ export default {
         showProjectModal: true,
         showModalUpload: false,
         currentPage: 1,
-        perPage: 3,
+        perPage: 5,
         checkboxCustom: 'Yes',
         selected: []
     }
@@ -161,6 +166,7 @@ export default {
     proj: db.collection('projects')
   },
   methods: {
+    ...mapActions('projects', ['updateProjectStatus']),
     showProject() {
       if(this.showProjectModal) {
         this.showProjectModal = false;
@@ -179,7 +185,24 @@ export default {
     },
     uploadComplete() {
       this.showModalUpload = !this.showModalUpload;
-    }
+    },
+   updatePstatus(projectStatus) {
+     this.$buefy.dialog.prompt({
+        message: `Are you sure you want to update it to ${projectStatus}`,
+        inputAttrs: {
+            type: 'text',
+            placeholder: 'Eg. started, to update to started',
+            maxlength: 10,
+        },
+        trapFocus: false,
+        onConfirm: (value) => {
+          if(['started', 'completed', 'cancelled'].includes(value) && value == projectStatus) {
+            this.updateProjectStatus({ pid: this.selected.id, status: value })
+          }
+        }
+    })
+   }
+    
   },
   computed: {
     ...mapState({
@@ -289,11 +312,11 @@ export default {
     border-radius: 4px;
     display: inline-block;
     width: 15em;
-    background: #111;
+    background: #E20338;
     color: white;
     
     h3 {
-      color: #6943d0;
+      color: white;
       font-size: 2em;
     }
   }

@@ -11,11 +11,13 @@
               </li>
           </ul>
       </div>
-      <div v-chat-scroll="{smooth: true, notSmoothOnInit: true}" class="messages">
-          <div v-for="(message, i) in chats" :key="i" v-bind:class="{ 'msg-right' : message.id == currentUser , 'msg-left': message.id != currentUser.id  }" class="msg">
-            <div class="bubbles" v-bind:class="{ 'bubbles-dark': message.id == currentUser.id , 'bubbles-light': message.id != currentUser.id }">
-                <p>{{ message.message }}</p>
-                <small>{{ message.time.toDate() | moment('from', 'now') }}</small>
+      <div v-chat-scroll="{smooth: true, scrollonremoved:true, smoothonremoved: false}" class="messages">
+          <div v-if="chats.length > 0">
+            <div v-for="(message, i) in chats" :key="i" v-bind:class="{ 'msg-right' : message.respondent , 'msg-left': !message.respondent  }" class="msg">
+                <div class="bubbles" v-bind:class="{ 'bubbles-dark': message.respondent , 'bubbles-light': !message.respondent }">
+                    <p>{{ message.message }}</p>
+                    <small>{{ message.time.toDate() | moment('from', 'now') }}</small>
+                </div>
             </div>
           </div>
       </div>
@@ -41,28 +43,34 @@ export default {
     data() {
         return {
             chats: [],
-            text: ""
+            text: "",
+            me: null
         }
     },
+    
     methods: {
         sendChat() {
             console.log("currentUser", currentUser)
             if(this.text.length > 2) {
-                chats.doc(currentUser.uid).set({
+                chats.add({
                     user: currentUser.displayName,
                     message: this.text,
-                    id: currentUser.uid,
+                    uid: currentUser.uid,
                     read: false,
-                    time: Timestamp.now()
+                    time: Timestamp.now(),
+                    respondent: null
                 })
+                // .then(() => {
                 this.text = ""
+                // })
             }
         }
     },
     created() {
-        this.$bind('chats', chats.where('id', '==', currentUser.uid).then(ch => {
-            console.log("chats", ch)
-        }))
+        this.$bind('chats', chats.where('uid', '==', currentUser.uid).orderBy('time')).then(ch => {
+            console.log("ch", ch)
+            this.me = currentUser.uid;
+        })
     }
 }
 </script>
@@ -110,10 +118,14 @@ export default {
 
         .messages {
             display: flex;
-                flex-direction: column;
+            flex-direction: column;
             padding: 10px;
+            max-height: 100%;
+            overflow-y: scroll;
 
             .msg {
+                margin: 20px 0;
+            
                 p {
                     font-size: .95rem;
                 }
@@ -131,7 +143,7 @@ export default {
                 &.msg-right {
                     display: flex;
                     justify-content: flex-start;
-                    margin: 2em 0;
+                    margin: 5px 0;
 
                     .bubbles {
                         max-width: 60%;

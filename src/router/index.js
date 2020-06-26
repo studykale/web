@@ -201,15 +201,46 @@ const router = new VueRouter({
   }
 });
 
+function getRoutesList(routes, pre) {
+  return routes.reduce((array, route) => {
+    const path = `${pre}${route.path}`;
+
+    if (route.path !== '*') {
+      array.push(path);
+    }
+
+    if (route.children) {
+      array.push(...getRoutesList(route.children, `${path}/`));
+    }
+
+    return array;
+  }, []);
+}
+
+function getRouteXML() {
+  const list = getRoutesList(routes, 'https://studykale-test.netlify.app')
+                .map(route => `<url><loc>${route}</loc></url>`)
+                .join('\r\n')
+    
+return `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+          ${list}
+        </urlset>`;
+
+}
+
+getRouteXML()
 
 router.beforeEach((to, from, next) => {
   let isLoggedIn = window.$cookies.isKey('loggedIn')
+  let isAdmin = window.$cookies.isKey('kadm')
+
   //("loggedIn", isLoggedIn)
   let requiresAuth = to.matched.some(record => record.meta.requiresAuth)
   // //("currentUser", currentUser)
   if (requiresAuth && !isLoggedIn) {  
     next('/auth/signin')
   }
+  else if(!requiresAuth && isAdmin) next('/admin/projects')
   else if (!requiresAuth && isLoggedIn) next('/dashboard/projects')
   else next()
 })
