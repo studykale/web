@@ -178,8 +178,16 @@ export default {
     return {
       title: "Home",
       titleTemplate: '%s | Studykale',
-      keywords: ['Paper', 'Top', 'ewriters', 'essay bid'],
-      description: "Top Essay and writing service. We help you to meet your deadlines at affordable price."
+      meta: [
+        {
+          vmid: 'description',
+          name: 'description',
+          content: "Top Essay and writing service. We help you to meet your deadlines at affordable price."
+        },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { charset: 'utf-8' },
+        { name: "keywords", content: "Paper, Top, ewriters, essay bid" }
+      ]
     }
   },
   components: {
