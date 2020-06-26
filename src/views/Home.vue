@@ -177,8 +177,9 @@ export default {
   metaInfo() {
     return {
       title: "Home",
-      titleTemplate: '%s | Studykale'
-      
+      titleTemplate: '%s | Studykale',
+      keywords: ['Paper', 'Top', 'ewriters', 'essay bid'],
+      description: "Top Essay and writing service. We help you to meet your deadlines at affordable price."
     }
   },
   components: {
