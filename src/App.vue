@@ -17,7 +17,32 @@
             {
               vmid: 'description',
               name: 'description',
-              content: "Top Essay and writing service. We help you to meet your deadlines at affordable price."
+              content: "Studykale provides you with professional essay writing services with efficiency, allowing you to have more time for you."
+            },
+            {
+              property: 'og:title',
+              content: 'Pro essay services',
+              vmid: 'og:title'
+            },
+            {
+              property: 'og:url',
+              content: 'https://studykale.com',
+              vmid: 'og:url'
+            },
+            {
+              property: 'og:site_name',
+              content: 'Studykale , Essay service',
+              vmid: 'og:site_name'
+            },
+            {
+              property: 'og:type',
+              content: 'website',
+              vmid: 'og:type'
+            },
+            {
+              property: 'og:image',
+              content: 'https:studykale.com/students.jpg',
+              vmid: 'og:image'
             },
             { name: 'viewport', content: 'width=device-width, initial-scale=1' },
             { charset: 'utf-8' },

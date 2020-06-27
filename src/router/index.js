@@ -23,25 +23,43 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
-  
+    meta: {
+      sitemap: {
+          lastmod:    'June 24, 2020',
+          priority:    0.8,
+          changefreq: 'monthly',
+      }
+    }
   },
   {
     path: "/auth/signup",
     name: "SignUp",
     component : () => import('@/views/SignUp.vue'),
-   
+    meta: {
+      sitemap: {
+          lastmod:    'June 24, 2020',
+          priority:    0.8,
+          changefreq: 'monthly',
+      }
+    }
   },
   {
     path: "/auth/signin",
     name: "SignIn",
     component : () => import('@/views/Signin.vue'),
+    meta: {
+      sitemap: {
+          lastmod:    'June 24, 2020',
+          priority:    0.8,
+          changefreq: 'monthly',
+      }
+    }
   
   },
   {
     path: "/auth/password-change-req",
     name: "PassChangeReq",
     component: () => import('@/views/PassReq'),
-   
   },
   {
     path: "/reviews",
@@ -53,7 +71,13 @@ const routes = [
     path: "/aboutus",
     name: "AboutUs",
     component: () => import('@/views/About.vue'),
-   
+    meta: {
+      sitemap: {
+          lastmod:    'June 24, 2020',
+          priority:    0.8,
+          changefreq: 'monthly',
+      }
+    }
   },
   {
     path: "/blog",

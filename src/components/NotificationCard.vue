@@ -84,11 +84,8 @@ export default {
             notifications: []
         }
     },
-    firestore: {
-        
-    },
     created() {
-        this.$bind('notifications', )
+        this.$bind('notifications', notifications)
     }
 }
 </script>
