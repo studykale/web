@@ -55,6 +55,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import { AwardIcon, BellIcon, MessageCircleIcon, SettingsIcon, LogOutIcon } from 'vue-feather-icons'
+import { currentUser } from '../../db';
 
 export default {
   components: {
@@ -63,6 +64,28 @@ export default {
     BellIcon,
     LogOutIcon,
     MessageCircleIcon
+  },
+  metaInfo() {
+    return {
+  title: currentUser.displayName,
+  titleTemplate: '%s - Dashboard',
+      meta: [
+        {
+          name: "description",
+          vmid: "description",
+          content: this.description
+        }, 
+        {
+          author: "Studykale",
+          content: "This site was developed by studykale developers."
+        },
+        {
+          name: "Keywords",
+          content: "Study, Students, Exams, Essay service"
+        }
+      ]
+    
+    }
   },
   data() {
     return {
