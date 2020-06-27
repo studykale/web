@@ -26,6 +26,10 @@
               content: 'Pro Essay service'
             },
             {
+              name: 'msvalidate.01',
+              content: '492FD9C02F7818C9C54FC658849FA77B'
+            },
+            {
               vmid: 'description',
               name: 'description',
               content: "Studykale offers professional essay service that's affordable for anyone. You now have more time to be creative. We are here to help with that!"

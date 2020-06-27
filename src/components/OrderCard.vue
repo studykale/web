@@ -1,7 +1,10 @@
 <template>
   <section class="card">
       <div class="card__header">
-          <h3>Let's begin...</h3>
+          <div class="flex justify-between">
+            <h3>Let's begin...</h3>
+            <h3><b>{{ totalWords }}</b> words</h3>
+          </div>
       </div>
       <div class="card__content">
           <form @submit.prevent="createDraft">
@@ -72,6 +75,7 @@ export default {
             orderPages: 1,
             orderDeadline: new Date(),
             pageNumber: 1,
+            words: 275,
             typeOfPaper: [{value: "Essay"}, {value: "Admission Essay"}, {value: "Annotated Bibliography"}, {value: "Argumentative Essay"}, {value: "Article Review"}, {value: "Book/moview Review"}, {value: "Business review"}, {value: "Case Study"}, {value: "Course Work"}, {value: "Creative writing"}, {value: "Critical Thinking"}, {value: "Presentation or Speech"},
                 {value: "Research Paper"}, {value: "Research propasal"}, {value: "Term Paper"}, {value: "Thesis/Dissertion Paper"}, {value: "CV"}, {value: "Other"}
             ]
@@ -104,7 +108,10 @@ export default {
     computed: {
         ...mapState({
             status: state => state.projects.addingDraftProject
-        })
+        }),
+        totalWords() {
+            return this.orderPages * this.words
+        }
     }
 }
 </script>

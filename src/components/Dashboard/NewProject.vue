@@ -106,6 +106,7 @@
                         <hr class="dropdown-divider"/>
                         <div class="text-left">
                         <h2>Pages: {{ orderPages }}</h2>
+                        <h2>{{ totalWords }} Words</h2>
                         <h4><span class="font-bold">Name: </span><span>{{ projectName || 'Please set a name' }}</span></h4>
                         <h4><span class="font-bold">Paper type: </span><span>{{ paperType || 'Please set the type otf paper' }}</span></h4>
                         
@@ -223,6 +224,9 @@ export default {
         ...mapState({
             addingProject: state => state.projects.addingProject
         }),
+        totalWords() {
+            return 275 * this.orderPages;
+        }
     }
 }
 </script>
