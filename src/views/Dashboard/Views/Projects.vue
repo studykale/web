@@ -71,7 +71,7 @@
             </div>
             <div class="text-center my-2 no-projects" v-else>
               <div class="flex justify-center items-center flex-column">
-                <img src="../../../assets/illustrations/grow_grades.svg" alt="Create task">
+                <img src="../../../assets/illustrations/growgrades.svg" alt="Create task">
                 <b-button type="is-warning" size="is-medium" @click="createProject">Create first task</b-button>
               </div>
             </div>

@@ -10,45 +10,32 @@
       metaInfo() {  
         return {
           // if no subcomponents specify a metaInfo.title, this title will be used
-          title: 'Studykale',
+          title: 'Pro Essay service',
           // all titles will be injected into this template
-          titleTemplate: '%s | Essay Service',
+          link: [
+            {
+              rel: 'sitemap',
+              type: 'application/xml',
+              title: 'Sitemap',
+              href: 'https://studykale.com/sitemap.xml'
+            }
+          ],
           meta: [
+            {
+              name: 'title',
+              content: 'Pro Essay service'
+            }
             {
               vmid: 'description',
               name: 'description',
-              content: "Studykale provides you with professional essay writing services with efficiency, allowing you to have more time for you."
+              content: "Studykale offers professional essay service that's affordable for anyone. You now have more time to be creative. We are here to help with that!"
             },
             {
-              property: 'og:title',
-              content: 'Pro essay services',
-              vmid: 'og:title'
+              vmid: 'keywords',
+              name: 'keywords',
+              content: "Essay service, Pro essay service, affordable, fast"
             },
-            {
-              property: 'og:url',
-              content: 'https://studykale.com',
-              vmid: 'og:url'
-            },
-            {
-              property: 'og:site_name',
-              content: 'Studykale , Essay service',
-              vmid: 'og:site_name'
-            },
-            {
-              property: 'og:type',
-              content: 'website',
-              vmid: 'og:type'
-            },
-            {
-              property: 'og:image',
-              content: 'https:studykale.com/students.jpg',
-              vmid: 'og:image'
-            },
-            { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-            { charset: 'utf-8' },
-            { name: "keywords", content: "Paper, Top, ewriters, essay bid" }
           ]
-        
       }
     }
   }

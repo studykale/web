@@ -89,7 +89,7 @@
                 </div>
               </div>
               <div class="feature__img">
-                <img src="@/assets/illustrations/easy_start.svg" alt="Illustration showing easy start" />
+                <img src="@/assets/illustrations/easystart.svg" alt="Illustration showing easy start" />
               </div>
             </div>
             <div class="feature">
@@ -131,7 +131,7 @@
                   <p>{{t.testify}}</p>
                   <div class="flex flex-column">
                     <span class="rating">
-                      <img src="@/assets/illustrations/star.svg" alt="Rating for work done" />
+                      <img src="@/assets/illustrations/star.svg" alt="Rating for work done for the essay service." />
                       {{ t.rating }}
                     </span>
                   </div>
@@ -157,7 +157,7 @@
               </div>
             </div>
             <div class="cta__img">
-              <img src="@/assets/illustrations/hero.svg" alt="Studykale get started hero" />
+              <img src="@/assets/illustrations/hero.svg" alt="Studykale get started hero essay service" />
             </div>
           </div>
         </div>
