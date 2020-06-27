@@ -19,9 +19,9 @@ module.exports = {
         pretty: true,
         urls: [
         'https://studykale.com/',
-        'https://studykale.cpm/aboutus',
-        'https://studykale.cpm/auth/login',
-        'https://studykale.cpm/auth/signup',
+        'https://studykale.com/aboutus',
+        'https://studykale.com/auth/login',
+        'https://studykale.com/auth/signup',
         ]
     }
   }
