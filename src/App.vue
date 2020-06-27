@@ -24,7 +24,7 @@
             {
               name: 'title',
               content: 'Pro Essay service'
-            }
+            },
             {
               vmid: 'description',
               name: 'description',
