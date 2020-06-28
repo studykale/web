@@ -220,7 +220,7 @@ export default {
 
 <style lang="scss" scoped>
 .home {
-  background: url("../assets/images/students-laptop.jpg");
+  background: url("../assets/images/students-laptop.jpg") no-repeat;
   background-position: center;
   background-size: cover;
 
