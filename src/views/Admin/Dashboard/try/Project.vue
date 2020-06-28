@@ -311,7 +311,7 @@ export default {
     padding: .75em;
     border-radius: 4px;
     display: inline-block;
-    width: 15em;
+    width: 13em;
     background: #E20338;
     color: white;
     

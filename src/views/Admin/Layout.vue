@@ -105,8 +105,8 @@ import { mapState, mapActions } from 'vuex';
 
 <style lang="scss" scoped>
     .dashboard {
-        background: #FAFAF2;
-        height: 100vh;
+        background: #f1f6fb;
+        max-height: 100vh;
         display: grid;
         grid-template-columns: 20% 1fr;
         grid-template-rows: 1fr;
@@ -146,6 +146,8 @@ import { mapState, mapActions } from 'vuex';
 
     .main-content {
         grid-area: 1 / 2 / 2 / 3;
+        min-height: 100vh;
+        overflow-y: auto;
         .wrapper {
             padding: 1.7em;
         }

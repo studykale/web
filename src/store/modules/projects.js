@@ -630,6 +630,10 @@ const projects = {
 				.set({
 						completeFiles
 				}, { merge: true })
+				Notification.open({
+					type: 'is-success',
+					message: "Upload complete..."
+				})
 				commit('uploadFCFinished')
 			})
 			.catch(error => {

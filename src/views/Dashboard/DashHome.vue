@@ -9,8 +9,6 @@
                               <span><award-icon size="1.5x" class="text-white"></award-icon></span>
                               <span>Tasks</span>
                           </router-link>
-  
-
                           <router-link  to="/dashboard/notifications" :class="{ 'notbell': notifications }"  class="flex flex-row top-links">
                               <span><bell-icon size="1.5x" class="text-white "></bell-icon></span>
                               <span>Notifications</span>
@@ -84,7 +82,6 @@ export default {
           content: "Study, Students, Exams, Essay service"
         }
       ]
-    
     }
   },
   data() {
