@@ -46,25 +46,27 @@
             </b-field>
         </div>
         <div v-if="project.completeFiles && project.completeFiles.length > 0" class="mb-2">
-            <b-field>
+            <b-field label="Completed files">
                 <div class="control">
                     <b-taglist v-for="(file, i) in project.completeFiles" :key="i" attached>
-                        <b-tag type="is-dark">
-                            <a :href="file" target="blank">{{ i }}</a>
+                        <b-tag rounded type="is-dark">
+                            <a class="completeLink" :href="file" target="blank">File {{ i + 1 }}</a>
                         </b-tag>
                     </b-taglist>
                 </div>
                 
             </b-field>
         </div>
-        <p class="mb-2">Completion <span class="text-red">{{ dateFm(project.deadline) }}</span></p>
-        
-        <div v-if="!project.paid" class="flex flex-wrap items-center">
-            <Payment :projectId="projectId" :paymentAmount="project.price ? project.price : calcPrice(project)"/>
-            <b-button @click="isProjectUpdateActive = !isProjectUpdateActive" type="is-warning">Update</b-button>
-        </div>
-        <div v-else>
-            <div class="flex flex-row my-2"><span class="mr-1">Paid</span> <check-circle-icon size="1.5x" class="text-blue"></check-circle-icon></div>
+        <div v-if="!project.completedFiles">
+            <p class="mb-2">Completion <span class="text-red">{{ dateFm(project.deadline) }}</span></p>
+            
+            <div v-if="!project.paid" class="flex flex-wrap items-center">
+                <Payment :projectId="projectId" :paymentAmount="project.price ? project.price : calcPrice(project)"/>
+                <b-button @click="isProjectUpdateActive = !isProjectUpdateActive" type="is-warning">Update</b-button>
+            </div>
+            <div v-else>
+                <div class="flex flex-row my-2"><span class="mr-1">Paid</span> <check-circle-icon size="1.5x" class="text-green"></check-circle-icon></div>
+            </div>
         </div>
         <x-circle-icon @click="closeSide" size="1x"  class="p-absolute icon"></x-circle-icon>
       </div>    
@@ -171,7 +173,7 @@ export default {
 
 <style lang="scss" scoped>
     .b-sidebar {
-        
+       
     
         .text-sm {
             color: gray;
@@ -199,5 +201,13 @@ export default {
 
     .mr-1 {
         margin-right: 15px;
+    }
+
+    .completeLink {
+        color: white;
+
+        &:hover {
+            color: rgb(0, 132, 255);
+        }
     }
 </style>
