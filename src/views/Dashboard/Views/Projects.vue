@@ -76,12 +76,9 @@
               </div>
             </div>
       </section>
-      <div class="p-absolute">
+      <div v-if="reviewAllowed" class="p-absolute review">
         <ReviewCard />
       </div>
-      <b-message class="p-absolute msg-notify" title="Processing" :active.sync="addingProject" aria-close-label="Close message">
-            Hey just setting things up...
-      </b-message>
     </div>
         <b-modal :active.sync="showNewProject">
           <NewProject :showNewProject="showProjectModal" :currentUser="loggedInUser"/>
@@ -135,7 +132,7 @@ export default {
       this.$buefy.snackbar.open({
           duration: 5000,
           message: 'Hey just a sneak peak, would you kindly take 2 min to rate us. Help us improve?..',
-          type: 'is-danger',
+          type: 'is-info',
           position: 'is-bottom-left',
           actionText: 'Yes',
           queue: false,
@@ -174,13 +171,7 @@ export default {
   },
   created() {
     this.$bind('proj', projectsCollection.where('creator', '==', this.loggedInUser.userId))
-    .then(docs => {
-      
-      this.$buefy.snackbar.open({
-        type: 'is-info',
-        message: "You have "+docs.length+ " projects"
-      })
-    })
+    
     this.$bind('drafts', draftsCollection.where('email', '==', this.loggedInUser.email)).then(dr => {
       // let date = new Date(null);
       let today = new Date()
@@ -203,7 +194,10 @@ export default {
         }
       }      
     }),
-    setTimeout(this.newReview, 20000)
+    setTimeout(this.newReview, 20000),
+    this.$root.$on('closeReview', (arg) => {
+      this.reviewAllowed = !arg
+    })
   }
 }
 </script>
@@ -346,5 +340,12 @@ export default {
       button {
         margin-top: 3em;
       }
+    }
+
+    .p-absolute.review {
+      box-shadow: 0 10px 15px 6px #c1c1c1;
+      position: absolute;
+      top: 20px;
+      right: 20px;
     }
 </style>
