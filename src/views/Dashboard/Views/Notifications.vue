@@ -37,7 +37,7 @@
 
                     <b-table-column field="date" label="Date" sortable centered>
                         <span class="tag is-success">
-                            {{ props.row.date.toDate() | moment('from', 'now') }}
+                            {{ props.row.time.toDate() | moment('from', 'now') }}
                         </span>
                     </b-table-column>
 

@@ -65,11 +65,11 @@ export default {
         this.setId()
         this.$bind('paidProject', projectsCollection.where('id', '==', this.projectId))
         
-        userPayments(this.loggedInUser.userId).add({
-            project: this.paidProject,
-            paid: this.$route.query.cancelled || !this.$route.query.PayRef ? false : true,
-            date: Timestamp.now()
-        })
+            userPayments(this.loggedInUser.userId).add({
+                project: this.paidProject,
+                paid: this.$route.query.cancelled || !this.$route.query.PayRef ? false : true,
+                date: Timestamp.now()
+            })
 
         this.updateProjects({ pid: this.projectId, paymentUpdate: true, ref: this.ref })
     }

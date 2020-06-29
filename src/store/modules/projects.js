@@ -380,20 +380,20 @@ const projects = {
 						creator: data.creator
 					})
 					.then(()=> {
-						notifications.add({
+						notifications.doc(currentUser.uid).add({
 							name: "New project added",
 							date: Timestamp.now(),
 							read: false,
-							user: currentUser.uid,
 							type: "New project",
 							description: `You created a new project with a deadline at ${this.deadline}. It has been received..If payment fails you can retry by clicking the project and paying via the project details bar..`
 						})
 			
-						notifications.add({
+						notifications.doc(tempId(5)).set({
 							name: "New project added",
 							date: Timestamp.now(),
 							read: false,
 							type: "New project",
+							description: "A project was added"
 						})
 
 						router.push(`/pay/${data.price}/${docId}`)
@@ -473,22 +473,27 @@ const projects = {
 									let id = result.id;
 									let data = result.data()
 									let res = { ...data, id };
-									
-									let notId = tempId(4)
-
-									let newNote = notifications.doc(notId)
-									
 								
+
+									let newNote = notifications.doc(currentUser.uid)
+									
+									
 									newNote.set({
 										name: "Payment successful",
-										date: Timestamp.now(),
+										time: Timestamp.now(),
 										read: false,
 										user: res.creator,
-										type: "Payment",
 										description: "Your task" + data.name +  " has been paid successfully. And has been received by the team we will begin working on it immediately."
 									})
-									
-						
+
+									notifications.doc(tempId(5))
+									.set({
+										name: "Payment received",
+										time: Timestamp.now(),
+										read: false,
+										description: `A project with name ${data.name} was paid.`
+									});
+
 									commit('updateProject', res)
 								
 								} else {
@@ -600,7 +605,22 @@ const projects = {
 								let id = result.id;
 								let data = result.data()
 								data.id = id;
-								commit('updateProject', data)
+
+								let note = notifications.doc(tempId(5))
+								note.set({
+									time: Timestamp.now(),
+									read: false,
+									description: "Project was changed to "+data.status,
+									name: "Project update"
+								});
+
+								Notification.open({
+									message: "You have successfully update the project to " + data.status,
+									type: "is-success",
+									position: 'is-top-right'
+								})
+
+								commit('updateProject', data);
 							} else {
 								Notification.open({
 									queue: true,

@@ -6,23 +6,7 @@ import { SnackbarProgrammatic as Snack, NotificationProgrammatic as Notification
 
 import router from "../../router"
 import { uploadFiles } from "./projects"
-// function getRandomInt() {
-// 	return Math.floor(Math.random() * 100)
-// }
 
-// function onIdTokenRevocation() {
-// 	// For an email/password user. Prompt the user for the password again.
-// 	let password = prompt('Please provide your password for reauthentication');
-// 	let credential = auth.EmailAuthProvider.credential(auth.currentUser.email, password);
-// 	auth.currentUser.reauthenticateWithCredential(credential)
-// 	.then(result => {
-// 		//("result", result)
-// 		// User successfully reauthenticated. New ID tokens should be valid.
-// 	})
-// 	.catch(error => {
-// 		//("error token", error)
-// 	});
-// }
 
 function sendVerificationEmail(user, url) {
 	user.sendEmailVerification({
@@ -215,7 +199,6 @@ const User = {
 					})
 					.then(() => {
 						commit("updateProfile", currentUser.photoURL)
-					
 					})
 					.catch(error => {
 						Notification.open({

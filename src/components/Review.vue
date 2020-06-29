@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { currentUser, reviews } from '../db';
+import { currentUser, reviews, notifications, Timestamp } from '../db';
 
 export default {
     data() {
@@ -55,20 +55,41 @@ export default {
     },
     methods: {
         addReview() {
-            reviews.add({
+            let r  = reviews.doc(currentUser.uid)
+            r.set({
                 name: currentUser.displayName,
-                profile: currentUser.profileURL,
+                profile: currentUser.photoURL || null,
                 rate: this.rate,
                 message: this.message
             })
+
+            let n = notifications.doc(this.tempId(5))
+
+            n.set({
+                name: 'Site review',
+                description: "A site review has been made..",
+                time: Timestamp.now(),
+                read: false
+            })
+
             this.$buefy.toast.open({
                   message: 'Thanks alot we will update...',
                   queue: false
             })
             this.message = ""
+            this.closeReview()
         },
         closeReview() {
             this.$root.$emit('closeReview', { close: true })
+        },
+        tempId(length) {
+            var result = '';
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for ( var i = 0; i < length; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
         }
     }
 }

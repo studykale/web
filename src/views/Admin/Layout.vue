@@ -20,6 +20,9 @@
                         <router-link to="/admin/chats">Clients</router-link> 
                     </li>
                     <li>
+                        <router-link to="/admin/reviews">Reviews</router-link> 
+                    </li>
+                    <li>
                         <router-link to="/admin/chats#contact">Contact Us</router-link> 
                     </li>
                     <li>

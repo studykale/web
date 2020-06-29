@@ -4,9 +4,10 @@
           <ul>
               <li class="profile">
                   
-                  <img src="https://source.unsplash.com/user/erondu" alt="Support staff">
+                  <img  src="../../../assets/support.png" alt="Support staff">
                   <div class="user-info">
-                      <p>Samantha</p>
+                      <p>Support team</p>
+                      <small>We ensure you get answered with our always online team... </small>
                   </div>
               </li>
           </ul>
@@ -44,7 +45,8 @@ export default {
         return {
             chats: [],
             text: "",
-            me: null
+            me: null,
+            receiver: null
         }
     },
     
@@ -55,7 +57,7 @@ export default {
                 chats.add({
                     user: currentUser.displayName,
                     message: this.text,
-                    uid: currentUser.uid,
+                    uid: this.me,
                     read: false,
                     time: Timestamp.now(),
                     respondent: null
@@ -64,13 +66,15 @@ export default {
                 this.text = ""
                 // })
             }
-        }
+        },
+        
     },
+    
     created() {
         this.$bind('chats', chats.where('uid', '==', currentUser.uid).orderBy('time')).then(() => {
-            
             this.me = currentUser.uid;
         })
+        
     }
 }
 </script>
@@ -95,7 +99,7 @@ export default {
                     display: flex;
                     margin-right: 10px;
                     height: 35px;
-                    width: 35px;
+                    
 
                     img {
                         height: inherit;

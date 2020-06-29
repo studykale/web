@@ -151,6 +151,10 @@ const routes = [
         component: () => import('@/views/Dashboard/Views/Settings.vue')
       },
       {
+        path: 'reviews',
+        component: () => import('@/views/Admin/Dashboard/try/Reviews.vue')
+      },
+      {
         path: 'notifications',
         name: 'AdminSettings',
         component: () => import('@/views/Dashboard/Views/Notifications')
