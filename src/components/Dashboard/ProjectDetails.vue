@@ -162,7 +162,7 @@ export default {
           this.$root.$on('projDetailOpen', (arg1) => {
             this.openSide = arg1.show;
             this.projectId = arg1.id;
-            this.project = this.projects.find(p => p.name == arg1.id);
+            this.project = this.projects.find(p => p.pid == arg1.id);
         }) 
        }) 
     }

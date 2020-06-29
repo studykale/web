@@ -377,24 +377,28 @@ const projects = {
 						creator: data.creator
 					})
 					.then(()=> {
+						notifications.add({
+							name: "New project added",
+							date: Timestamp.now(),
+							read: false,
+							user: currentUser.uid,
+							type: "New project",
+							description: `You created a new project with a deadline at ${this.deadline}. It has been received..If payment fails you can retry by clicking the project and paying via the project details bar..`
+						})
+			
+						notifications.add({
+							name: "New project added",
+							date: Timestamp.now(),
+							read: false,
+							type: "New project",
+						})
+
+						router.push(`/pay/${data.price}/${docId}`)
+
 						projectsCollection.doc(docId)
 						.get()
 						.then(res => {
-							notifications.add({
-								name: "New project added",
-								date: Timestamp.now(),
-								read: false,
-								user: currentUser.uid,
-								type: "New project",
-								description: `You created a new project with a deadline at ${this.deadline}. It has been received..If payment fails you can retry by clicking the project and paying via the project details bar..`
-							})
-				
-							notifications.add({
-								name: "New project added",
-								date: Timestamp.now(),
-								read: false,
-								type: "New project",
-							})
+							
 							
 							this.$buefy.notification.open({
 								message: "Processing payment...",
@@ -402,7 +406,6 @@ const projects = {
 								position: 'is-bottom-right',
 								duration: 10000
 							})
-							router.push(`/pay/${res.data().price}/${res.id}`)
 							commit('addProjectComplete')
 						})
 						.catch((error) => {

@@ -1,6 +1,6 @@
 <template>
    
-      <div @click="showSide(project.name)" class="project-card">
+      <div @click="showSide(project.pid)" class="project-card">
           <div class="head">
               <h2 class="title">{{ project.name }}</h2>
           </div>

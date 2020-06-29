@@ -29,6 +29,7 @@
 <script>
 import Rave from 'vue-ravepayment';
 import { CreditCardIcon } from 'vue-feather-icons'
+import { currentUser } from '../../db';
 
 export default {
     props:{
@@ -46,10 +47,10 @@ export default {
         const raveKey = process.env.VUE_APP_RAVE_KEY
         return {
             raveKey,
-            customerEmail: 'studykale@gmail.com',
+            customerEmail: currentUser.email,
             plan: 2928,
-            fname: 'Brian',
-            lname: 'Mwangi',
+            fname: currentUser.displayName,
+            lname: currentUser.email.split("@")[0],
             currency: 'AUD',
             hostedPayment: 1,
             country: "KE",
