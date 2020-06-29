@@ -183,7 +183,7 @@ const User = {
 			.then(() => {
 				commit('logout')
 				window.$cookies.remove('loggedIn');
-				if(window.$cookies.isKey('kadm'))  window.$cookies.remove('loggedIn');
+				if(window.$cookies.isKey('kadm'))  window.$cookies.remove('kadm');
 				window.$cookies.remove('vuex')
 				window.localStorage.removeItem('vuex')
 				router.replace('/')

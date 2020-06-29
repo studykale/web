@@ -169,7 +169,7 @@ export default {
 
       this.$buefy.snackbar.open({
         type: 'is-info',
-        message: "Please not that drafts that pass deadlines will be automatically deleted. Please update it to a complete project to avoid this.",
+        message: "Please note that drafts that pass deadlines will be automatically deleted. Please update it to a complete project to avoid this.",
         duration: 8000
       })
       

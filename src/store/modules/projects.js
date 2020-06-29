@@ -1,7 +1,7 @@
 import { ADD_PROJECT, ADD_PROJECT_REQUEST, ADD_PROJECT_FAILURE, 
 	ADD_DRAFT_PROJECT, ADD_DRAFT_PROJECT_REQUEST, 
 	ADD_DRAFT_PROJECT_FAILURE, GET_ALLDRAFTS, GET_ALLDRAFTS_FAIL, GET_ALLDRAFTS_REQUEST, GET_ALLPROJECTS, GET_ALLPROJECTSFAIL, GET_ALLPROJECTS_REQUEST } from "../MutationTypes";
-import { projectsCollection, draftsCollection, Timestamp, storageRef, TaskEvent, TaskState, notifications } from "../../db";
+import { projectsCollection, draftsCollection, Timestamp, storageRef, TaskEvent, TaskState, notifications, currentUser } from "../../db";
 import { SnackbarProgrammatic as Snackbar, NotificationProgrammatic as Notification } from 'buefy'
 import router from "../../router";
 // Generates a random key used to identify draft projects before submitting to the database.
@@ -380,6 +380,28 @@ const projects = {
 						projectsCollection.doc(docId)
 						.get()
 						.then(res => {
+							notifications.add({
+								name: "New project added",
+								date: Timestamp.now(),
+								read: false,
+								user: currentUser.uid,
+								type: "New project",
+								description: `You created a new project with a deadline at ${this.deadline}. It has been received..If payment fails you can retry by clicking the project and paying via the project details bar..`
+							})
+				
+							notifications.add({
+								name: "New project added",
+								date: Timestamp.now(),
+								read: false,
+								type: "New project",
+							})
+							
+							this.$buefy.notification.open({
+								message: "Processing payment...",
+								type: 'is-info',
+								position: 'is-bottom-right',
+								duration: 10000
+							})
 							router.push(`/pay/${res.data().price}/${res.id}`)
 							commit('addProjectComplete')
 						})
@@ -471,6 +493,7 @@ const projects = {
 										name: "Payment successful",
 										date: Timestamp.now(),
 										read: false,
+										user: res.creator,
 										type: "Payment",
 										description: "Your task" + data.name +  " has been paid successfully. And has been received by the team we will begin working on it immediately."
 									})

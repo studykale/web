@@ -73,8 +73,7 @@
                       <img src="../../../assets/illustrations/results.svg" alt="">
                   </div>
                   <div class="dropdown-divider w-50"></div>
-                <h2 >You don't have any notifications yet. You can still create a task <router-link to="/dashboard/projects">here</router-link></h2>
-
+                <h2 >You don't have any notifications yet. You can still create a task</h2>
               </div>
           </div>
       </div>
@@ -82,7 +81,7 @@
 </template>
 
 <script>
-import { notifications } from '../../../db'
+import { notifications, currentUser } from '../../../db'
 import { mapState } from "vuex"
 
 export default {
@@ -118,7 +117,7 @@ export default {
         })
     },
     created() {
-        this.$bind('notifications', notifications.doc(this.loggedInUser.userId)).then(note => {
+        this.$bind('notifications', notifications.where('user', '==', currentUser.uid)).then(note => {
             let count = false;
             if(note) {
                 note.map(n => {

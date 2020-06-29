@@ -111,7 +111,7 @@
                         <h4><span class="font-bold">Paper type: </span><span>{{ paperType || 'Please set the type otf paper' }}</span></h4>
                         
                         </div>
-                        <button  class="button is-primary is-fullwidth" :class="{ 'is-loading': addingProject }" type="submit" @click="$parent.close()">Submit</button>
+                        <button  class="button is-primary is-fullwidth" type="submit" @click="$parent.close()">Submit</button>
                     </b-step-item>
                 </b-steps>
             </form>
@@ -123,6 +123,8 @@
 // import { validationMixin } from "vuelidate";
 import { mapActions, mapState } from "vuex";
 import { AlertCircleIcon } from 'vue-feather-icons';
+// import { notifications, Timestamp, currentUser } from "../../db";
+
 export default {
     props: {
         showNewProject: Boolean,
@@ -188,13 +190,8 @@ export default {
 
             this.addProject(data)
             this.$parent.close();
+
             
-            this.$buefy.notification.open({
-                message: "Processing payment...",
-                type: 'is-info',
-                position: 'is-bottom-right',
-                duration: 10000
-            })
         },
          deleteDropFile(index) {
             this.dropFiles.splice(index, 1);
