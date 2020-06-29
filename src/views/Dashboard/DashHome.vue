@@ -127,11 +127,6 @@ export default {
       this.$router.push('/')
     } else {
       this.initDrafts(this.loggedInUser.email);
-      this.$buefy.snackbar.open({
-        type: 'is-info',
-        message: "Please note that drafts that pass deadlines will be automatically deleted. Please update it to a complete project to avoid this.",
-        duration: 8000
-      })
     }
   }
 }

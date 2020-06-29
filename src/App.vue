@@ -53,6 +53,10 @@
   font-family: "Muli", sans-serif;
 }
 
+.card {
+  box-shadow: 0px 4px 4px 0px rgba(222, 222, 222, 0.25) !important;
+}
+
 .p-relative {
   position: relative;
 }

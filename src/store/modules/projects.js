@@ -624,6 +624,7 @@ const projects = {
 							} else {
 								Notification.open({
 									queue: true,
+									type: 'is-danger',
 									message: "Project not found"
 								})
 							}
