@@ -5,6 +5,7 @@
                 Hi, How would you rate our services?
             </div>
         </div>
+
         <form @submit.prevent="addReview">
 
             <div class="card-content">
@@ -19,7 +20,7 @@
             <b-field label="Message"
                 >
                 <b-input 
-                validation-message="Please add a descriptive message to help us improve your experience..."
+                validation-message="Please add a descriptive mpproessage to help us improve your experience..."
                 required 
                 minLength="5" 
                 placeholder="What's your say?.." 
@@ -28,8 +29,8 @@
                  type="textarea"></b-input>
             </b-field>
             <button class="button is-primary is-extended" type="submit">Submit</button>
+            </div>
         </form>
-        </div>
     </div>
 </template>
 
@@ -54,6 +55,10 @@ export default {
                 profile: currentUser.profileURL,
                 rate: this.rate,
                 message: this.message
+            })
+            this.$buefy.toast.open({
+                  message: 'Thanks alot we will update...',
+                  queue: false
             })
         }
     }

@@ -76,6 +76,9 @@
               </div>
             </div>
       </section>
+      <div class="p-absolute">
+        <ReviewCard />
+      </div>
       <b-message class="p-absolute msg-notify" title="Processing" :active.sync="addingProject" aria-close-label="Close message">
             Hey just setting things up...
       </b-message>
@@ -92,6 +95,7 @@ import NewProject from '@/components/Dashboard/NewProject.vue'
 import { mapState, mapGetters } from "vuex"
 import ProjectDetails from "@/components/Dashboard/ProjectDetails.vue";
 import  ProjectCard from "@/components/ProjectCard"
+import ReviewCard from "@/components/Review";
 import { projectsCollection, draftsCollection } from "../../../db";
 import DraftCard from "../../../components/DraftCard";
 
@@ -100,7 +104,8 @@ export default {
     NewProject,
     ProjectDetails,
     ProjectCard,
-    DraftCard
+    DraftCard,
+    ReviewCard
   },
   props: {
     showProjectModal: Boolean
@@ -114,6 +119,7 @@ export default {
       proj: [],
       drafts: [],
       openSide: false,
+      reviewAllowed: false
     }
   },
   methods: {
@@ -125,6 +131,19 @@ export default {
         this.showNewProject = true
       }
     },
+    newReview() {
+      this.$buefy.snackbar.open({
+          duration: 5000,
+          message: 'Hey just a sneak peak, would you kindly take 2 min to rate us. Help us improve?..',
+          type: 'is-danger',
+          position: 'is-bottom-left',
+          actionText: 'Yes',
+          queue: false,
+          onAction: () => {
+              this.reviewAllowed = true
+          }
+      })
+    }
   },
   firestore: {
     proj: projectsCollection
@@ -183,7 +202,8 @@ export default {
           draftsCollection.doc(d.id).delete()
         }
       }      
-    })
+    }),
+    setTimeout(this.newReview, 20000)
   }
 }
 </script>

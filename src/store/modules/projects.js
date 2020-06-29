@@ -228,6 +228,9 @@ const projects = {
 					// No drafts found...
 					
 					// //("No drafts yet");
+					Notification.open({
+						message: "You don't have any drafts"
+					})
 
 				} else {
 					// //("result", result);
@@ -394,29 +397,13 @@ const projects = {
 						})
 
 						router.push(`/pay/${data.price}/${docId}`)
-
-						projectsCollection.doc(docId)
-						.get()
-						.then(res => {
-							
-							
-							this.$buefy.notification.open({
-								message: "Processing payment...",
-								type: 'is-info',
-								position: 'is-bottom-right',
-								duration: 10000
-							})
-							commit('addProjectComplete')
+						this.$buefy.notification.open({
+							message: "Processing payment...",
+							type: 'is-info',
+							position: 'is-bottom-right',
+							duration: 10000
 						})
-						.catch((error) => {
-							Notification.open({
-								queue: true,
-								message: "Sorry we were unable to complete adding the project :"+error.message,
-								position: 'is-top-right',
-								type: 'is-warning'
-							})
-							commit(ADD_PROJECT_FAILURE)
-						})
+	
 					}).catch(error => {
 						//("erro", error);
 						Notification.open({
