@@ -167,7 +167,7 @@ export default {
             deadline: new Date(),
             orderPages: 1,
             maxOrderPages: 100,
-            pricePerPage: 20,
+            pricePerPage: 1,
             currency: 'AUD',
             totalPrice: 0
         }
@@ -190,8 +190,6 @@ export default {
 
             this.addProject(data)
             this.$parent.close();
-
-            
         },
          deleteDropFile(index) {
             this.dropFiles.splice(index, 1);
@@ -203,7 +201,7 @@ export default {
             var days = duration.asDays();
             
             if(days.toFixed() >= 0 ) {
-                return this.orderPages * 25
+                return this.orderPages * 1
             }
             return this.orderPages * this.pricePerPage;
         },
