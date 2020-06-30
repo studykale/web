@@ -114,7 +114,7 @@ const User = {
 					}, { merge: true })
 				})
 				.then(() => {
-					sendVerificationEmail(data.user, 'http://localhost:8080/auth/signin')
+					sendVerificationEmail(data.user, 'http://studykale.com/auth/signin')
 					Notification.open({
 						message: "A verification email has been sent",
 						type: 'is-info',
@@ -188,7 +188,7 @@ const User = {
 				commit('setUser', null)
 			}
 		},
-		updateUserProfile({ commit }, data) {
+		updateUserProfile({ dispatch, commit }, data) {
 			commit('updateProfileRequest')
 			if(data.type == "photo") {
 				uploadFiles(data.image, 'photo')
@@ -217,6 +217,10 @@ const User = {
 				commit('updateEmailRequest')
 				currentUser.updateEmail(data.email)
 				.then(() => {
+					Notification.open({
+						type: 'is-info',
+						message: "Email updated..."
+					})
 					commit("updateEmail", currentUser.email)
 				})
 				.catch(error => {
@@ -239,9 +243,14 @@ const User = {
 					}
 				})
 			} else if(data.type == "password") {
-				commit("upatePasswordRequest")
+				commit("updatePasswordRequest")
 				currentUser.updatePassword(data.password)
 				.then(() => {
+					Notification.open({
+						type: 'is-info',
+						message: "Password updated you will have to login in again.."
+					})
+					dispatch('signout')
 					commit("updatePasswordComplete")
 				})
 				.catch(error => {

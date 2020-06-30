@@ -380,6 +380,8 @@ const projects = {
 						creator: data.creator
 					})
 					.then(()=> {
+						router.push(`/pay/${data.price}/${docId}`)
+
 						notifications.doc(currentUser.uid).add({
 							name: "New project added",
 							date: Timestamp.now(),
@@ -396,7 +398,6 @@ const projects = {
 							description: "A project was added"
 						})
 
-						router.push(`/pay/${data.price}/${docId}`)
 						this.$buefy.notification.open({
 							message: "Processing payment...",
 							type: 'is-info',
@@ -598,44 +599,25 @@ const projects = {
 						project.update({
 							status: data.status
 						})
-						project
-						.get()
-						.then(result => {
-							if(result.exists) {
-								let id = result.id;
-								let data = result.data()
-								data.id = id;
+							console.log("note", result.data())
+							let note = notifications.doc(result.data().creator);
 
-								let note = notifications.doc(tempId(5))
-								note.set({
-									time: Timestamp.now(),
-									read: false,
-									description: "Project was changed to "+data.status,
-									name: "Project update"
-								});
+							note.set({
+								time: Timestamp.now(),
+								read: false,
+								description: "Project was changed to "+data.status,
+								name: "Project update"
+							});
 
-								Notification.open({
-									message: "You have successfully update the project to " + data.status,
-									type: "is-success",
-									position: 'is-top-right'
-								})
-
-								commit('updateProject', data);
-							} else {
-								Notification.open({
-									queue: true,
-									type: 'is-danger',
-									message: "Project not found"
-								})
-							}
-						})
-						.catch(error => {
 							Notification.open({
-								queue: true,
-								message: "Something went wrong "+error.message
-							})
-							commit('updateProjectFail')
-						})
+								message: "You have successfully update the project to " + data.status,
+								type: "is-success",
+								position: 'is-top-right'
+							});
+
+							commit('updateProject', data);
+						
+						
 						
 					} else {
 						Notification.open({
@@ -643,7 +625,6 @@ const projects = {
 							message: "The project is not paid yet..."
 						})
 						commit('updateProjectFail')
-						
 					}
 				})
 				.catch(error => {

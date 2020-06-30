@@ -51,16 +51,16 @@
               <b-table-column field="id" label="ID">
                     {{ props.row.id }}
                 </b-table-column>
-                <b-table-column field="name" label="Name">
+                <b-table-column sortable field="name" label="Name">
                     {{ props.row.name }}
                 </b-table-column>
                 <b-table-column field="status" label="Status">
                     {{ props.row.status }}
                 </b-table-column>
-                <b-table-column field="pages" label="Pages">
+                <b-table-column sortable field="pages" label="Pages">
                     {{ props.row.pages }}
                 </b-table-column>
-                <b-table-column field="status" label="Deadline">
+                <b-table-column sortable field="status" label="Deadline">
                     {{ props.row.deadline.seconds ? formatDate(props.row.deadline.seconds) : 'today' }}
                 </b-table-column>
             </template>
@@ -90,30 +90,29 @@
             </div>
           </div>
           <b-field class="mt-2">
-              <b-radio-button 
-                  
-                  @input="updatePstatus('started')"
+              <b-button 
+                  @open-on-click="updatePstatus('started')"
                   native-value="OnProgress"
                   >
                   <coffee-icon size="1x" class="icon-blue"></coffee-icon>
                   <span>Started</span>
-              </b-radio-button>
+              </b-button>
 
-              <b-radio-button 
-                  @input="updatePstatus('complete')"
+              <b-button 
+                  @click="updatePstatus('completed')"
                   native-value="Completed"
                   >
                   <check-icon size="1x" class="custom-class"></check-icon>
                   <span>Completed</span>
-              </b-radio-button>
+              </b-button>
 
-              <b-radio-button 
-                  @input="updatePstatus('cancelled')"
+              <b-button 
+                  @click="updatePstatus('cancelled')"
                   native-value="Cancelled"
                   >
                   <x-square-icon size="1.5x" class="custom-class"></x-square-icon>
                   <span>Cancel</span>
-              </b-radio-button>
+              </b-button>
           </b-field>
         </div>
         <div class="card-footer flex flex-column p-2">
@@ -157,7 +156,7 @@ export default {
         showProjectModal: true,
         showModalUpload: false,
         currentPage: 1,
-        perPage: 5,
+        perPage: 8,
         checkboxCustom: 'Yes',
         selected: []
     }

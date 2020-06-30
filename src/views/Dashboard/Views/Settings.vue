@@ -32,6 +32,8 @@
         </div>
         <div class="card-content">
           <form @submit.prevent="updateUserPassword">
+             <small class="text-red my-2">You will be logged out of all devices after successful change..</small>
+
             <b-field 
             :message="newPasswordErrors"
             :type="{ 'is-danger': newPasswordErrors.length > 0 }"
@@ -226,5 +228,9 @@ export default {
 
     .mr-a {
       margin-right: auto;
+    }
+
+    .my-2 {
+      margin: 0 10px
     }
 </style>
