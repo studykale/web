@@ -21,6 +21,9 @@
                 </div>
             </div>
           </div>
+          <div class="flex justify-center items-center" v-else>
+            <p>You don't have any chat's yet..</p>
+          </div>
       </div>
       <div class="text-view">
           <form @submit.prevent="sendChat">

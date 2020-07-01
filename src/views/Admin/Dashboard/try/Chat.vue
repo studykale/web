@@ -95,7 +95,7 @@
 </template>
 
 <script>
-import { contactCollection, users, chats, Timestamp, currentUser, notifications } from '../../../../db'
+import { contactCollection, users, chats, Timestamp, currentUser } from '../../../../db'
 import { NavigationIcon } from 'vue-feather-icons'
 
 
@@ -169,12 +169,6 @@ export default {
       this.me = currentUser
     }),
     this.$bind('chats', chats.orderBy('time'))
-    notifications.add({
-      date: Timestamp.now(),
-      read: false,
-      name: "Getting started...",
-      description: "Welcome "+currentUser.displayName+"Get all your info"
-    })
   }
 }
 </script>

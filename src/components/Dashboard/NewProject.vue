@@ -167,7 +167,7 @@ export default {
             deadline: new Date(),
             orderPages: 1,
             maxOrderPages: 100,
-            pricePerPage: 1,
+            pricePerPage: 25,
             currency: 'AUD',
             totalPrice: 0
         }
@@ -201,7 +201,7 @@ export default {
             var days = duration.asDays();
             
             if(days.toFixed() >= 0 ) {
-                return this.orderPages * 1
+                return this.orderPages * 25
             }
             return this.orderPages * this.pricePerPage;
         },

@@ -45,29 +45,35 @@
                 </div>
             </b-field>
         </div>
-        <div v-if="project.completeFiles && project.completeFiles.length > 0" class="mb-2">
-            <b-field label="Completed files">
-                <div class="control">
-                    <b-taglist v-for="(file, i) in project.completeFiles" :key="i" attached>
-                        <b-tag rounded type="is-dark">
-                            <a class="completeLink" :href="file" target="blank">File {{ i + 1 }}</a>
-                        </b-tag>
-                    </b-taglist>
-                </div>
-                
-            </b-field>
-        </div>
-        <div v-if="!project.completedFiles">
+        
+        <div v-if="project.status !== 'completed'">
             <p class="mb-2">Completion <span class="text-red">{{ dateFm(project.deadline) }}</span></p>
             
             <div v-if="!project.paid" class="flex flex-wrap items-center">
-                <Payment :projectId="projectId" :paymentAmount="project.price ? project.price : calcPrice(project)"/>
+                <Payment :projectId="project.pid" :paymentAmount="project.price ? project.price : calcPrice(project)"/>
                 <b-button @click="isProjectUpdateActive = !isProjectUpdateActive" type="is-warning">Update</b-button>
             </div>
             <div v-else>
                 <div class="flex flex-row my-2"><span class="mr-1">Paid</span> <check-circle-icon size="1.5x" class="text-green"></check-circle-icon></div>
             </div>
         </div>
+        <div v-else>
+            <p class="text-green">Project is complete. Please find attached the completed files.</p>
+            <div v-if="project.completeFiles && project.completeFiles.length > 0" class="mb-2">
+                <b-field label="Completed files">
+                    <div class="control">
+                        <b-taglist v-for="(file, i) in project.completeFiles" :key="i" attached>
+                            <b-tag rounded type="is-dark">
+                                <a class="completeLink" :href="file" target="blank">File {{ i + 1 }}</a>
+                            </b-tag>
+                        </b-taglist>
+                    </div>
+                    
+                </b-field>
+            </div>
+            <b-button type="is-danger" class="mt-2" expanded @click="openReview">Please leave us a review...</b-button>
+        </div>
+        <!-- This is a close icon for the sidebar incase the backdrop fails -->
         <x-circle-icon @click="closeSide" size="1x"  class="p-absolute icon"></x-circle-icon>
       </div>    
     </b-sidebar>
@@ -101,14 +107,12 @@ export default {
             project: {},
             projectId: '',
             isProjectUpdateActive: false,
-            
         }
     },
     methods: {
         updateSingleProject() {
             // //("id", this.projectId)
             this.isProjectUpdateActive = !this.isProjectUpdateActive;
-
         },
         dateFm(s) {
             if(new Date(s) && (typeof s !== Object) && s != null) {
@@ -121,6 +125,9 @@ export default {
                 return new Date(s.seconds * 1000)
             }
         },
+        openReview() {
+            this.$emit('showReviewBox', true)
+        },
         toDate(d) {
             return new Date(d)
         },
@@ -130,10 +137,10 @@ export default {
             let end = this.$moment(this.dateFm(project.deadline));
             var duration = this.$moment.duration(now.diff(end));
             var days = Math.abs(duration.asHours());
-            // //("days", days)
+   
             if(days <= 24 ) {
                 let p = parseInt(project.pages * 10 + project.pages * 3.2)
-                // //("p", p);
+                
                 return p;
             } else {
                 let r = parseInt(project.pages * 10);
@@ -159,7 +166,7 @@ export default {
             return this.project.deadline.toDate()
         }
     },
-    mounted() {
+    created() {
        this.$nextTick(() => {
           this.$root.$on('projDetailOpen', (arg1) => {
             this.openSide = arg1.show;

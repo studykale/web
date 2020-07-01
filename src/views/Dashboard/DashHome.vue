@@ -26,7 +26,7 @@
           <section class="bottom">
               <div class="links">
                   <ul>
-                      <router-link v-if="!loggedInUser.photoURL" to="/dashboard/profile" class="profile">
+                      <router-link v-if="!loggedInUser.photoURL" to="/dashboard/profile" class="profile items-center">
                             <span>{{ userInitials }}</span>
                       </router-link>
                       <router-link to="/dashboard/profile" class="profile present" v-else>
@@ -107,7 +107,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.$root.$on('notCount', (arg) => {
-        console.log("args", arg)
+        this.notifications = arg
       })
     })
   },
@@ -123,6 +123,8 @@ export default {
     }
   },
   created () {
+    
+    
     if(!this.loggedInUser || !this.loggedInUser.username) {
       this.$router.push('/')
     } else {
@@ -254,12 +256,12 @@ export default {
         content: "";
         position: absolute;
         top: 0;
-        right: 60px;
-        height: 5px;
+        left: 15px;
+        height: 8px;
         z-index: 2;
-        width: 5px;
-        border-radius: 2.5px;
-        background-color: yellow;
+        width: 8px;
+        border-radius: 4px;
+        background-color: #FFAD32;
       }
     }
 </style>

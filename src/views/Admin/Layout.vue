@@ -25,7 +25,7 @@
                     <li>
                         <router-link to="/admin/chats#contact">Contact Us</router-link> 
                     </li>
-                    <li>
+                    <li :class="{'noticon': notifications }">
                         <router-link to="/admin/notifications">Notifications</router-link> 
                     </li>
                 </ul>
@@ -86,6 +86,11 @@ import { mapState, mapActions } from 'vuex';
             BriefcaseIcon,
             LogOutIcon
         },
+        data() {
+            return {
+                notifications: false
+            }
+        },
         methods: {
             ...mapActions('user', ['signout']),
             logOut() {
@@ -101,6 +106,11 @@ import { mapState, mapActions } from 'vuex';
         computed: {
             ...mapState({
                 user: state => state.user.user
+            })
+        },
+        created() {
+            this.$root.$on('notCount', (arg) => {
+                this.notifications = arg
             })
         }
     }
@@ -197,4 +207,7 @@ import { mapState, mapActions } from 'vuex';
     .btn:hover {
         cursor: pointer;
     }
+  li.noticon {
+      border-right: solid red;
+  }
 </style>

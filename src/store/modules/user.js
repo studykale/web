@@ -1,12 +1,21 @@
 
 import { LOGIN_USER, SIGNUP_USER, SIGNUP_USER_COMPLETE, LOGIN_REQUEST, SIGNUP_USER_REQUEST, LOGIN_FAILURE, SIGNUP_USER_FAILURE } from "../MutationTypes"
-import { auth, newUser, users, currentUser, chats, Timestamp } from "../../db"
+import { auth, newUser, users, currentUser, chats, Timestamp, notifications } from "../../db"
 import { SnackbarProgrammatic as Snack, NotificationProgrammatic as Notification } from 'buefy'
 
 
 import router from "../../router"
-import { uploadFiles } from "./projects"
+import { uploadFiles } from "./projects";
 
+const tempId = length => {
+	var result           = '';
+	var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	var charactersLength = characters.length;
+	for ( var i = 0; i < length; i++ ) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
+}
 
 function sendVerificationEmail(user, url) {
 	user.sendEmailVerification({
@@ -61,6 +70,9 @@ const User = {
 			
 				let user = result.user;
 				let userId = user.uid;
+				if(result.user.emailVerified) {
+					router.push('/verification')
+				}
 
 				dispatch('projects/initProjects', { userId }, { root: true })
 				window.$cookies.set('loggedIn', true, '1d');
@@ -120,12 +132,25 @@ const User = {
 						type: 'is-info',
 						duration: 5000
 					})
-					chats.doc(data.user.uid).set({
+					let note = notifications.doc(tempId(7))
+
+					
+					note.set({
+						time: Timestamp.now(),
+						read: false,
+						rvr: data.user.uid,
+						name: "Getting started...",
+						description: "Welcome "+currentUser.displayName+", Feel right at home. You can ask us anything in the chat section"
+					})
+					
+					let startChat = chats.doc(tempId(8))
+					startChat.set({
 						user: currentUser.displayName,
 						message: "Welcome to studykale...you can talk to us any time",
 						read: false,
-						id: currentUser.uid,
-						time: Timestamp.now()
+						uid: currentUser.uid,
+						time: Timestamp.now(),
+						respondent: null
 					})
 					.then(() => {
 						commit(SIGNUP_USER_COMPLETE)
@@ -217,6 +242,13 @@ const User = {
 				commit('updateEmailRequest')
 				currentUser.updateEmail(data.email)
 				.then(() => {
+					let note = notifications.doc(currentUser.uid)
+					note.set({
+						name: "Email change successful",
+						description: "The email change was successful.",
+						time: Timestamp.now(),
+						read: false
+					})
 					Notification.open({
 						type: 'is-info',
 						message: "Email updated..."
@@ -244,31 +276,27 @@ const User = {
 				})
 			} else if(data.type == "password") {
 				commit("updatePasswordRequest")
-				currentUser.updatePassword(data.password)
-				.then(() => {
-					Notification.open({
-						type: 'is-info',
-						message: "Password updated you will have to login in again.."
-					})
+				let note = notifications.doc(tempId(6))
+
+				Promise.all([ 
+					note.set({
+						time: Timestamp.now(),
+						read: false,
+						rvr: currentUser.uid,
+						name: 'Password update',
+						description: "Your password change was successful.Please note that logging you out is a security measure. "
+					}), 
+					currentUser.updatePassword(data.password)
+				])
+				.then(result => {
+					console.log("res", result);
+					
 					dispatch('signout')
-					commit("updatePasswordComplete")
 				})
 				.catch(error => {
-					commit("updatePasswordFail")
-					if(error.type == "auth/weak-password") {
-						Notification.open({
-							type: "is-info",
-							message: "Your password was very weak please add a stronger password."
-						})
-					} else if(error.type == "auth/requires-recent-login") {
-						Notification.open({
-							type: "is-info",
-							message: "You need to logout and login again to change your password"
-						})
-					}
+					console.log("err", error)
 				})
 			}
-			
 		},
 		// Meant for ADMIN login.
 		createAdminAccount({ commit }, payload) {

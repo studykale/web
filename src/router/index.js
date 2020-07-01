@@ -62,6 +62,11 @@ const routes = [
     component: () => import('@/views/PassReq'),
   },
   {
+    path: "/verification",
+    name: "Verification",
+    component: () => import('@/views/verify')
+  },
+  {
     path: "/reviews",
     name: 'Reviews',
     component : () => import('@/views/Reviews.vue'),

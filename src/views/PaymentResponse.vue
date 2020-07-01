@@ -37,7 +37,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import { userPayments, projectsCollection, Timestamp } from "../db";
+import { projectsCollection, Timestamp, userPayments } from "../db";
 
 export default {
     data() {
@@ -64,8 +64,10 @@ export default {
     created() {
         this.setId()
         this.$bind('paidProject', projectsCollection.where('id', '==', this.projectId))
-        
-            userPayments(this.loggedInUser.userId).add({
+
+            let pay = userPayments(this.loggedInUser.userId)
+            
+            pay.add({
                 project: this.paidProject,
                 paid: this.$route.query.cancelled || !this.$route.query.PayRef ? false : true,
                 date: Timestamp.now()

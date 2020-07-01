@@ -83,7 +83,7 @@
         <b-modal :active.sync="showNewProject">
           <NewProject :showNewProject="showProjectModal" :currentUser="loggedInUser"/>
         </b-modal>
-        <ProjectDetails :projects="proj"/>
+        <ProjectDetails @showReviewBox="addReview" :projects="proj"/>
     </div>
 </template>
 <script>
@@ -128,18 +128,21 @@ export default {
         this.showNewProject = true
       }
     },
-    newReview() {
-      this.$buefy.snackbar.open({
-          duration: 5000,
-          message: 'Hey just a sneak peak, would you kindly take 2 min to rate us. Help us improve?..',
-          type: 'is-info',
-          position: 'is-bottom-left',
-          actionText: 'Yes',
-          queue: false,
-          onAction: () => {
-              this.reviewAllowed = true
-          }
-      })
+    // newReview() {
+    //   this.$buefy.snackbar.open({
+    //       duration: 5000,
+    //       message: 'Hey just a sneak peak, would you kindly take 2 min to rate us. Help us improve?..',
+    //       type: 'is-info',
+    //       position: 'is-bottom-left',
+    //       actionText: 'Yes',
+    //       queue: false,
+    //       onAction: () => {
+    //           this.reviewAllowed = true
+    //       }
+    //   })
+    // }
+    addReview(option) {
+      this.reviewAllowed = option
     }
   },
   firestore: {
@@ -176,9 +179,6 @@ export default {
       // let date = new Date(null);
       let today = new Date()
       
-
-      
-      
       for (let i = 0; i < dr.length; i++) {
         let d = dr[i]
         // let dline = date.setSeconds(d.deadline.seconds)
@@ -189,11 +189,11 @@ export default {
           draftsCollection.doc(d.id).delete()
         }
       }      
-    }),
-    setTimeout(this.newReview, 20000),
-    this.$root.$on('closeReview', (arg) => {
-      this.reviewAllowed = !arg
     })
+    // setTimeout(this.newReview, 20000),
+    // this.$root.$on('closeReview', (arg) => {
+    //   this.reviewAllowed = !arg
+    // })
   }
 }
 </script>

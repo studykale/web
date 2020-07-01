@@ -1,22 +1,22 @@
 <template>
   <div>
        <Rave
-        style-class="paymentbtn"
-        :email="customerEmail"
-        :amount="paymentAmount"
-        :reference="projectId ? projectId : reference"
-        :rave-key="raveKey"
-        :callback="callback"
-        :close="close"
-        :redirectUrl="redirect"
-        :paymentPlan="plan"
-        :customerFirstname="fname"
-        :customerLastname="lname"
-        paymentOptions="card,barter,account,ussd, mpesa"
-        :hostedPayment="hostedPayment"
-        customTitle="Complete Payment"
-        :currency="currency"
-        :country="country"
+            style-class="paymentbtn"
+            :email="loggedInUser.email"
+            :amount="paymentAmount"
+            :reference="projectId ? projectId : reference"
+            :rave-key="raveKey"
+            :callback="callback"
+            :close="close"
+            :redirectUrl="redirect"
+            :paymentPlan="plan"
+            :customerFirstname="loggedInUser.username"
+            :customerLastname="loggedInUser.email.split('@')[0]"
+            paymentOptions="card, barter, account, ussd, mpesa"
+            :hostedPayment="hostedPayment"
+            customTitle="Complete Payment"
+            :currency="currency"
+            :country="country"
         >
             <b-button class="flex" type="is-danger" expanded>
                 <credit-card-icon size="1x" class="mr-2"></credit-card-icon>
@@ -29,7 +29,8 @@
 <script>
 import Rave from 'vue-ravepayment';
 import { CreditCardIcon } from 'vue-feather-icons'
-import { currentUser } from '../../db';
+import { mapState } from 'vuex';
+
 
 export default {
     props:{
@@ -47,10 +48,10 @@ export default {
         const raveKey = process.env.VUE_APP_RAVE_KEY
         return {
             raveKey,
-            customerEmail: currentUser.email,
+            customerEmail: this.loggedInUser.email,
             plan: 2928,
-            fname: currentUser.displayName,
-            lname: currentUser.email.split("@")[0],
+            fname: this.loggedInUser.username,
+            lname: this.loggedInUser.email.split("@")[0],
             currency: 'AUD',
             hostedPayment: 1,
             country: "KE",
@@ -58,6 +59,9 @@ export default {
         }
     },
     computed: {
+        ...mapState({
+            loggedInUser: state => state.user.user
+        }),
         reference(){
             let text = "";
             let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

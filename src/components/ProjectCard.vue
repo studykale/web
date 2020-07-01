@@ -1,6 +1,6 @@
 <template>
    
-      <div @click="showSide(project.pid)" class="project-card">
+      <div @click="showSide(project)" class="project-card">
           <div class="head">
               <h2 class="title">{{ project.name }}</h2>
           </div>
@@ -35,8 +35,8 @@ export default {
                 return new Date(s.seconds * 1000).toDateString()
             }
         },
-        showSide(name) {
-            this.$root.$emit('projDetailOpen', { show: true, id: name  })
+        showSide(project) {
+            this.$root.$emit('projDetailOpen', { show: true, id: project.pid ? project.pid : project.name  })
         },
     }
 }

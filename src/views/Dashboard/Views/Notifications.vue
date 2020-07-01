@@ -6,66 +6,73 @@
         </h2>
         <p>Get notified of projects and updates here</p>
       </div>
-      <div class="Notifications">
+      <div class="Notifications m-2">
           <div v-if="notifications.length > 0">
-            <b-button class="mt-2 mb-2" :type="{'is-success': checkedNotifications.length > 0, 'is-light': checkedNotifications.length <= 0 }" @click="markSelected">Mark as read</b-button>
-            <b-table
-                :data="notifications"
-                ref="table"
-                paginated
-                per-page="5"
-                :checked-rows.sync="checkedNotifications"
-                detailed
-                striped
-                bordered
-                hoverable
-                checkable
-                detail-key="id"
-                aria-next-label="Next page"
-                aria-previous-label="Previous page"
-                aria-page-label="Page"
-                aria-current-label="Current page">
+           <div class="card w-auto">
+               <div class="card-header pl-2">
+                    <b-button class="mt-2 mb-2" :type="{'is-success': checkedNotifications.length > 0, 'is-light': checkedNotifications.length <= 0 }" @click="markSelected">Mark as read</b-button>
+               </div>
+               <div class="card-content">
+                
+                    <b-table
+                        :data="notifications"
+                        ref="table"
+                        paginated
+                        per-page="5"
+                        :checked-rows.sync="checkedNotifications"
+                        detailed
+                        striped
+                        
+                        hoverable
+                        checkable
+                        detail-key="id"
+                        aria-next-label="Next page"
+                        aria-previous-label="Previous page"
+                        aria-page-label="Page"
+                        aria-current-label="Current page">
 
-                <template slot-scope="props">
-                    <b-table-column field="name" label="Name" sortable>
-                        <template>
-                            <a @click="toggle(props.row)">
-                                {{ props.row.name }}
-                            </a>
+                        <template slot-scope="props">
+                            <b-table-column field="name" label="Name" sortable>
+                                <template>
+                                    <a @click="toggle(props.row)">
+                                        {{ props.row.name }}
+                                    </a>
+                                </template>
+                            </b-table-column>
+
+                            <b-table-column field="date" label="Date" sortable centered>
+                                <span class="tag is-success">
+                                    {{ props.row.time.toDate() | moment('from', 'now') }}
+                                </span>
+                            </b-table-column>
+
+                            <b-table-column field="read" label="Read">
+                                <span>
+                                    <p>{{ props.row.read }}</p>
+                                </span>
+                            </b-table-column>
                         </template>
-                    </b-table-column>
 
-                    <b-table-column field="date" label="Date" sortable centered>
-                        <span class="tag is-success">
-                            {{ props.row.time.toDate() | moment('from', 'now') }}
-                        </span>
-                    </b-table-column>
+                        <template slot="detail" slot-scope="props">
+                            <p>{{ props.row.description }}</p>
+                        </template>
 
-                    <b-table-column field="read" label="Read">
-                        <span>
-                            <p>{{ props.row.read }}</p>
-                        </span>
-                    </b-table-column>
-                </template>
-
-                <template slot="detail" slot-scope="props">
-                    <p>{{ props.row.description }}</p>
-                </template>
-
-                <template slot="empty">
-                <section class="section">
-                    <div class="content has-text-grey has-text-centered">
-                        <p>
-                            <b-icon
-                                icon="emoticon-sad"
-                                size="is-large">
-                            </b-icon>
-                        </p>
-                        <p>Nothing here.</p>
-                    </div>
-                </section>
-                </template>
-            </b-table>
+                        <template slot="empty">
+                        <section class="section">
+                            <div class="content has-text-grey has-text-centered">
+                                <p>
+                                    <b-icon
+                                        icon="emoticon-sad"
+                                        size="is-large">
+                                    </b-icon>
+                                </p>
+                                <p>Nothing here.</p>
+                            </div>
+                        </section>
+                        </template>
+                    </b-table>
+               </div>
+           </div>
           </div>
           <div v-else>
               <div class="flex flex-column justify-center items-center">
@@ -82,6 +89,7 @@
 
 <script>
 import { notifications, currentUser } from '../../../db'
+
 import { mapState } from "vuex"
 
 export default {
@@ -90,9 +98,6 @@ export default {
             notifications: [],
             checkedNotifications: []
         }
-    },
-    firestore: {
-        notifications: notifications
     },
     methods: {
         markSelected() {
@@ -105,6 +110,9 @@ export default {
                 notifications.doc(note.id).set({
                     read: true
                 }, { merge: true })
+                .then(() => {
+                    this.$root.$emit('notCount', false)
+                })
             })
             this.$buefy.toast.open({
                 message: "Success.."
@@ -117,11 +125,14 @@ export default {
         })
     },
     created() {
-        this.$bind('notifications', notifications.where('user', '==', currentUser.uid)).then(note => {
+        this.$bind('notifications', notifications.where('rvr', '==', currentUser.uid)).then(note => {
             let count = false;
+           
+            console.log("note", note)
             if(note) {
                 note.map(n => {
                     if(!n.read) {
+                        
                         count = true
                     }
                 })
@@ -146,5 +157,8 @@ export default {
             height: 300px;
             width: 300px;
         }
+    }
+    .pl-2 {
+        padding-left: 25px;
     }
 </style>

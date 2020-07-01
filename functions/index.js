@@ -17,7 +17,7 @@ app.use(cors({ origin: true }))
 app.post('/:projectId', (req, res) => {
     let projectId = req.params.projectId;
     
-    if(req.query.cancelled === true) {
+    if(req.query.cancelled) {
         res.redirect(301, `https://studykale.com/project-pay/${projectId}/cancelled`)
     } else {
         let ref = req.query.flwref;

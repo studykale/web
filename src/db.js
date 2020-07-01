@@ -34,13 +34,14 @@ const newUser = uid => db.collection('users').doc(`${uid}`)
 const users = db.collection('users');
 const chats = db.collection('chats');
 const contactCollection = db.collection('contactus');
-const userPayments = uid => db.collection('users').doc(uid).collection('payments');
+const userPayments = uid => newUser(uid).collection('payments');
 const notifications = db.collection('notifications');
 const reviews = db.collection('reviews')
 
 
 auth.onAuthStateChanged((user) => {
     if(user) {
+        
         currentUser = user
     }
     store.dispatch('user/fetchUser', user, { root: true })

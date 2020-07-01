@@ -279,13 +279,6 @@ const projects = {
 				.get()
 				.then(res => {
 					if(res.empty) {
-						Notification.open({
-							queue: true,
-							message: "You don't have any projects yet. Create one...",
-							duration: 10000,
-							type: 'is-warning',
-							position: 'is-bottom-right'
-						})
 						commit(GET_ALLPROJECTSFAIL)
 					} else {
 						res.forEach(p => {
@@ -340,9 +333,11 @@ const projects = {
 							projectsCollection.doc(docId).set({
 								files: res
 							}, { merge: true })
+							.then(() => {
+								router.push(`/pay/${data.price}/${docId}`)
+								commit('addProjectComplete')							
+							})
 
-							router.push(`/pay/${data.price}/${docId}`);
-							commit('addProjectComplete')							
 						}).catch(error => {
 							//("erro", error);
 							Notification.open({
@@ -487,7 +482,9 @@ const projects = {
 										description: "Your task" + data.name +  " has been paid successfully. And has been received by the team we will begin working on it immediately."
 									})
 
-									notifications.doc(tempId(5))
+									let admNote = notifications.doc(tempId(5))
+
+									admNote
 									.set({
 										name: "Payment received",
 										time: Timestamp.now(),

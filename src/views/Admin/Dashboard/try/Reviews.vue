@@ -2,7 +2,7 @@
   <div class="p-2">
     <h2 class="title">Reviews</h2>
     <p class="my-1">Please find client reviews here...</p>
-    <div class="card w-100">
+    <div v-if="reviews.length > 0" class="card w-auto">
         <div class="card-content p-2">
             <b-table 
             :data="reviews"
@@ -36,6 +36,13 @@
                     <p>{{ props.row.message }}</p>
                 </template>
             </b-table>
+        </div>
+    </div>
+    <div v-else>
+        <div class="card">
+            <div class="card-content">
+                <p>No reviews made..</p>
+            </div>
         </div>
     </div>
   </div>
