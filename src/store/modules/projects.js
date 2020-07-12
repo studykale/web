@@ -434,7 +434,8 @@ const projects = {
 				});
 				router.push('/auth/signup')
 			})
-			.catch(() => {
+			.catch(error => {
+				console.log("error", error)
 				Notification.open({
 					queue: true,
 					message: "Sorry we were unable to complete adding the project.",
