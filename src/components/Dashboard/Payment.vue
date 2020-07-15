@@ -1,6 +1,7 @@
 <template>
   <div>
        <Rave
+       :is-production="true"
             style-class="paymentbtn"
             :email="loggedInUser.email"
             :amount="paymentAmount"
