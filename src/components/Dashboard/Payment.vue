@@ -18,6 +18,7 @@
             customTitle="Complete Payment"
             :currency="currency"
             :country="country"
+            :metadata="meta"
         >
             <b-button class="flex" type="is-danger" expanded>
                 <credit-card-icon size="1x" class="mr-2"></credit-card-icon>
@@ -50,7 +51,6 @@ export default {
         return {
             raveKey,
             customerEmail: this.loggedInUser.email,
-            plan: 2928,
             fname: this.loggedInUser.username,
             lname: this.loggedInUser.email.split("@")[0],
             currency: 'AUD',
