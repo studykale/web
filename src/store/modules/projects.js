@@ -334,7 +334,6 @@ const projects = {
 								files: res
 							}, { merge: true })
 							.then(() => {
-								router.push(`/pay/${data.price}/${docId}`)
 								commit('addProjectComplete')							
 							})
 
@@ -375,8 +374,6 @@ const projects = {
 						creator: data.creator
 					})
 					.then(()=> {
-						router.push(`/pay/${data.price}/${docId}`)
-
 						notifications.doc(currentUser.uid).add({
 							name: "New project added",
 							date: Timestamp.now(),
@@ -470,10 +467,8 @@ const projects = {
 									let id = result.id;
 									let data = result.data()
 									let res = { ...data, id };
-								
 
 									let newNote = notifications.doc(currentUser.uid)
-									
 									
 									newNote.set({
 										name: "Payment successful",
@@ -482,16 +477,6 @@ const projects = {
 										user: res.creator,
 										description: "Your task" + data.name +  " has been paid successfully. And has been received by the team we will begin working on it immediately."
 									})
-
-									let admNote = notifications.doc(tempId(5))
-
-									admNote
-									.set({
-										name: "Payment received",
-										time: Timestamp.now(),
-										read: false,
-										description: `A project with name ${data.name} was paid.`
-									});
 
 									commit('updateProject', res)
 								

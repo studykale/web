@@ -17,26 +17,6 @@ const tempId = length => {
 	return result;
 }
 
-function sendVerificationEmail(user, url) {
-	user.sendEmailVerification({
-		url: url,
-		canHandleCodeInApp: false
-	})
-	.then(() => {
-		Notification.open({
-			type: 'is-info',
-			message: "Email verification sent"
-		})
-	})
-	.catch(error => {
-		//("email send", error)
-		Notification.open({
-			type: 'is-danger',
-			message: `${error.message}. Please try again`
-		})
-	})
-}
-
 const User = {
 	namespaced: true,
 	state: {
@@ -114,39 +94,45 @@ const User = {
 			.then(data => {
 				
 				data.user.updateProfile({
-					displayName: payload.username
+					displayName: payload.username,
+					photoURL: `http://tinygraphs.com/spaceinvaders/${payload.username}?theme=duskfalling&numcolors=4&size=220&fmt=svg`
 				}).then(()=> {
+					
+
 					newUser(data.user.uid)
 					.set({
 						role: 'CLIENT',
 						username: payload.username,
 						email: payload.email,
-						profile: data.user.photoURL,
+						profile: `http://tinygraphs.com/spaceinvaders/${payload.username}?theme=duskfalling&numcolors=4&size=220&fmt=svg`,
 						verified: data.user.emailVerified
 					}, { merge: true })
 				})
 				.then(() => {
-					sendVerificationEmail(data.user, 'http://studykale.com/auth/signin')
-					Notification.open({
-						message: "A verification email has been sent",
-						type: 'is-info',
-						duration: 5000
+					// sendVerificationEmail(data.user, 'http://studykale.com/auth/signin')
+					data.user.sendEmailVerification({
+						handleCodeInApp: false,
+						url: 'http://studykale.com/auth/signin'
 					})
-					let note = notifications.doc(tempId(7))
-
-					
+					.then(() => {
+						Notification.open({
+							message: "A verification email has been sent",
+							type: 'is-info',
+							position: 'is-bottom-right'
+						})
+						let note = notifications.doc(tempId(7))
 					note.set({
 						time: Timestamp.now(),
 						read: false,
 						rvr: data.user.uid,
 						name: "Getting started...",
-						description: "Welcome "+currentUser.displayName+", Feel right at home. You can ask us anything in the chat section"
+						description: `Welcome to studykale ${payload.username}, Feel right at home. You can ask us anything in the chat section`
 					})
 					
 					let startChat = chats.doc(tempId(8))
 					startChat.set({
 						user: currentUser.displayName,
-						message: "Welcome to studykale...you can talk to us any time",
+						message: "Welcome to studykale " + payload.username + "...you can talk to us any time",
 						read: false,
 						uid: currentUser.uid,
 						time: Timestamp.now(),
@@ -155,6 +141,14 @@ const User = {
 					.then(() => {
 						commit(SIGNUP_USER_COMPLETE)
 						router.push('/auth/signin')
+					})
+					})
+					.catch(error => {
+						Notification.open({
+							message: "We were unable to send a verification email. " + error.message,
+							type: 'is-warning',
+							position: 'is-bottom-right'
+						})
 					})
 				})
 				.catch(error => {

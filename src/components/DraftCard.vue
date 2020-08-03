@@ -3,18 +3,24 @@
     <h3>{{ paperType }}</h3>
     <p>{{ pages }} pages</p>
     <small><b>Deadline</b> {{ convertToDate(deadline.seconds) }}</small>
-    <b-button type="is-primary" size="is-small" class="mt-2">Update</b-button>
+    <b-button @click="makeProject()" type="is-primary" class="mt-2">Make project</b-button>
   </div> 
 </template>
 
 <script>
 export default {
-    props: ['paperType', 'pages', 'deadline'],
+    props: ['paperType', 'pages', 'deadline', 'draftId'],
     methods: {
         convertToDate(d) {
             let date = new Date(null);
             date.setSeconds(d);
             return date.toDateString()
+        },
+        makeProject() {
+            console.log("yes")
+            console.log("id draft", this.draftId)
+            this.$root.$emit("selectedDraft", this.draftId);
+            this.$emit("makeProjFromDraft", this.draftId)
         }
     }
 }

@@ -20,14 +20,16 @@
                         <b-input :name="projectName" required minLength="5" maxlength="55" v-model="projectName" placeholder="Project name" expanded/>
                         </b-field>
                         <b-field label="Project description">
-                            <b-input :name="projectDescription" maxlength="300" v-model="projectDescription" type="textarea" expanded placeholder="Project description"/>
+                            <b-input required :name="projectDescription" maxlength="300" v-model="projectDescription" type="textarea" expanded placeholder="Project description"/>
                         </b-field>
                     </b-step-item>
                     
                     <!-- Add more details. Paper type, Paper deadline, Number of pages. -->
                     <b-step-item class="my-2" step="2" label="Time to complete">
-                        <b-field class="mt-2" label="Select datetime">
+                        <b-field class="mt-2" label="Select date for Completion">
                             <b-datepicker
+                                :disabled="disablePredefined"
+                                required
                                 :name="deadline"
                                 v-model="deadline"
                                 placeholder="Select a date"
@@ -35,6 +37,7 @@
                                 :timepicker="timepicker"
                                 :min-date="minDatetime"
                                 :max-date="maxDatetime"
+                                
                                 >
                             </b-datepicker>
                             <!-- <b-datetimepicker v-model="datetime" inline></b-datetimepicker> -->
@@ -46,11 +49,12 @@
                                     <alert-circle-icon size="1x" class="custom-class"></alert-circle-icon>
                                 </b-tooltip>
                             </template>
-                            <b-numberinput :name="orderPages" v-model="orderPages" min="1" :max="maxOrderPages" >
+                            <b-numberinput :disabled="disablePredefined" :name="orderPages" v-model="orderPages" min="1" :max="maxOrderPages" >
                             </b-numberinput>
                         </b-field>
                         <b-field label="Type of paper">
                             <b-select
+                                :disabled="disablePredefined"
                                 :name="paperType"
                                 required
                                 v-model="paperType"
@@ -102,16 +106,30 @@
 
                     <b-step-item step="4" label="Complete">
                         <h2 class="subtitle" v-if="projectName && paperType">Awesome the project is set.</h2>
-                        <h2 class="subtitle" v-else>Please complete setting up the project</h2>
+                        <b-message type="is-warning" title="Incomplete" v-else>
+                            Please complete setting up your project.
+                        </b-message>
+                        <p v-if="Object.keys(drafts).length > 0">Please note that draft made projects will be deleted...</p>
                         <hr class="dropdown-divider"/>
-                        <div class="text-left">
-                        <h2>Pages: {{ orderPages }}</h2>
-                        <h2>{{ totalWords }} Words</h2>
-                        <h4><span class="font-bold">Name: </span><span>{{ projectName || 'Please set a name' }}</span></h4>
-                        <h4><span class="font-bold">Paper type: </span><span>{{ paperType || 'Please set the type otf paper' }}</span></h4>
-                        
+
+                        <div class="text-left details">
+                            <h4 class="font-bold">Pages: {{ orderPages }}</h4>
+                            <h4 class="font-bold">Total words: {{ totalWords }} Words</h4>
+                            <h4>
+                                <b-taglist attached>
+                                    <b-tag type="is-warning">Name</b-tag>
+                                    <b-tag type="is-dark">{{ projectName || 'Please set a name' }}</b-tag>
+                                </b-taglist>
+                            </h4>
+                            
+                            <h4>
+                                <b-taglist attached>
+                                    <b-tag type="is-warning">Paper type</b-tag>
+                                    <b-tag type="is-dark">{{ paperType || 'Please set a name' }}</b-tag>
+                                </b-taglist>
+                            </h4>
                         </div>
-                        <button  class="button is-primary is-fullwidth" type="submit" @click="$parent.close()">Submit</button>
+                        <button :disabled="projectName.length <= 0 || paperType.length <= 0" class="button is-primary is-fullwidth" type="submit" @click="$parent.close()">Submit</button>
                     </b-step-item>
                 </b-steps>
             </form>
@@ -120,18 +138,23 @@
 </template>
 
 <script>
-// import { validationMixin } from "vuelidate";
+import { validationMixin } from "vuelidate";
 import { mapActions, mapState } from "vuex";
 import { AlertCircleIcon } from 'vue-feather-icons';
+import { draftsCollection } from '../../db';
 // import { notifications, Timestamp, currentUser } from "../../db";
 
 export default {
+    mixins: [validationMixin],
     props: {
         showNewProject: Boolean,
         currentUser: Object,
         pType: String,
         completion: String,
-        pages: String
+        pages: String,
+        draft: {
+            type: Object
+        }
     },
     components: {
         AlertCircleIcon
@@ -169,7 +192,8 @@ export default {
             maxOrderPages: 100,
             pricePerPage: 25,
             currency: 'AUD',
-            totalPrice: 0
+            totalPrice: 0,
+            disablePredefined: false
         }
     },
     methods: {
@@ -189,6 +213,9 @@ export default {
             }
 
             this.addProject(data)
+            if(Object.keys(this.draft).length > 0) {
+                draftsCollection.doc(this.draft.id).delete();
+            }
             this.$parent.close();
         },
          deleteDropFile(index) {
@@ -213,15 +240,31 @@ export default {
                 result += characters.charAt(Math.floor(Math.random() * charactersLength));
             }
             return result;
-        }
+        },
     },
     computed: {
         ...mapState({
-            addingProject: state => state.projects.addingProject
+            addingProject: state => state.projects.addingProject,
+            drafts: state => state.projects.draftProjects
         }),
         totalWords() {
             return 275 * this.orderPages;
         }
+    },
+    created() {
+        this.$root.$on('selectedDraft', (draftId) => {
+            console.log("start")
+            let newP = this.drafts.find(d => d.id == draftId);
+            this.deadline = newP.deadline;
+            this.orderPages = newP.pages;
+            this.paperType = newP.paperType;
+        })
+        if(Object.keys(this.draft).length > 0) {
+            this.orderPages = this.draft.pages;
+            this.paperType = this.draft.paperType;
+            this.deadline = this.draft.deadline.toDate();
+            this.disablePredefined = true;
+        } 
     }
 }
 </script>
@@ -246,6 +289,10 @@ export default {
                 width: 100% !important;
             }
         }
+    }
+
+    .details h4 {
+        margin-bottom: .25em;
     }
 
     .w-50 {

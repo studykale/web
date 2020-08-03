@@ -7,6 +7,7 @@
       mobile="fullwidth"
       :open.sync="openSide"
       class="sidebar"
+      type="is-white"
     >
       <div class="p-1 p-relative">
           
@@ -50,7 +51,7 @@
             <p class="mb-2">Completion <span class="text-red">{{ dateFm(project.deadline) }}</span></p>
             
             <div v-if="!project.paid" class="flex flex-wrap items-center">
-                <Payment :projectId="project.pid" :paymentAmount="project.price ? project.price : calcPrice(project)"/>
+                <!-- <Payment :projectId="project.pid" :paymentAmount="project.price ? project.price : calcPrice(project)"/> -->
                 <b-button @click="isProjectUpdateActive = !isProjectUpdateActive" type="is-warning">Update</b-button>
             </div>
             <div v-else>
@@ -87,7 +88,7 @@
 
 <script>
 import { mapGetters } from "vuex"
-import Payment from "./Payment";
+// import Payment from "./Payment";
 import { XCircleIcon, CheckCircleIcon } from 'vue-feather-icons'
 import UpdateCard from "../UpdateProject";
 export default {
@@ -96,7 +97,7 @@ export default {
     },
     template: {},
     components:{
-        Payment,
+        // Payment,
         XCircleIcon,
         CheckCircleIcon,
         UpdateCard

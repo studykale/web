@@ -2,6 +2,9 @@ import firebase from "firebase/app";
 import 'firebase/firestore';
 import 'firebase/auth';
 import 'firebase/storage';
+import 'firebase/messaging';
+
+
 
 import store from "./store"
 
@@ -41,11 +44,11 @@ const reviews = db.collection('reviews')
 
 auth.onAuthStateChanged((user) => {
     if(user) {
-        
         currentUser = user
     }
     store.dispatch('user/fetchUser', user, { root: true })
 })
+
 
 export { 
     Timestamp, 
@@ -63,7 +66,8 @@ export {
     TaskState, 
     config,
     reviews,
-    contactCollection
+    contactCollection,
+    firebase
 };
 
 export default db;

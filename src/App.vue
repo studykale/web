@@ -5,6 +5,8 @@
 </template>
 
 <script>
+  // import { firebase } from "./db";
+
   export default {  
       name: 'App',
       metaInfo() {  
@@ -41,7 +43,8 @@
             },
           ]
       }
-    }
+    },
+    
   }
 </script>
 

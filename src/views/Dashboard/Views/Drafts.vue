@@ -35,7 +35,7 @@
                   </div>
                 </div>
                 <div class="actions">
-                  <button>Continue</button>
+                  <button @click="convertToProject(index)">Convert to project</button>
                 </div>
               </div>
             </div>
@@ -53,7 +53,12 @@ export default {
   },
   data() {
     return  {
-
+      selected: null
+    }
+  },
+  methods: {
+    convertToProject() {
+      console.log("draft selected")
     }
   },
   computed : {

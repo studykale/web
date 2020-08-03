@@ -20,7 +20,7 @@
               <h2 class="title font-bold">All drafts</h2>
               <p class="mb-2">All your drafted projects appear here.</p>
               <div class="d-inline" v-for="(draft, i) in drafts" :key="i">
-                <DraftCard :paperType="draft.paperType" :pages="draft.pages" :deadline="draft.deadline" />
+                <DraftCard @makeProjFromDraft="draftToProject" :paperType="draft.paperType" :pages="draft.pages" :deadline="draft.deadline" :draftId="draft.id"/>
               </div>
             </div>
             <div v-if="proj.length > 0">
@@ -81,7 +81,7 @@
       </div>
     </div>
         <b-modal :active.sync="showNewProject">
-          <NewProject :showNewProject="showProjectModal" :currentUser="loggedInUser"/>
+          <NewProject :draft="selectedDraft" :showNewProject="showProjectModal" :currentUser="loggedInUser"/>
         </b-modal>
         <ProjectDetails @showReviewBox="addReview" :projects="proj"/>
     </div>
@@ -116,7 +116,8 @@ export default {
       proj: [],
       drafts: [],
       openSide: false,
-      reviewAllowed: false
+      reviewAllowed: false,
+      selectedDraft: null
     }
   },
   methods: {
@@ -128,21 +129,18 @@ export default {
         this.showNewProject = true
       }
     },
-    // newReview() {
-    //   this.$buefy.snackbar.open({
-    //       duration: 5000,
-    //       message: 'Hey just a sneak peak, would you kindly take 2 min to rate us. Help us improve?..',
-    //       type: 'is-info',
-    //       position: 'is-bottom-left',
-    //       actionText: 'Yes',
-    //       queue: false,
-    //       onAction: () => {
-    //           this.reviewAllowed = true
-    //       }
-    //   })
-    // }
     addReview(option) {
       this.reviewAllowed = option
+    },
+    draftToProject(id) {
+      if(id) {
+        this.selectedDraft = this.drafts.find(dr => dr.id == id)
+      }
+      if(this.showNewProject) {
+        this.showNewProject = false
+      } else {
+        this.showNewProject = true
+      }
     }
   },
   firestore: {
@@ -170,7 +168,8 @@ export default {
     },
     paidP() {
       return this.proj.filter(p => p.paid == true)
-    }
+    },
+    
   },
   created() {
     this.$bind('proj', projectsCollection.where('creator', '==', this.loggedInUser.userId))
@@ -188,8 +187,9 @@ export default {
         if(time <= 0) {
           draftsCollection.doc(d.id).delete()
         }
-      }      
+      }    
     })
+    
     // setTimeout(this.newReview, 20000),
     // this.$root.$on('closeReview', (arg) => {
     //   this.reviewAllowed = !arg
