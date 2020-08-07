@@ -127,8 +127,6 @@ export default {
     created() {
         this.$bind('notifications', notifications.where('rvr', '==', currentUser.uid)).then(note => {
             let count = false;
-           
-            console.log("note", note)
             if(note) {
                 note.map(n => {
                     if(!n.read) {

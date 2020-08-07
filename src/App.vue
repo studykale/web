@@ -43,8 +43,17 @@
             },
           ]
       }
-    },
-    
+      },
+      mounted: function() {
+    //     let paypalScript = document.createElement('script');
+    // paypalScript.addEventListener('load');
+    // paypalScript.src = `https://www.paypal.com/sdk/js?client-id=AWjzg7XCuJ--qvoWZESWUCkqfmZbcDJ6yicasa6b1yfSMjK49x-VU_hXK-hgO7KsNL0ppzLxtMvHAvSW&currency=AUD`
+    // // paypalScript.setAttribute('src', `https://www.paypal.com/sdk/js?client-id=AWjzg7XCuJ--qvoWZESWUCkqfmZbcDJ6yicasa6b1yfSMjK49x-VU_hXK-hgO7KsNL0ppzLxtMvHAvSW&currency=AUD`)
+    // paypalScript.setAttribute('data-sdk-integration-source', `button-factory`)
+    // document.body.appendChild(paypalScript);
+        
+
+      }
   }
 </script>
 
@@ -486,6 +495,7 @@ $colors: (
 $link: $primary;
 $link-invert: $primary-invert;
 $link-focus-border: $primary;
+$sidebar-width: 450px;
 
 // Import Bulma and Buefy styles
 @import "~bulma";

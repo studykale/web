@@ -327,7 +327,8 @@ const projects = {
 							files: res,
 							price: data.price,
 							createdAt: Timestamp.now(),
-							creator: data.creator
+							creator: data.creator,
+							paid: true
 						})
 						.then(() => {
 							projectsCollection.doc(docId).set({
@@ -336,9 +337,7 @@ const projects = {
 							.then(() => {
 								commit('addProjectComplete')							
 							})
-
 						}).catch(error => {
-							//("erro", error);
 							Notification.open({
 								queue: true,
 								message: "Sorry we were unable to complete adding the project :"+error.message,
@@ -371,7 +370,8 @@ const projects = {
 						files: [],
 						price: data.price,
 						createdAt: Timestamp.now(),
-						creator: data.creator
+						creator: data.creator,
+						paid: true
 					})
 					.then(()=> {
 						notifications.doc(currentUser.uid).add({

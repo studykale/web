@@ -90,7 +90,9 @@ export default {
       dashUrl: `/dashboard/projects`,
       username: "brian",
       windowWidth: 0,
-      notifications: false
+      notifications: false,
+      // For paypal.
+      payLoaded: false
     }
   },
   methods: {
@@ -123,8 +125,6 @@ export default {
     }
   },
   created () {
-    
-    
     if(!this.loggedInUser || !this.loggedInUser.username) {
       this.$router.push('/')
     } else {

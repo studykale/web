@@ -7,6 +7,9 @@ import Profile from "../views/Dashboard/Views/Profile";
 import Meta from 'vue-meta'
 
 
+
+
+
 Vue.use(Meta, {
   keyName: 'metaInfo',
   attribute: 'data-vue-meta',
@@ -103,6 +106,11 @@ const routes = [
         path: "notifications",
         name: 'Notifications',
         component: () => import('@/views/Dashboard/Views/Notifications.vue')
+      },
+      {
+        path: "payment/:project_id/:response",
+        name: "PayPal",
+        component: () => import('@/views/Dashboard/Views/Payments')
       },
       {
         path: "chats",

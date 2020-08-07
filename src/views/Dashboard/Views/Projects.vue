@@ -81,7 +81,7 @@
       </div>
     </div>
         <b-modal :active.sync="showNewProject">
-          <NewProject :draft="selectedDraft" :showNewProject="showProjectModal" :currentUser="loggedInUser"/>
+          <NewProject  :draft="selectedDraft" :showNewProject="showProjectModal" :currentUser="loggedInUser"/>
         </b-modal>
         <ProjectDetails @showReviewBox="addReview" :projects="proj"/>
     </div>

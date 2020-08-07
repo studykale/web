@@ -3,7 +3,7 @@
         <div class="card-header">
             <div class="card-header-title flex justify-around">
                 <span>
-                    Creating a new project
+                    Creating a new project.
                 </span>
                 <span class="font-bold"> <span class="text-red">{{ calcPrice() }}</span> AUD</span>
             </div>
@@ -129,7 +129,9 @@
                                 </b-taglist>
                             </h4>
                         </div>
-                        <button :disabled="projectName.length <= 0 || paperType.length <= 0" class="button is-primary is-fullwidth" type="submit" @click="$parent.close()">Submit</button>
+                        <br>
+                        <div ref="paypal"></div>
+                        <!-- <button :disabled="projectName.length <= 0 || paperType.length <= 0" class="button is-primary is-fullwidth" type="submit" @click="$parent.close()">Submit</button> -->
                     </b-step-item>
                 </b-steps>
             </form>
@@ -142,6 +144,7 @@ import { validationMixin } from "vuelidate";
 import { mapActions, mapState } from "vuex";
 import { AlertCircleIcon } from 'vue-feather-icons';
 import { draftsCollection } from '../../db';
+import { NotificationProgrammatic as Notify } from "buefy"
 // import { notifications, Timestamp, currentUser } from "../../db";
 
 export default {
@@ -193,7 +196,8 @@ export default {
             pricePerPage: 25,
             currency: 'AUD',
             totalPrice: 0,
-            disablePredefined: false
+            disablePredefined: false,
+            loaded: false
         }
     },
     methods: {
@@ -216,6 +220,8 @@ export default {
             if(Object.keys(this.draft).length > 0) {
                 draftsCollection.doc(this.draft.id).delete();
             }
+
+            
             this.$parent.close();
         },
          deleteDropFile(index) {
@@ -241,6 +247,40 @@ export default {
             }
             return result;
         },
+        setLoaded() {
+            this.loaded = true;
+            window.paypal.Buttons({
+                style: {
+                    shape: 'pill',
+                    color: 'blue',
+                    layout: 'vertical',
+                    label: 'paypal',
+                    
+                },
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: '1'
+                            }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        this.newProject()
+                    });
+                },
+                onError: (err) => {
+                    console.log("error pay", err)
+                    Notify.open({
+                        type: "is-warning",
+                        position: "is-top-right",
+                        message: "Sorry you need to complete payment before we first add your project."
+                    })
+                }
+        }).render(this.$refs.paypal);
+        }
     },
     computed: {
         ...mapState({
@@ -251,7 +291,16 @@ export default {
             return 275 * this.orderPages;
         }
     },
+    mounted() {
+        const script = document.createElement("script");
+        script.addEventListener("load", this.setLoaded);
+        script.src =
+        "https://www.paypal.com/sdk/js?client-id=AbZaNshXsQ0n930lxucUCjoN-p00b-vXghTjCArElccPfqmMvqd3RBbL5qq7yRxgxM7O46DCVwNJvC24";
+    document.body.appendChild(script);
+    },
     created() {
+        
+    
         this.$root.$on('selectedDraft', (draftId) => {
             console.log("start")
             let newP = this.drafts.find(d => d.id == draftId);
@@ -259,7 +308,7 @@ export default {
             this.orderPages = newP.pages;
             this.paperType = newP.paperType;
         })
-        if(Object.keys(this.draft).length > 0) {
+        if(this.draft && Object.keys(this.draft).length > 0) {
             this.orderPages = this.draft.pages;
             this.paperType = this.draft.paperType;
             this.deadline = this.draft.deadline.toDate();

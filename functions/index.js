@@ -68,7 +68,7 @@ exports.deleteUser = functions.auth.user().onDelete(user => {
 })
 
 
-exports.createPaymentProject = functions.firestore.document('/project/{documentId}').onCreate((event, context) => {
+exports.createPaymentProject = functions.firestore.document('projects/{documentId}').onCreate((event, context) => {
     var projectData = event.data();
 
     console.log("created", projectData)
@@ -77,6 +77,7 @@ exports.createPaymentProject = functions.firestore.document('/project/{documentI
         to: 'studykale@gmail.com',
         from: 'support@studykale.com',
         templateId: 'd-3180cda4570345b5821f97b9615fe547',
+        substitutionWrappers: ["{{", "}}"],
         dynamicTemplateData: {
             project_id: context.params.documentId,
             project_name: projectData.name,
@@ -86,37 +87,29 @@ exports.createPaymentProject = functions.firestore.document('/project/{documentI
             pages: projectData.pages
         }
     })
-    .then(() => {
-        admin.firestore().collection('email').add({
+    .then(async () => {
+        await admin.firestore().collection('email').add({
             status:"Sent successfully",
             date: new Date(),
             type: "New Project",
             description: "Email was sent successfully to " + projectData.name
         });
 
-       return admin.firestore().collection('notifications').add({
+        await admin.firestore().collection('notifications').add({
             name: "New Project",
-            time: event.after.createTime.toDate(),
+            time: new Date(),
             read: false,
             description: `A new project was created with the name ${ projectData['name'] } and the price is ${ projectData['price'] }`
         })
-    })
-    .catch(error => {
-        admin.firestore().collection('email').add({
-            status:"Not sent",
-            date: new Date(),
-            type: "New Project",
-            description: "Email was not sent successfully to " + projectData.name +" : "+error
-        })
-    })
 
-    admin.firestore().doc(`users/${projectData.creator}`)
+       return admin.firestore().doc(`users/${projectData.creator}`)
         .get()
         .then(async result => {
             let userId = result.id;
-           return await sgMail.send({
+           sgMail.send({
                 to: result.data().email,
                 from: "team@studykale.com",
+                subject: "Project received",
                 text: "Thank you. We have received your project. We will update you when we are done.",
                 html: "<p>Thank you we have received your project and we will be done in no time. Thank you for trusting in us.</p><br><p>Studykale Team</p>"
             })
@@ -148,9 +141,20 @@ exports.createPaymentProject = functions.firestore.document('/project/{documentI
         .catch(error => {
             console.log("error on getting user data", error)
         })
+
+       
+    })
+    .catch(error => {
+        admin.firestore().collection('email').add({
+            status:"Not sent",
+            date: new Date(),
+            type: "New Project",
+            description: "Email was not sent successfully: The name is " + projectData.name +" : "+error
+        })
+    })
+
+    
 })
-
-
 
 
 app.post('/addProject', (req, res) => {
@@ -162,8 +166,8 @@ app.post('/addProject', (req, res) => {
             payment_method:'paypal'
         },
         redirect_urls:{
-            return_url:`http://localhost:8080/payment/${project['uid']}/success`,
-            cancel_url:'http://localhost:8080/payment/failure'
+            return_url:`http://localhost:8080/dashboard/payment/${project['pid']}/success`,
+            cancel_url:`http://localhost:8080/dashboard/payment/${project['pid']}/failure`
         },
         transactions:[{
             amount:{
@@ -203,7 +207,7 @@ app.post('/addProject', (req, res) => {
     )
 })
 
-app.get('/process', (req, res) => {
+app.get('/make-payment', (req, res) => {
     const paymentId = req.query.paymentId;
 
     const payerId = {
