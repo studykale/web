@@ -130,7 +130,7 @@
                             </h4>
                         </div>
                         <br>
-                        <div ref="paypal"></div>
+                        <div class="paypal-btn" ref="paypal"></div>
                         <!-- <button :disabled="projectName.length <= 0 || paperType.length <= 0" class="button is-primary is-fullwidth" type="submit" @click="$parent.close()">Submit</button> -->
                     </b-step-item>
                     <template
@@ -269,6 +269,8 @@ export default {
         },
         setLoaded() {
             this.loaded = true;
+            let price = this.calcPrice();
+            console.log("price", price);
             window.paypal.Buttons({
                 style: {
                     shape: 'pill',
@@ -281,7 +283,7 @@ export default {
                     return actions.order.create({
                         purchase_units: [{
                             amount: {
-                                value: this.calcPrice()
+                                value: price
                             }
                         }]
                     });
@@ -325,7 +327,7 @@ export default {
         const script = document.createElement("script");
         script.addEventListener("load", this.setLoaded);
         script.src =
-        "https://www.paypal.com/sdk/js?client-id=AQF-Ah7jDj3nPq2o8HcCgE0h7fXV_MUnPsMv3suXQqmXRttKa58MfrtuxuEZYatf26hs2-ij6lm4urtA";
+        "https://www.paypal.com/sdk/js?client-id=AQF-Ah7jDj3nPq2o8HcCgE0h7fXV_MUnPsMv3suXQqmXRttKa58MfrtuxuEZYatf26hs2-ij6lm4urtA&currency=AUD";
     document.body.appendChild(script);
     },
     created() {
@@ -390,6 +392,16 @@ export default {
 
         .upload-control {
             width: 100%;
+        }
+    }
+    .paypal-btn {
+        @media screen and (min-width: 400px) {
+            width: 100%;
+        }
+
+        @media screen and (max-width: 400px) {
+            width: 250px;
+            margin: auto;
         }
     }
 </style>

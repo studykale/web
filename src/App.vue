@@ -44,16 +44,6 @@
           ]
       }
       },
-      mounted: function() {
-    //     let paypalScript = document.createElement('script');
-    // paypalScript.addEventListener('load');
-    // paypalScript.src = `https://www.paypal.com/sdk/js?client-id=AWjzg7XCuJ--qvoWZESWUCkqfmZbcDJ6yicasa6b1yfSMjK49x-VU_hXK-hgO7KsNL0ppzLxtMvHAvSW&currency=AUD`
-    // // paypalScript.setAttribute('src', `https://www.paypal.com/sdk/js?client-id=AWjzg7XCuJ--qvoWZESWUCkqfmZbcDJ6yicasa6b1yfSMjK49x-VU_hXK-hgO7KsNL0ppzLxtMvHAvSW&currency=AUD`)
-    // paypalScript.setAttribute('data-sdk-integration-source', `button-factory`)
-    // document.body.appendChild(paypalScript);
-        
-
-      }
   }
 </script>
 
@@ -482,7 +472,11 @@ $family-primary: 'Muli', sans-serif;
 .input, .taginput .taginput-container.is-focusable, .textarea, .select select {
   outline: none !important;
   box-shadow: none !important;
-  border: 2px solid #414042 !important;
+  border: 2px solid #9fa1a2 !important;
+}
+
+.input:focus {
+  border: 1.5px solid #5703b8bb !important;
 }
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
 $colors: (
