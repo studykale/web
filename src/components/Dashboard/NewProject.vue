@@ -75,7 +75,7 @@
                                     v-model="dropFiles"
                                     multiple
                                     drag-drop
-                                    accept="application/pdf, application/doc"
+                                    accept="application/pdf, application/docx, application/doc"
                                     type="is-success">
                                     <section class="section">
                                         <div class="content has-text-centered">
@@ -268,6 +268,7 @@ export default {
                 },
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
+                        console.log("details", details)
                         this.newProject()
                     });
                 },
