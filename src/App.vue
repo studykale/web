@@ -477,6 +477,13 @@ $primary-invert: findColorInvert($primary);
 $twitter: #4099FF;
 $twitter-invert: findColorInvert($twitter);
 
+$family-primary: 'Muli', sans-serif;
+
+.input, .taginput .taginput-container.is-focusable, .textarea, .select select {
+  outline: none !important;
+  box-shadow: none !important;
+  border: 2px solid #414042 !important;
+}
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
 $colors: (
     "white": ($white, $black),

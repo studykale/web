@@ -15,7 +15,7 @@
                 size="is-small"
                 type="is-primary"
                     >
-                     <b-step-item step="1" label="Project details">
+                     <b-step-item   step="1" label="Project details">
                         <b-field label="Project name">
                         <b-input :name="projectName" required minLength="5" maxlength="55" v-model="projectName" placeholder="Project name" expanded/>
                         </b-field>
@@ -67,7 +67,7 @@
                         </b-field>
                     </b-step-item>
                     <!-- Upload documents -->
-                    <b-step-item step="3" label="Extra files">
+                    <b-step-item  step="3" label="Extra files">
                         <section class="flex justify-center flex-column">
                             <b-field class="flex justify-center flex-column" label="Upload documents" message="Accepts pdfs and docs only.">
                                 <b-upload class="w-100" 
@@ -133,6 +133,26 @@
                         <div ref="paypal"></div>
                         <!-- <button :disabled="projectName.length <= 0 || paperType.length <= 0" class="button is-primary is-fullwidth" type="submit" @click="$parent.close()">Submit</button> -->
                     </b-step-item>
+                    <template
+                        slot="navigation"
+                        slot-scope="{previous, next}">
+                        <div class="m-2">
+                            <b-button
+                                class="mr-2"
+                                type="is-danger"
+                                :disabled="previous.disabled"
+                                @click.prevent="previous.action">
+                                Previous
+                            </b-button>
+                            <b-button
+                                :class="{ 'd-none' : unverified}"
+                                type="is-success"
+                                :disabled="next.disabled"
+                                @click.prevent="next.action">
+                                Next
+                            </b-button>
+                        </div>
+                    </template>
                 </b-steps>
             </form>
         </div>
@@ -290,6 +310,15 @@ export default {
         }),
         totalWords() {
             return 275 * this.orderPages;
+        },
+        unverified() {
+            if(this.activeStep == 0 && (!this.projectName || this.projectName.length < 5)) {
+                return true;
+            } else if(this.activeStep == 1 && (!this.paperType)) {
+                return true
+            } else {
+                return false;
+            }
         }
     },
     mounted() {
@@ -351,6 +380,10 @@ export default {
         @media screen and (min-width: 768px) {
             width: 50% !important; 
         }
+    }
+
+    .d-none {
+        display: none;
     }
 
     .w-100 {
