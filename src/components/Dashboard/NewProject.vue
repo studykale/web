@@ -75,7 +75,7 @@
                                     v-model="dropFiles"
                                     multiple
                                     drag-drop
-                                    accept="application/pdf, application/docx, application/doc"
+                                    accept=".xlsx, .xls, image/*, .doc, .docx, .ppt, .pptx, .txt, .pdf"
                                     type="is-success">
                                     <section class="section">
                                         <div class="content has-text-centered">
@@ -261,7 +261,7 @@ export default {
                     return actions.order.create({
                         purchase_units: [{
                             amount: {
-                                value: '1'
+                                value: this.calcPrice()
                             }
                         }]
                     });
@@ -296,7 +296,7 @@ export default {
         const script = document.createElement("script");
         script.addEventListener("load", this.setLoaded);
         script.src =
-        "https://www.paypal.com/sdk/js?client-id=AbZaNshXsQ0n930lxucUCjoN-p00b-vXghTjCArElccPfqmMvqd3RBbL5qq7yRxgxM7O46DCVwNJvC24";
+        "https://www.paypal.com/sdk/js?client-id=AQF-Ah7jDj3nPq2o8HcCgE0h7fXV_MUnPsMv3suXQqmXRttKa58MfrtuxuEZYatf26hs2-ij6lm4urtA";
     document.body.appendChild(script);
     },
     created() {
