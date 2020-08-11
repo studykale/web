@@ -254,7 +254,7 @@ export default {
             var days = duration.asDays();
             
             if(days.toFixed() >= 0 ) {
-                return this.orderPages * 25
+                return this.orderPages * 2
             }
             return this.orderPages * this.pricePerPage;
         },

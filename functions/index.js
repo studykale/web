@@ -106,7 +106,7 @@ exports.createPaymentProject = functions.firestore.document('projects/{documentI
         .get()
         .then(async result => {
             let userId = result.id;
-           sgMail.send({
+          return sgMail.send({
                 to: result.data().email,
                 from: "team@studykale.com",
                 subject: "Project received",
@@ -152,59 +152,12 @@ exports.createPaymentProject = functions.firestore.document('projects/{documentI
             description: "Email was not sent successfully: The name is " + projectData.name +" : "+error
         })
     })
-
-    
 })
 
 
-app.post('/addProject', (req, res) => {
-    let { uid, project } = req.body;
-
-    const payReq = JSON.stringify({
-        intent:'sale',
-        payer:{
-            payment_method:'paypal'
-        },
-        redirect_urls:{
-            return_url:`http://localhost:8080/dashboard/payment/${project['pid']}/success`,
-            cancel_url:`http://localhost:8080/dashboard/payment/${project['pid']}/failure`
-        },
-        transactions:[{
-            amount:{
-                total: project['price'],
-                currency: 'AUD'
-            },
-            description: uid
-        }]
-    });
-
-    paypal.payment.create(
-        payReq, 
-        (error, payment) => {
-            if(error) {
-                console.error(error);
-                res.status('500').end();
-            } else {
-                // Capture HATEOAS links.
-                payment.links.forEach((linkObj) => {
-                    links[linkObj.rel] = {
-                    href: linkObj.href,
-                    method: linkObj.method
-                };
-                });
-                // If redirect url present, redirect user
-                if(Object.prototype.hasOwnProperty.call(links, 'approval_url')) {
-                    // REDIRECT USER TO links['approval_url'].href
-                    console.info(links.approval_url.href);
-                    // res.json({"approval_url":links.approval_url.href});
-                    res.redirect(302, links.approval_url.href);
-                } else {
-                    console.error('no redirect URI present');
-                    res.status('500').end();
-                }
-            }
-        }
-    )
+app.post('/paymentsComplete', (req, res) => {
+    console.log("payments", req.body);
+    res.end();
 })
 
 app.get('/make-payment', (req, res) => {
