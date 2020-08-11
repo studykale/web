@@ -213,7 +213,7 @@ export default {
             deadline: new Date(),
             orderPages: 1,
             maxOrderPages: 100,
-            pricePerPage: 25,
+            pricePerPage: 2,
             currency: 'AUD',
             totalPrice: 0,
             disablePredefined: false,

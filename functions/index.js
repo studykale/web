@@ -63,11 +63,6 @@ exports.newUserSignUp = functions.auth.user().onCreate(async user => {
 
 })
 
-exports.deleteUser = functions.auth.user().onDelete(user => {
-    console.log("user deleted", user.uid, user.email);
-})
-
-
 exports.createPaymentProject = functions.firestore.document('projects/{documentId}').onCreate((event, context) => {
     var projectData = event.data();
 
@@ -156,41 +151,23 @@ exports.createPaymentProject = functions.firestore.document('projects/{documentI
 
 
 app.post('/paymentsComplete', (req, res) => {
-    console.log("payments", req.body);
+
+    admin.firestore().collection('payments').add(
+        {
+            payment_time: req.body.create_time,
+            summary: req.body.summary,
+            amount: req.body.resource.purchase_units.amount.value,
+            payment: {
+                id: req.body.resource.purchase_units.payments.captures.id,
+                status: req.body.resource.purchase_units.payments.captures.status,
+                fee: req.body.resource.purchase_units.payments.captures.seller_receivable_breakdown.paypal_fee,
+                received_after_deduction: req.body.resource.purchase_units.payments.captures.seller_receivable_breakdown.net_amount
+            }
+        }
+    )
     res.end();
 })
 
-app.get('/make-payment', (req, res) => {
-    const paymentId = req.query.paymentId;
-
-    const payerId = {
-        payer_id: req.query.PayerID
-    };
-
-    paypal.payment.execute(paymentId, payerId, (error, payment) => {
-        if(error) {
-            console.log("error", error)
-        } else {
-            if(payment.state === "approved") {
-                console.info('payment completed successfully, description: ', payment.transactions[0].description);
-                // console.info('req.custom: : ', payment.transactions[0].custom);
-                // set paid status to True in RealTime Database
-                const date = Date.now();
-                const uid = payment.transactions[0].description;
-                const ref = admin.database().ref('users/' + uid + '/');
-
-                ref.push({
-                    'paid': true,
-                    // 'description': description,
-                    'date': date
-                })
-                res.redirect('http://localhost:8080/projects')
-            } else {
-                console.warn('payment.state: not approved ?');
-            }
-        }
-    })
-})
 
 exports.completePayment = functions.https.onRequest(app)
  

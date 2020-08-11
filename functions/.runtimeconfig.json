@@ -1,9 +1,12 @@
 {
-  "stripe": {
-    "testkey": "sk_test_w2IdHBG6GiapErUQsjoZC7z700yUnbX8jQ"
-  },
   "paypal": {
     "client_id": "AWjzg7XCuJ--qvoWZESWUCkqfmZbcDJ6yicasa6b1yfSMjK49x-VU_hXK-hgO7KsNL0ppzLxtMvHAvSW",
     "client_secret": "EOQml-TfimdcVMshOvtw-ew7e7jsAoBPJagjNs1hWRfHa-mEQ69ycl6wkc-x3tM1G4mwmaBwx75Ssvk9"
+  },
+  "stripe": {
+    "testkey": "sk_test_w2IdHBG6GiapErUQsjoZC7z700yUnbX8jQ"
+  },
+  "sendgrid": {
+    "key": "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"
   }
 }
