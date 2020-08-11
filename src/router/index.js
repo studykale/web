@@ -108,7 +108,7 @@ const routes = [
         component: () => import('@/views/Dashboard/Views/Notifications.vue')
       },
       {
-        path: "payment/:project_id/:response",
+        path: "payment/:response",
         name: "PayPal",
         component: () => import('@/views/Dashboard/Views/Payments')
       },

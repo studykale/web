@@ -31,12 +31,10 @@
 export default {
     data() {
         return {
-            project: null,
             response: ""
         }
     },
     created() {
-        this.project = this.$route.params.project_id;
         this.response = this.$route.params.response
     }
 }

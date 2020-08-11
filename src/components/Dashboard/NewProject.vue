@@ -281,21 +281,45 @@ export default {
                 },
                 createOrder: function(data, actions) {
                     return actions.order.create({
-                        purchase_units: [{
-                            amount: {
-                                value: price
+                        purchase_units: [
+                            {
+                                amount: {
+                                    value: price
+                                }
                             }
-                        }]
+                        ],
+                        redirect_urls: {
+                            return_url: 'https://studykale.com/payments/success',
+                            cancel_url: 'https://studykale.com/payments/cancelled'
+                        }
                     });
                 },
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
-                        console.log("details", details)
-                        this.newProject()
+                        let data = {
+                            genId: this.randomId(8),
+                            name: this.projectName,
+                            description: this.projectDescription,
+                            deadline: this.deadline,
+                            paperType: this.paperType,
+                            pageNumber: this.orderPages,
+                            files: this.dropFiles,
+                            status: 'pending',
+                            creator: this.currentUser.userId,
+                            price: this.calcPrice()
+                        }
+
+                        this.addProject(data)
+                        if(Object.keys(this.draft).length > 0) {
+                            draftsCollection.doc(this.draft.id).delete();
+                        }
+
+                        
+                        this.$parent.close();
                     });
                 },
                 onError: (err) => {
-                    console.log("error pay", err)
+                    
                     Notify.open({
                         type: "is-warning",
                         position: "is-top-right",

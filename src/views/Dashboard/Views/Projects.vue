@@ -1,7 +1,7 @@
 <template>
   <div>
       <div>
-      <div class="project-cards flex justify-between">
+      <div class="project-cards flex justify-between wrap">
           <div class="start stats">
               <p class="font-bold">Get started</p>
               <button class="button" @click="createProject">Create task</button>
@@ -80,13 +80,13 @@
         <ReviewCard />
       </div>
     </div>
-        <b-modal :active.sync="showNewProject">
+        <b-modal fullscreen :active.sync="showNewProject">
           <NewProject  :draft="selectedDraft" :showNewProject="showProjectModal" :currentUser="loggedInUser"/>
         </b-modal>
         <ProjectDetails @showReviewBox="addReview" :projects="proj"/>
     </div>
 </template>
-<script>
+<script> 
 
 import NewProject from '@/components/Dashboard/NewProject.vue'
 import { mapState, mapGetters } from "vuex"
@@ -202,6 +202,17 @@ export default {
   .p-wrapper {
     display: inline-block;
 
+  }
+
+  .wrap {
+    @media screen and (max-width: 450px) {
+      flex-direction: column;
+    }
+    
+    .start {
+      width: 100% !important;
+      margin-bottom: 1em;
+    }
   }
 
   .p-4 {

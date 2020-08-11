@@ -1,3 +1,4 @@
+
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp({
@@ -156,12 +157,12 @@ app.post('/paymentsComplete', (req, res) => {
         {
             payment_time: req.body.create_time,
             summary: req.body.summary,
-            amount: req.body.resource.purchase_units.amount.value,
+            amount: req.body.resource.purchase_units[0].amount.value,
             payment: {
-                id: req.body.resource.purchase_units.payments.captures.id,
-                status: req.body.resource.purchase_units.payments.captures.status,
-                fee: req.body.resource.purchase_units.payments.captures.seller_receivable_breakdown.paypal_fee,
-                received_after_deduction: req.body.resource.purchase_units.payments.captures.seller_receivable_breakdown.net_amount
+                id: req.body.resource.purchase_units[0].payments.captures[0].id,
+                status: req.body.resource.purchase_units[0].payments.captures[0].status,
+                fee: req.body.resource.purchase_units[0].payments.captures[0].seller_receivable_breakdown.paypal_fee,
+                received_after_deduction: req.body.resource.purchase_units[0].payments.captures[0].seller_receivable_breakdown.net_amount
             }
         }
     )

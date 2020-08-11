@@ -1,5 +1,5 @@
 <template>
-  <div class="h-100 p-2 bg-light">
+  <div class="h-100 p-1 bg-light">
       <div class="container">
         <h2 class="title">Profile</h2>
         <p>View or change your profile information.</p>

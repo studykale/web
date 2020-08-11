@@ -143,7 +143,10 @@ export default {
 
 <style lang="scss" scoped>
 .m-2 {
-    margin: 1em;
+    @media screen and (min-width: 450px) {
+        margin: 1em;
+    }
+    margin: .25em;
 }
  .Notications {
         margin-top: 1em;

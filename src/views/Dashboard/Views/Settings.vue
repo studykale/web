@@ -204,6 +204,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+    .p-2 {
+      @media screen and (min-width: 450px) {
+        padding: 1.2em;
+      }
+      padding: .4em;
+    }
+
+
     .card.w-100 {
       width: 80%;
       border-radius: 5px;

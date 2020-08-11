@@ -45,14 +45,37 @@
           </section>
       </div>
       <div class="main_view">
-         <router-view></router-view>
+          <menu-icon @click="showSide" size="1.5x" class="m-1"></menu-icon>
+          <b-sidebar
+            type="is-light"
+            :fullheight=true
+            :fullWidth=false
+            :open.sync="openSide"
+          >
+            <div class="p-1">
+                <arrow-left-icon @click="showSide" size="1.5x" class="custom-class"></arrow-left-icon>
+                <b-menu>
+                  <b-menu-list label="Projects">
+                    <b-menu-item @click="goto('/dashboard/projects')" icon="case" label="My projects"></b-menu-item>
+                    <b-menu-item @click="goto('/dashboard/chats')" icon="users" label="Chats"></b-menu-item>
+                    <b-menu-item @click="goto('/dashboard/notifications')" icon="bell" label="Notifications"></b-menu-item>
+                  </b-menu-list>
+                  <b-menu-list label="Account">
+                    <b-menu-item @click="goto('/dashboard/profile')" icon="user" label="Profile"></b-menu-item>
+                    <b-menu-item @click="goto('/dashboard/settings')" icon="cog" label="Settings"></b-menu-item>
+                    <b-menu-item @click="logout" icon="sign-out-alt" label="Logout"></b-menu-item>
+                  </b-menu-list>
+                </b-menu>
+              </div>
+          </b-sidebar>
+          <router-view></router-view>
       </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
-import { AwardIcon, BellIcon, MessageCircleIcon, SettingsIcon, LogOutIcon } from 'vue-feather-icons'
+import { AwardIcon, BellIcon, MessageCircleIcon, SettingsIcon, LogOutIcon, MenuIcon, ArrowLeftIcon } from 'vue-feather-icons'
 import { currentUser } from '../../db';
 
 export default {
@@ -61,7 +84,9 @@ export default {
     AwardIcon,
     BellIcon,
     LogOutIcon,
-    MessageCircleIcon
+    MessageCircleIcon,
+    MenuIcon,
+    ArrowLeftIcon
   },
   metaInfo() {
     return {
@@ -91,6 +116,7 @@ export default {
       username: "brian",
       windowWidth: 0,
       notifications: false,
+      openSide: false,
       // For paypal.
       payLoaded: false
     }
@@ -99,12 +125,21 @@ export default {
     ...mapActions('projects', ['initDrafts', 'initProjects']),
     ...mapActions('user', ['signout']),
     goto(link) {
-     
       if(link) {
         this.$router.push(link)
       }
+
+      if(this.openSide) this.openSide = false;
     },
-    
+    createProject() {
+      this.$emit('create');
+    },
+    showSide() {
+      this.openSide = !this.openSide;
+    },
+    logout() {
+      this.signout();
+    }
   },
   mounted() {
     this.$nextTick(() => {
@@ -141,6 +176,10 @@ export default {
         grid-template-columns: 20% 1fr;
         grid-template-rows: 1fr;
         overflow: hidden;
+
+        @media screen and (max-width: 450px) {
+          grid-template-columns: 1fr;
+        }
         
 
         .sidebar {
@@ -150,9 +189,14 @@ export default {
            top: 0;
            left: 0;
            color: white;
-
            display: grid;
+
+           @media screen and (max-width: 450px) {
+             display: none;
+           }
         }
+
+        
 
         .sidebar .top {
             grid-row-start: 1;
