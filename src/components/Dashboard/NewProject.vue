@@ -269,8 +269,9 @@ export default {
         },
         setLoaded() {
             this.loaded = true;
+            let v = this;
             let price = this.calcPrice();
-            console.log("price", price);
+            let randomId = this.randomId(8);
             window.paypal.Buttons({
                 style: {
                     shape: 'pill',
@@ -296,30 +297,31 @@ export default {
                 },
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
+                        console.log("details", details)
                         let data = {
-                            genId: this.randomId(8),
-                            name: this.projectName,
-                            description: this.projectDescription,
-                            deadline: this.deadline,
-                            paperType: this.paperType,
-                            pageNumber: this.orderPages,
-                            files: this.dropFiles,
+                            genId: randomId,
+                            name: v.projectName,
+                            description: v.projectDescription,
+                            deadline: v.deadline,
+                            paperType: v.paperType,
+                            pageNumber: v.orderPages,
+                            files: v.dropFiles,
                             status: 'pending',
-                            creator: this.currentUser.userId,
-                            price: this.calcPrice()
+                            creator: v.currentUser.userId,
+                            price: v.calcPrice()
                         }
 
-                        this.addProject(data)
-                        if(Object.keys(this.draft).length > 0) {
-                            draftsCollection.doc(this.draft.id).delete();
+                        v.addProject(data)
+                        if(Object.keys(v.draft).length > 0) {
+                            draftsCollection.doc(v.draft.id).delete();
                         }
 
                         
-                        this.$parent.close();
+                        v.$parent.close();
                     });
                 },
                 onError: (err) => {
-                    
+                    console.log("err", err);
                     Notify.open({
                         type: "is-warning",
                         position: "is-top-right",

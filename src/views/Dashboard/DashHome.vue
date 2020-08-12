@@ -45,7 +45,7 @@
           </section>
       </div>
       <div class="main_view">
-          <menu-icon @click="showSide" size="1.5x" class="m-1"></menu-icon>
+          <menu-icon @click="showSide" size="1.5x" class="m-1 sidebutton"></menu-icon>
           <b-sidebar
             type="is-light"
             :fullheight=true
@@ -306,6 +306,12 @@ export default {
         width: 8px;
         border-radius: 4px;
         background-color: #FFAD32;
+      }
+    }
+
+    .sidebutton {
+      @media screen and (min-width: 450px){
+        display: none;
       }
     }
 </style>

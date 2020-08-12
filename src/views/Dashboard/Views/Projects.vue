@@ -44,7 +44,7 @@
 
               <div id="pending" class="mt-2">
                   <h2 class="title">Pending Projects</h2>
-                  <p>Your pending projects appear here. They include <b>unpaid projects</b></p>
+                  <p>Your pending projects appear here.</p>
                   <div class="mt-2" v-if="pProjects.length > 0">
                     <div class="p-wrapper" v-for="(project, i) in pProjects" :key="i">
                       <ProjectCard @click="showProjectDetail(project)" :project="project"/>
@@ -80,7 +80,7 @@
         <ReviewCard />
       </div>
     </div>
-        <b-modal fullscreen :active.sync="showNewProject">
+        <b-modal :active.sync="showNewProject">
           <NewProject  :draft="selectedDraft" :showNewProject="showProjectModal" :currentUser="loggedInUser"/>
         </b-modal>
         <ProjectDetails @showReviewBox="addReview" :projects="proj"/>
