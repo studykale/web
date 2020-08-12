@@ -288,11 +288,7 @@ export default {
                                     value: price
                                 }
                             }
-                        ],
-                        redirect_urls: {
-                            return_url: 'https://studykale.com/payments/success',
-                            cancel_url: 'https://studykale.com/payments/cancelled'
-                        }
+                        ]
                     });
                 },
                 onApprove: function(data, actions) {
@@ -353,7 +349,7 @@ export default {
         const script = document.createElement("script");
         script.addEventListener("load", this.setLoaded);
         script.src =
-        "https://www.paypal.com/sdk/js?client-id=AWjzg7XCuJ--qvoWZESWUCkqfmZbcDJ6yicasa6b1yfSMjK49x-VU_hXK-hgO7KsNL0ppzLxtMvHAvSW&currency=AUD";
+        "https://www.paypal.com/sdk/js?client-id=AQF-Ah7jDj3nPq2o8HcCgE0h7fXV_MUnPsMv3suXQqmXRttKa58MfrtuxuEZYatf26hs2-ij6lm4urtA&currency=AUD";
     document.body.appendChild(script);
     },
     created() {
