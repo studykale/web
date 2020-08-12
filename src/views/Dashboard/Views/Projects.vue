@@ -77,7 +77,7 @@
             </div>
       </section>
       <div v-if="reviewAllowed" class="p-absolute review">
-        <ReviewCard />
+        <ReviewCard @closeReview="closeReview"/>
       </div>
     </div>
         <b-modal :active.sync="showNewProject">
@@ -131,6 +131,9 @@ export default {
     },
     addReview(option) {
       this.reviewAllowed = option
+    },
+    closeReview(payload) {
+      this.reviewAllowed = payload.open;
     },
     draftToProject(id) {
       if(id) {

@@ -50,7 +50,6 @@ export default {
     methods: {
         ...mapActions('projects', ['updateProjects']),
         updateSingleProject() {
-        
             projectsCollection.doc(this.id).update({
                 name: this.project.name,
                 description: this.project.description,

@@ -120,7 +120,7 @@ exports.createPaymentProject = functions.firestore.document('projects/{documentI
                return admin.firestore().doc(`notifications/${userId}`).set({
                     time: new Date(),
                     read: false,
-                    rvr: userId,
+                    rvr: `${userId}`,
                     name: "Project received.",
                     description: `Thank you ${result.data().username} we have received your task and will update you on completion.`
                 })
@@ -163,7 +163,9 @@ app.post('/paymentsComplete', (req, res) => {
                 status: req.body.resource.purchase_units[0].payments.captures[0].status,
                 fee: req.body.resource.purchase_units[0].payments.captures[0].seller_receivable_breakdown.paypal_fee,
                 received_after_deduction: req.body.resource.purchase_units[0].payments.captures[0].seller_receivable_breakdown.net_amount
-            }
+            },
+            payer: req.body.resource.payer.name.given_name,
+            email: req.body.resource.payer.email_address
         }
     )
     res.end();

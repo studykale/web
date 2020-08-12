@@ -40,6 +40,7 @@ const contactCollection = db.collection('contactus');
 const userPayments = uid => newUser(uid).collection('payments');
 const notifications = db.collection('notifications');
 const reviews = db.collection('reviews')
+const payments = db.collection('payments');
 
 
 auth.onAuthStateChanged((user) => {
@@ -64,6 +65,7 @@ export {
     storageRef, 
     TaskEvent, 
     TaskState, 
+    payments,
     config,
     reviews,
     contactCollection,

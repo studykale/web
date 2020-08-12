@@ -80,7 +80,7 @@ export default {
             this.closeReview()
         },
         closeReview() {
-            this.$root.$emit('closeReview', { close: true })
+            this.$root.$emit('closeReview', { open: true })
         },
         tempId(length) {
             var result = '';

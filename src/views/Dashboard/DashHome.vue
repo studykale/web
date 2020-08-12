@@ -13,12 +13,12 @@
                               <span><bell-icon size="1.5x" class="text-white "></bell-icon></span>
                               <span>Notifications</span>
                           </router-link>
-                          <router-link to="/dashboard/chats" class="flex flex-row top-links">
+                          <!-- <router-link to="/dashboard/chats" class="flex flex-row top-links">
                               <span>
                                 <message-circle-icon size="1.5x" class="custom-class"></message-circle-icon>
                               </span>
                               <span>Chats</span>
-                          </router-link>
+                          </router-link> -->
                       </ul>
                   </div>
               </div>
@@ -57,7 +57,6 @@
                 <b-menu>
                   <b-menu-list label="Projects">
                     <b-menu-item @click="goto('/dashboard/projects')" icon="case" label="My projects"></b-menu-item>
-                    <b-menu-item @click="goto('/dashboard/chats')" icon="users" label="Chats"></b-menu-item>
                     <b-menu-item @click="goto('/dashboard/notifications')" icon="bell" label="Notifications"></b-menu-item>
                   </b-menu-list>
                   <b-menu-list label="Account">
@@ -75,7 +74,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import { AwardIcon, BellIcon, MessageCircleIcon, SettingsIcon, LogOutIcon, MenuIcon, ArrowLeftIcon } from 'vue-feather-icons'
+import { AwardIcon, BellIcon, SettingsIcon, LogOutIcon, MenuIcon, ArrowLeftIcon } from 'vue-feather-icons'
 import { currentUser } from '../../db';
 
 export default {
@@ -84,7 +83,6 @@ export default {
     AwardIcon,
     BellIcon,
     LogOutIcon,
-    MessageCircleIcon,
     MenuIcon,
     ArrowLeftIcon
   },

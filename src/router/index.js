@@ -169,8 +169,8 @@ const routes = [
       },
       {
         path: 'notifications',
-        name: 'AdminSettings',
-        component: () => import('@/views/Dashboard/Views/Notifications')
+        name: 'AdminNotifications',
+        component: () => import('@/views/Admin/Dashboard/try/Notifications.vue')
       },
       {
         path: 'payments',
