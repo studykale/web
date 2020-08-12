@@ -10,10 +10,7 @@
               <p class="font-bold">Notifications</p>
               <router-link to="/dashboard/notifications" class="button">View notifications</router-link>
           </div>
-          <div class="start respond">
-              <p class="font-bold">Chats</p>
-              <router-link to="/dashboard/chats" class="button">Chats</router-link>
-          </div>
+          
       </div>
       <section class="projects-list">
             <div class="mb-2" v-if="drafts.length > 0">
