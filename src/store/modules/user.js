@@ -208,6 +208,7 @@ const User = {
 			}
 		},
 		updateUserProfile({ dispatch, commit }, data) {
+			console.log("data");
 			commit('updateProfileRequest')
 			if(data.type == "photo") {
 				uploadFiles(data.image, 'photo')
@@ -234,13 +235,15 @@ const User = {
 				})
 			} else if(data.type == "email") {
 				commit('updateEmailRequest')
+				
 				currentUser.updateEmail(data.email)
 				.then(() => {
-					let note = notifications.doc(currentUser.uid)
-					note.set({
+					console.log("yes yea");
+					notifications.add({
 						name: "Email change successful",
 						description: "The email change was successful.",
 						time: Timestamp.now(),
+						rvr: currentUser.uid,
 						read: false
 					})
 					Notification.open({
@@ -253,7 +256,7 @@ const User = {
 					commit("updateEmailFail")
 					if(error.type == "invalid-email") {
 						Notification.open({
-							message: "Sorry but that is an invalid password.",
+							message: "Sorry but that is an invalid email.",
 							type: "is-warning"
 						})
 					} else if(error.type == "requires-recent-login") {

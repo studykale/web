@@ -32,7 +32,7 @@
             </b-field>
             <div class="flex">
                 <button class="button is-primary is-extended" type="submit">Submit</button>
-                <b-button class="ml-2" @click="closeReview" type="is-danger">Close</b-button>
+                <b-button class="ml-2" @click="log" type="is-danger">Close</b-button>
             </div>
             </div>
         </form>
@@ -54,6 +54,10 @@ export default {
         }
     },
     methods: {
+        log() {
+            this.$emit('closeReview', { close: true })
+
+        },
         addReview() {
             let r  = reviews.doc(currentUser.uid)
             r.set({
@@ -69,18 +73,21 @@ export default {
                 name: 'Site review',
                 description: "A site review has been made..",
                 time: Timestamp.now(),
-                read: false
+                read: false,
+                admin: true
             })
-
+            
+            
             this.$buefy.toast.open({
                   message: 'Thanks alot we will update...',
                   queue: false
             })
             this.message = ""
-            this.closeReview()
+            this.log();
         },
         closeReview() {
-            this.$root.$emit('closeReview', { open: true })
+            console.log("close review")
+            this.$emit('closeReview', { close: true })
         },
         tempId(length) {
             var result = '';

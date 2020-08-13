@@ -20,7 +20,7 @@
             label="Email">
               <b-input v-model="$v.newEmail.$model" placeholder="Your email" name="email" type="email" expanded></b-input>
             </b-field>
-            <button class="button is-success mr-a" type="submit">Save</button>
+            <button :disabled="true" class="button is-success mr-a" type="submit">Save</button>
           </form>
         </div>
       </div>
@@ -105,20 +105,19 @@ export default {
       ...mapActions('user', ['updateUserProfile']),
       updateUserEmail() {
         let data = {
-          newEmail: this.newEmail,
+          email: this.newEmail,
           type: 'email'
         }
-        this.$v.newEmail.$dirty = true;
 
-        if(this.$v.$invalid) {
+        if(this.$v.newEmail.$invalid) {
           this.emailSubmitStatus = "ERROR"
+         
         } else {
           this.emailSubmitStatus =  "OKAY";
           this.emailSubmitStatus = "PENDING";
-
           this.updateUserProfile(data)
-          this.newEmail = "";
           this.emailSubmitStatus = null
+          this.$v.$reset();
         }
       },
       updateUserPassword() {

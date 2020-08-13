@@ -128,6 +128,7 @@ export default {
         },
         openReview() {
             this.$emit('showReviewBox', true)
+            this.openSide = false;
         },
         toDate(d) {
             return new Date(d)

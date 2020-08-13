@@ -120,7 +120,7 @@ exports.createPaymentProject = functions.firestore.document('projects/{documentI
                return admin.firestore().doc(`notifications/${userId}`).set({
                     time: new Date(),
                     read: false,
-                    rvr: `${userId}`,
+                    rvr: result.id,
                     name: "Project received.",
                     description: `Thank you ${result.data().username} we have received your task and will update you on completion.`
                 })

@@ -472,11 +472,11 @@ $family-primary: 'Muli', sans-serif;
 .input, .taginput .taginput-container.is-focusable, .textarea, .select select {
   outline: none !important;
   box-shadow: none !important;
-  border: 2px solid #9fa1a2 !important;
+  border: 1.5px solid #e0e0e0 !important;
 }
 
 .input:focus {
-  border: 1.5px solid #5703b8bb !important;
+  border: 1px solid #5703b8bb !important;
 }
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
 $colors: (

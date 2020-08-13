@@ -270,8 +270,8 @@ export default {
         setLoaded() {
             this.loaded = true;
             let v = this;
-            let price = this.calcPrice();
             let randomId = this.randomId(8);
+           
             window.paypal.Buttons({
                 style: {
                     shape: 'pill',
@@ -285,7 +285,7 @@ export default {
                         purchase_units: [
                             {
                                 amount: {
-                                    value: price
+                                    value: v.calcPrice()
                                 }
                             }
                         ]

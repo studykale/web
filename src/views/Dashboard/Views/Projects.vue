@@ -130,6 +130,7 @@ export default {
       this.reviewAllowed = option
     },
     closeReview(payload) {
+      console.log("payload", payload)
       this.reviewAllowed = payload.open;
     },
     draftToProject(id) {
