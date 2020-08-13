@@ -238,7 +238,7 @@ const User = {
 				
 				currentUser.updateEmail(data.email)
 				.then(() => {
-					console.log("yes yea");
+					
 					notifications.add({
 						name: "Email change successful",
 						description: "The email change was successful.",
