@@ -129,9 +129,7 @@
                                 </b-taglist>
                             </h4>
                         </div>
-                        <br>
-                        <div class="paypal-btn" ref="paypal"></div>
-                        <!-- <button :disabled="projectName.length <= 0 || paperType.length <= 0" class="button is-primary is-fullwidth" type="submit" @click="$parent.close()">Submit</button> -->
+                        <button :disabled="projectName.length <= 0 || paperType.length <= 0" class="button is-primary is-fullwidth" type="submit" @click="$parent.close()">Submit</button>
                     </b-step-item>
                     <template
                         slot="navigation"
