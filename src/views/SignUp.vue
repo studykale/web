@@ -36,6 +36,9 @@ export default {
   components: {
     SignUpCard,
     Footer
+  },
+  created() {
+    this.$crisp.do("chat:hide");
   }
 }
 </script>

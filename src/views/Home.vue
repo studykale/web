@@ -32,7 +32,7 @@
         <div class="container p-5">
           <div class="flex flex-row justify-between">
             <div class="side">
-              <h2 class="title">At studykale, we help you to meet your deadlines at affordable price.</h2>
+              <h2 class="title title-1">At studykale, we help you to meet your deadlines at affordable price.</h2>
               <p
                 class="mt-2"
               >We help you get all your assignments done one place. Do not worry if you have no ideas or if you are overloaded with assignments, we are the solution and we will help get amazing grades.</p>
@@ -172,6 +172,7 @@
 import Navbar from "@/components/Navbar.vue";
 import OrderCard from "@/components/OrderCard.vue";
 import Footer from "@/components/Footer.vue";
+import { SnackbarProgrammatic as Snackbar } from "buefy"
 
 export default {
   
@@ -213,6 +214,20 @@ export default {
     },
     goSignUp() {
       this.$router.push("/auth/signup");
+    }
+  },
+  created() {
+    this.$crisp.load();
+    this.$crisp.$on('loaded', () => {
+      Snackbar.open({
+        type: "is-primary",
+        message: "Feel free to talk to us anytime using the chat box. On bottom right.",
+        position: "is-bottom-left",
+        indefinite: true,
+      })
+    })
+    if(this.$crisp.is("chat:hidden")) {
+      this.$crisp.do("chat:show")
     }
   }
 };
@@ -299,20 +314,12 @@ export default {
   position: relative;
   padding: 4em 0;
 
-  &::before {
-    content: "";
-    position: absolute;
-    display: block;
-    top: 0;
-    /* z-index: -1; */
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background: url("../assets/illustrations/graycurve.svg") no-repeat center;
+  .title {
+    font-size: 1.5rem;
   }
 
-  .title {
-    font-size: 1.3rem;
+  .title.title-1 {
+    font-size: 1.8rem;
   }
 
   .flex {

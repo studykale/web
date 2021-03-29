@@ -119,6 +119,9 @@ export default {
         }
       ]
     }
+  },
+  created() {
+    this.$crisp.do("chat:show")
   }
 }
 </script>

@@ -8,6 +8,7 @@ import "./plugins/buefy";
 import { firestorePlugin } from 'vuefire';
 import { auth } from "./db";
 import VueChatScroll from 'vue-chat-scroll'
+import CrispChat from  "@dansmaculotte/vue-crisp-chat";
 Vue.use(VueChatScroll)
 
 Vue.config.productionTip = false;
@@ -15,6 +16,14 @@ Vue.config.productionTip = false;
 Vue.use(firestorePlugin);
 Vue.use(VueMoment);
 Vue.use(VueCookies);
+Vue.use(
+  CrispChat,
+  {
+    websiteId: '1e09935d-afef-44af-9ec3-60ab39993f5e',
+    disabled: true,
+    hideOnLoad: false
+  }
+)
 
 
 

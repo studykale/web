@@ -27,6 +27,7 @@ export default {
        project: Object
     },
     methods: {
+        
         dateFm(s) {
             if(new Date(s) && !s.seconds) {
                 return new Date(s).toDateString();

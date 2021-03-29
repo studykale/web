@@ -163,6 +163,11 @@ export default {
     } else {
       this.initDrafts(this.loggedInUser.email);
     }
+
+    this.$crisp.load()
+    this.$crisp.do("chat:toggle");
+    this.$crisp.push(["set", "user:email", [this.loggedInUser.email]])
+    this.$crisp.push(["set", "user:nickname", [this.loggedInUser.username]])
   }
 }
 </script>

@@ -64,15 +64,18 @@ exports.newUserSignUp = functions.auth.user().onCreate(async user => {
 
 })
 
-exports.createPaymentProject = functions.firestore.document('projects/{documentId}').onCreate((event, context) => {
+exports.createPaymentProject = functions.firestore.document('projects/{documentId}').onCreate(async (event, context) => {
     var projectData = event.data();
 
-    console.log("created", projectData)
+   let user_data = await admin.firestore().doc(`users/${projectData.creator}`)
+    .get()
+
+    let { username, email } = user_data.data();
 
     sgMail.send({
         to: 'studykale@gmail.com',
         from: 'support@studykale.com',
-        templateId: 'd-3180cda4570345b5821f97b9615fe547',
+        templateId: 'd-51add76cab5b465b91e3b8e6107b5cb4',
         substitutionWrappers: ["{{", "}}"],
         dynamicTemplateData: {
             project_id: context.params.documentId,
@@ -80,7 +83,9 @@ exports.createPaymentProject = functions.firestore.document('projects/{documentI
             price: projectData.price,
             deadline: projectData.deadline.toDate(),
             project_type: projectData.paperType,
-            pages: projectData.pages
+            pages: projectData.pages,
+            username,
+            user_email: email
         }
     })
     .then(async () => {

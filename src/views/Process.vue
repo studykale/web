@@ -96,6 +96,9 @@ export default {
                 const steps = [...this.baseSteps]
                 return steps
             },
+    },
+    created() {
+        this.$crisp.do("chat:hide")
     }
 }
 </script>

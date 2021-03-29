@@ -181,16 +181,16 @@ export default {
         AlertCircleIcon
     },
     data() {
-            const min = new Date()
-            min.setDate(min.getDate())
-            min.setHours(min.getHours() + 4)
-            min.setMinutes(0)
-            min.setSeconds(0)
-            const max = new Date()
-            max.setDate(max.getDate() + 7)
-            max.setHours(24)
-            max.setMinutes(0)
-            max.setSeconds(0)
+        const min = new Date()
+        min.setDate(min.getDate())
+        min.setHours(min.getHours() + 4)
+        min.setMinutes(0)
+        min.setSeconds(0)
+        const max = new Date()
+        max.setDate(max.getDate() + 7)
+        max.setHours(24)
+        max.setMinutes(0)
+        max.setSeconds(0)
         return {
             activeStep: 0,
             labelPosition: 'bottom',
