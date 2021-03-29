@@ -218,16 +218,15 @@ export default {
   },
   created() {
     this.$crisp.load();
+
     this.$crisp.$on('loaded', () => {
       Snackbar.open({
         type: "is-primary",
         message: "Feel free to talk to us anytime using the chat box. On bottom right.",
         position: "is-bottom-left",
+        duration: 2500,
       })
     })
-    if(this.$crisp.is("chat:hidden")) {
-      this.$crisp.do("chat:show")
-    }
   }
 };
 </script>

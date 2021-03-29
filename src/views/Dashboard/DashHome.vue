@@ -167,9 +167,14 @@ export default {
     this.$crisp.load()
     this.$crisp.do("chat:toggle");
     this.$crisp.push(["set", "user:email", [this.loggedInUser.email]])
-    this.$crisp.push(["set", "user:nickname", [this.loggedInUser.username]])
+    // this.$crisp.push(["set", "user:nickname", [this.loggedInUser.username]])
+    this.$crisp.set("user:nickname", [this.loggedInUser.username]);
     // Introduce company by calling out whoever has just logged in.
-    this.$crisp.do(["message:show", ["text", `Hello, ${this.loggedInUser.username}, Welcome to studykale we are here for you. Feel free to contact us and we will get back to you as soon as possible.`]])
+    
+    this.$crisp.push(["on", "chat:initiated", () => {
+      console.log("Okay")
+    }])
+    
   }
 }
 </script>
