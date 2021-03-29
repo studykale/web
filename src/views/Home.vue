@@ -223,7 +223,6 @@ export default {
         type: "is-primary",
         message: "Feel free to talk to us anytime using the chat box. On bottom right.",
         position: "is-bottom-left",
-        indefinite: true,
       })
     })
     if(this.$crisp.is("chat:hidden")) {
