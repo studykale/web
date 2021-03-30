@@ -21,7 +21,7 @@ Vue.use(VueCookies);
 Vue.use(
   CrispChat,
   {
-    websiteId: '1e09935d-afef-44af-9ec3-60ab39993f5e',
+    websiteId: process.env.VUE_APP_CRISP_WEBID,
     disabled: true,
     hideOnLoad: false
   }
