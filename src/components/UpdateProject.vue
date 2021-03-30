@@ -50,11 +50,11 @@ export default {
     methods: {
         ...mapActions('projects', ['updateProjects']),
         updateSingleProject() {
-            projectsCollection.doc(this.id).update({
+            projectsCollection.doc(this.id).set({
                 name: this.project.name,
                 description: this.project.description,
                 deadline: Timestamp.fromDate(this.deadline)
-            })
+            }, { merge: true })
             this.changedValues = false,
             this.closeModal = false
             this.$emit('complete')

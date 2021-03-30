@@ -328,7 +328,8 @@ const projects = {
 							price: data.price,
 							createdAt: Timestamp.now(),
 							creator: data.creator,
-							paid: true
+							token: data.token,
+							paid: false
 						})
 						.then(() => {
 							projectsCollection.doc(docId).set({

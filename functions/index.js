@@ -10,7 +10,12 @@ const express = require('express');
 const cors = require('cors');
 const bodyparser = require('body-parser');
 const sgMail = require('@sendgrid/mail');
+const { Stripe } = require("stripe")
 sgMail.setApiKey(functions.config().sendgrid.key);
+const stripe =  new Stripe(functions.config().stripe.secret, {
+    apiVersion: "2020-03-02"
+})
+
 
 // To alert support of a new project using sendgrid the project id and name will be required.
 
@@ -33,6 +38,8 @@ paypal.configure({
 
 
 exports.newUserSignUp = functions.auth.user().onCreate(async user => {
+    
+
    return sgMail.send({
        to: 'studykale@gmail.com',
        from: 'support@studykale.com',
@@ -48,7 +55,7 @@ exports.newUserSignUp = functions.auth.user().onCreate(async user => {
     .then(() => {
         return admin.firestore().collection('email').add({
             status:"Sent",
-            date: new Date(),
+            date: new Date.now(),
             type: "New User",
             description: "Email was sent successfully"
         })
@@ -56,7 +63,7 @@ exports.newUserSignUp = functions.auth.user().onCreate(async user => {
     .catch(error => {
         return admin.firestore().collection('email').add({
             status:"Not sent",
-            date: new Date(),
+            date: new Date.now(),
             type: "New User",
             description: "Email was not sent successfully: "+error
         })
@@ -65,115 +72,129 @@ exports.newUserSignUp = functions.auth.user().onCreate(async user => {
 })
 
 exports.createPaymentProject = functions.firestore.document('projects/{documentId}').onCreate(async (event, context) => {
-    var projectData = event.data();
+    let projectData = event.data();
 
-   let user_data = await admin.firestore().doc(`users/${projectData.creator}`)
+   let userData = await admin.firestore().doc(`users/${projectData.creator}`)
     .get()
 
-    let { username, email } = user_data.data();
+    console.log("userdata", userData)
 
-    sgMail.send({
-        to: 'studykale@gmail.com',
-        from: 'support@studykale.com',
-        templateId: 'd-51add76cab5b465b91e3b8e6107b5cb4',
-        substitutionWrappers: ["{{", "}}"],
-        dynamicTemplateData: {
-            project_id: context.params.documentId,
-            project_name: projectData.name,
-            price: projectData.price,
-            deadline: projectData.deadline.toDate(),
-            project_type: projectData.paperType,
-            pages: projectData.pages,
-            username,
-            user_email: email
-        }
+    let { username, email } = userData.data();
+    let userId = userData.id;
+
+   return await stripe.charges.create({
+    //    Uses cents have to multiply iy with 100
+        amount: projectData.price * 100,
+        currency: "AUD",
+        description: `${projectData.name} - ${projectData.description}`,
+        source: projectData.token,
+    })
+    .then(async (charge) => {
+           return sgMail.send({
+                to: 'studykale@gmail.com',
+                from: 'support@studykale.com',
+                templateId: 'd-51add76cab5b465b91e3b8e6107b5cb4',
+                substitutionWrappers: ["{{", "}}"],
+                dynamicTemplateData: {
+                    project_id: context.params.documentId,
+                    project_name: projectData.name,
+                    price: projectData.price,
+                    deadline: projectData.deadline.toDate(),
+                    project_type: projectData.paperType,
+                    pages: projectData.pages,
+                    username,
+                    user_email: email
+                }
+            })
     })
     .then(async () => {
         await admin.firestore().collection('email').add({
             status:"Sent successfully",
-            date: new Date(),
+            date: new Date.now(),
             type: "New Project",
             description: "Email was sent successfully to " + projectData.name
         });
+        
+        await admin.firestore().collection("projects").doc(projectData.pid).set({ paid: true }, { merge: true })
 
         await admin.firestore().collection('notifications').add({
             name: "New Project",
-            time: new Date(),
+            time: new Date.now(),
             read: false,
             description: `A new project was created with the name ${ projectData['name'] } and the price is ${ projectData['price'] }`
         })
 
        return admin.firestore().doc(`users/${projectData.creator}`)
         .get()
-        .then(async result => {
-            let userId = result.id;
-          return sgMail.send({
-                to: result.data().email,
-                from: "team@studykale.com",
-                subject: "Project received",
-                text: "Thank you. We have received your project. We will update you when we are done.",
-                html: "<p>Thank you we have received your project and we will be done in no time. Thank you for trusting in us.</p><br><p>Studykale Team</p>"
-            })
-            .then(async () => {
-                await admin.firestore().collection('email').add({
-                    status:"Sent successfully",
-                    date: new Date(),
-                    type: "Project received",
-                    description: "Email on project received successfully sent to " + result.data().username
-                });
-
-               return admin.firestore().doc(`notifications/${userId}`).set({
-                    time: new Date(),
-                    read: false,
-                    rvr: result.id,
-                    name: "Project received.",
-                    description: `Thank you ${result.data().username} we have received your task and will update you on completion.`
-                })
-            })
-            .catch(error => {
-                admin.firestore().collection('email').add({
-                    status:"Email Send failed",
-                    date: new Date(),
-                    type: "Project received",
-                    description: "Email was not sent successfully to " + result.data().username + " with email " + result.data().email + ". The error is "+error
-                });
-            })
-        })
-        .catch(error => {
-            console.log("error on getting user data", error)
-        })
-
        
     })
-    .catch(error => {
+    .then(async (result) => {
+      return sgMail.send({
+            to: result.data().email,
+            from: "team@studykale.com",
+            subject: "Project received",
+            text: "Thank you. We have received your project. We will update you when we are done.",
+            html: "<p>Thank you we have received your project and we will be done in no time. Thank you for trusting in us.</p><br><p>Studykale Team</p>"
+        })
+    })
+    .then(async () => {
+        await admin.firestore().collection('email').add({
+            status:"Sent successfully",
+            date: new Date.now(),
+            type: "Project received",
+            description: "Email on project " + projectData.name + " received successfully sent to " + username
+        });
+
+       return admin.firestore().collection("notifications").add({
+            time: new Date.now(),
+            read: false,
+            rvr: userId,
+            name: "Project received.",
+            description: `Thank you ${username} we have received your task and will update you on completion.`
+        })
+    })
+    .catch(async error => {
+        console.log("failed terribly")
+        await admin.firestore().collection(`notifications`).add({
+            time: new Date.now(),
+            read: false,
+            rvr: userId,
+            name: "Payment process failed",
+            description: `Please check your payment information. We were unable to process payment.`
+        })
+
+        await sgMail.send({
+            to: "studykale@gmail.com",
+            from: "support@studykale.com",
+            subject: "Payment failed",
+            text: `Payment for a project failed. User - ${username} and email - ${email}.`,
+            html: `<p>Payment for a project could not process successfully. It has therefore been deleted until successful payment is processed</p><br/><p>Studykale Support</p>`
+        })
+
+        await sgMail.send({
+            to: email,
+            from: "team@studykale.com",
+            subject: "Payment process failed",
+            text: "Please review the payment card used.",
+            html: "<p>Please review your payment process. We could not receive the project if the payment does not complete. Please try again</p><br><p>Studykale Team</p>"
+        })
+
         admin.firestore().collection('email').add({
             status:"Not sent",
-            date: new Date(),
+            date: new Date.now(),
             type: "New Project",
             description: "Email was not sent successfully: The name is " + projectData.name +" : "+error
         })
+
+        functions.logger.log(error);
+
+        
+        return await admin.firestore().collection("projects").doc(projectData.pid).delete();
     })
-})
 
+   
 
-app.post('/paymentsComplete', (req, res) => {
-
-    admin.firestore().collection('payments').add(
-        {
-            payment_time: req.body.create_time,
-            summary: req.body.summary,
-            amount: req.body.resource.purchase_units[0].amount.value,
-            payment: {
-                id: req.body.resource.purchase_units[0].payments.captures[0].id,
-                status: req.body.resource.purchase_units[0].payments.captures[0].status,
-                fee: req.body.resource.purchase_units[0].payments.captures[0].seller_receivable_breakdown.paypal_fee,
-                received_after_deduction: req.body.resource.purchase_units[0].payments.captures[0].seller_receivable_breakdown.net_amount
-            },
-            payer: req.body.resource.payer.name.given_name,
-            email: req.body.resource.payer.email_address
-        }
-    )
-    res.end();
+    
 })
 
 

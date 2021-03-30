@@ -8,8 +8,10 @@ import "./plugins/buefy";
 import { firestorePlugin } from 'vuefire';
 import { auth } from "./db";
 import VueChatScroll from 'vue-chat-scroll'
+import { StripePlugin } from "@vue-stripe/vue-stripe"
 import CrispChat from  "@dansmaculotte/vue-crisp-chat";
 Vue.use(VueChatScroll)
+
 
 Vue.config.productionTip = false;
 
@@ -24,6 +26,12 @@ Vue.use(
     hideOnLoad: false
   }
 )
+Vue.use(StripePlugin, {
+  pk: process.env.VUE_APP_PK,
+  stripeAccount: process.env.VUE_APP_STRIPE_ACCOUNT,
+  locale: process.env.VUE_APP_STRIPE_LOCALE,
+  apiVersion: process.env.VUE_APP_STRIPE_API_VERSION
+})
 
 
 

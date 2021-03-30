@@ -54,7 +54,7 @@ auth.onAuthStateChanged((user) => {
 export { 
     Timestamp, 
     auth, 
-    newUser, 
+    newUser,
     users, 
     notifications, 
     userPayments, 

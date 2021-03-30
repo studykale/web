@@ -19,6 +19,8 @@
 
 <script>
 import  { CalendarIcon } from "vue-feather-icons"
+import { SnackbarProgrammatic as Snackbar } from "buefy";
+
 export default {
     components: {
         CalendarIcon
@@ -37,7 +39,13 @@ export default {
             }
         },
         showSide(project) {
-            this.$root.$emit('projDetailOpen', { show: true, id: project.pid ? project.pid : project.name  })
+            if(project.paid) {
+                this.$root.$emit('projDetailOpen', { show: true, id: project.pid ? project.pid : project.name  })
+            } else {
+                Snackbar.open({
+                    message: "Please wait as we process payment."
+                })
+            }
         },
     }
 }

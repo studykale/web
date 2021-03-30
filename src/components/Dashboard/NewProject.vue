@@ -69,12 +69,13 @@
                     <!-- Upload documents -->
                     <b-step-item  step="3" label="Extra files">
                         <section class="flex justify-center flex-column">
-                            <b-field class="flex justify-center flex-column" label="Upload documents" message="Accepts pdfs and docs only.">
-                                <b-upload class="w-100" 
+                            <b-field class="flex justify-center flex-column" label="Upload documents" message="Accepts pdfs and docs only." expanded>
+                                <b-upload
                                     :name="dropFiles"
                                     v-model="dropFiles"
                                     multiple
                                     drag-drop
+                                    expanded
                                     accept=".xlsx, .xls, image/*, .doc, .docx, .ppt, .pptx, .txt, .pdf"
                                     type="is-success">
                                     <section class="section">
@@ -104,30 +105,35 @@
                         </section>
                     </b-step-item>
 
-                    <b-step-item step="4" label="Complete">
-                        <h2 class="subtitle" v-if="projectName && paperType">Awesome the project is set.</h2>
-                        <b-message type="is-warning" title="Incomplete" v-else>
-                            Please complete setting up your project.
-                        </b-message>
-                        <p v-if="Object.keys(drafts).length > 0">Please note that draft made projects will be deleted...</p>
-                        <hr class="dropdown-divider"/>
+                    <b-step-item step="4" label="Payment">
+                        <div class="flex justify-center flex-column">
+                            <h2 class="subtitle text-center">Payment Information</h2>
+                            <p v-if="token == null" class="text-center">Please add payment information</p>
+                            <p class="has-text-success text-center" v-else>Successfully added.</p>
+                            <br>
+                            <stripe-element-card
+                                ref="cardRef"
+                                :pk="publishableKey"
+                                @token="tokenCreated"
+                            />
+                            <p v-if="cardErrorMessage">{{ cardErrorMessage }}</p>
+                            <b-button v-if="token == null" :loading="loadingToken" @click="generateToken" type="is-primary">Add Card</b-button>
+                        </div>
+                    </b-step-item>
 
-                        <div class="text-left details">
-                            <h4 class="font-bold">Pages: {{ orderPages }}</h4>
-                            <h4 class="font-bold">Total words: {{ totalWords }} Words</h4>
-                            <h4>
-                                <b-taglist attached>
-                                    <b-tag type="is-warning">Name</b-tag>
-                                    <b-tag type="is-dark">{{ projectName || 'Please set a name' }}</b-tag>
-                                </b-taglist>
-                            </h4>
-                            
-                            <h4>
-                                <b-taglist attached>
-                                    <b-tag type="is-warning">Paper type</b-tag>
-                                    <b-tag type="is-dark">{{ paperType || 'Please set a name' }}</b-tag>
-                                </b-taglist>
-                            </h4>
+                    <b-step-item step="5" label="Complete">
+                        <div class="flex justify-center flex-column">
+                            <div class="success_project" v-if="projectName && paperType">
+                                <check-circle-icon size="4x" class="has-text-success mr-2"></check-circle-icon>
+                                <p class="mt-2 subtitle">Successfully set up</p>
+                            </div>
+                            <b-message type="is-warning" title="Incomplete" v-else>
+                                <alert-circle-icon size="1.5x" class="has-text-danger"></alert-circle-icon>
+                                
+                                Please complete setting up your project.
+                            </b-message>
+                            <p v-if="Object.keys(drafts).length > 0">Please note that draft made projects will be deleted...</p>
+                        
                         </div>
                         <button :disabled="projectName.length <= 0 || paperType.length <= 0" class="button is-primary is-fullwidth" type="submit" @click="$parent.close()">Submit</button>
                     </b-step-item>
@@ -160,9 +166,11 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { mapActions, mapState } from "vuex";
-import { AlertCircleIcon } from 'vue-feather-icons';
+import { AlertCircleIcon, CheckCircleIcon } from 'vue-feather-icons';
 import { draftsCollection } from '../../db';
 import { NotificationProgrammatic as Notify } from "buefy"
+import { StripeElementCard } from "@vue-stripe/vue-stripe"
+
 // import { notifications, Timestamp, currentUser } from "../../db";
 
 export default {
@@ -178,9 +186,12 @@ export default {
         }
     },
     components: {
-        AlertCircleIcon
+        AlertCircleIcon,
+        StripeElementCard,
+        CheckCircleIcon,
     },
     data() {
+        this.publishableKey = process.env.VUE_APP_PK
         const min = new Date()
         min.setDate(min.getDate())
         min.setHours(min.getHours() + 4)
@@ -195,7 +206,9 @@ export default {
             activeStep: 0,
             labelPosition: 'bottom',
              typeOfPaper: [
-                    {value: "Essay"}, {value: "Admission Essay"}, {value: "Annotated Bibliography"}, {value: "Argumentative Essay"}, {value: "Article Review"}, {value: "Book/moview Review"}, {value: "Business review"}, {value: "Case Study"}, {value: "Course Work"}, {value: "Creative writing"}, {value: "Critical Thinking"}, {value: "Presentation or Speech"},
+                    {
+                        value: "Essay"
+                    }, {value: "Admission Essay"}, {value: "Annotated Bibliography"}, {value: "Argumentative Essay"}, {value: "Article Review"}, {value: "Book/moview Review"}, {value: "Business review"}, {value: "Case Study"}, {value: "Course Work"}, {value: "Creative writing"}, {value: "Critical Thinking"}, {value: "Presentation or Speech"},
                     {value: "Research Paper"}, {value: "Research propasal"}, {value: "Term Paper"}, {value: "Thesis/Dissertion Paper"}, {value: "Other"}
             ],
             paperType: "",
@@ -215,7 +228,10 @@ export default {
             currency: 'AUD',
             totalPrice: 0,
             disablePredefined: false,
-            loaded: false
+            loaded: false,  
+            loadingToken: false,
+            cardErrorMessage: null,
+            token: null     
         }
     },
     methods: {
@@ -231,7 +247,8 @@ export default {
                 files: this.dropFiles,
                 status: 'pending',
                 creator: this.currentUser.userId,
-                price: await this.calcPrice()
+                price: await this.calcPrice(),
+                token: this.token
             }
 
             this.addProject(data)
@@ -242,7 +259,7 @@ export default {
             
             this.$parent.close();
         },
-         deleteDropFile(index) {
+        deleteDropFile(index) {
             this.dropFiles.splice(index, 1);
         },
         calcPrice() {
@@ -323,6 +340,17 @@ export default {
                     })
                 }
         }).render(this.$refs.paypal);
+        },
+        async generateToken(){
+            console.log("Logging");
+            this.loadingToken = true;
+            await this.$refs.cardRef.submit();
+            this.loadingToken = false;
+        },
+        tokenCreated(token) {
+            console.log("created", token);
+            // Send token to server
+            this.token = token.id;
         }
     },
     computed: {
@@ -334,25 +362,18 @@ export default {
             return 275 * this.orderPages;
         },
         unverified() {
-            if(this.activeStep == 0 && (!this.projectName || this.projectName.length < 5)) {
+            if(this.activeStep == 0 && (!this.projectName || this.projectName.length < 5 || !this.projectDescription)) {
                 return true;
             } else if(this.activeStep == 1 && (!this.paperType)) {
                 return true
+            } else if(this.token == null && this.activeStep == 3) {
+                return true;
             } else {
                 return false;
             }
-        }
-    },
-    mounted() {
-        const script = document.createElement("script");
-        script.addEventListener("load", this.setLoaded);
-        script.src =
-        "https://www.paypal.com/sdk/js?client-id=AQF-Ah7jDj3nPq2o8HcCgE0h7fXV_MUnPsMv3suXQqmXRttKa58MfrtuxuEZYatf26hs2-ij6lm4urtA&currency=AUD";
-    document.body.appendChild(script);
+        },
     },
     created() {
-        
-    
         this.$root.$on('selectedDraft', (draftId) => {
             console.log("start")
             let newP = this.drafts.find(d => d.id == draftId);
@@ -423,5 +444,17 @@ export default {
             width: 250px;
             margin: auto;
         }
+    }
+    .success_project {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 2em;   
+    }
+    
+
+    .upload-draggable.is-success {
+        width: 100% !important;
     }
 </style>

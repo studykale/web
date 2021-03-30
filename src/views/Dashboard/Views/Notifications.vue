@@ -42,11 +42,11 @@
 
                             <b-table-column field="date" label="Date" sortable centered>
                                 <span class="tag is-success">
-                                    {{ props.row.time.toDate() | moment('from', 'now') }}
+                                    {{ props.row.time.toDate() | moment("dddd, MMMM Do YYYY") }}
                                 </span>
                             </b-table-column>
 
-                            <b-table-column field="read" label="Read">
+                            <b-table-column field="read" sortable label="Read">
                                 <span>
                                     <p>{{ props.row.read }}</p>
                                 </span>
