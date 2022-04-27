@@ -5,7 +5,7 @@
               <div>
                   <div class="brand">
                       <router-link to="/" class="subtitle font-bold">
-                          StudyWorks
+                          StudyKale
                       </router-link>
                   </div>
                   <div class="links">
@@ -20,10 +20,10 @@
                               <router-link to="/aboutus#FAQ">FAQS</router-link>
                           </li>
                           <li>
-                              <router-link to="/aboutus">FaceBook</router-link>
+                              <a href="https://www.facebook.com/studykale/" target="blank">FaceBook</a>
                           </li>
                           <li>
-                              <router-link to="/aboutus">Twitter</router-link>
+                              <a target="blank" href="https://www.instagram.com/studykale/">Instagram</a>
                           </li>
                       </ul>
                   </div>

@@ -11,7 +11,7 @@
             </span>
             <span>
               <h2 class="text-purple font-bold">
-                Works
+                Kale
               </h2>
             </span>
           </div>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import SignInCard from "@/components/SignIn.vue";
+import SignInCard from "@/components/SignInCard.vue";
 import Footer from "@/components/Footer.vue";
 
 
@@ -35,6 +35,9 @@ export default {
     components: {
         SignInCard,
         Footer
+    },
+    created() {
+      this.$crisp.do("chat:hide")
     }
 }
 </script>

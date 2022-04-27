@@ -51,7 +51,7 @@
 import { validationMixin } from 'vuelidate';
 const { required, email, maxLength } = require('vuelidate/lib/validators');
 import { SnackbarProgrammatic as Snackbar } from 'buefy'
-import db from "../db"
+import { contactCollection } from "../db"
 
 export default {
     name: 'Contact',
@@ -86,7 +86,7 @@ export default {
             } else  {
                 this.submitStatus = "OK";
 
-                db.collection('contactus').add({ message: this.message, email: this.email, subject: this.subject });
+                contactCollection.add({ message: this.message, email: this.email, subject: this.subject });
 
                 Snackbar.open({
                     position: 'is-top-right',

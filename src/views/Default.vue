@@ -4,7 +4,7 @@
             <template slot="brand">
             <b-navbar-item tag="router-link" :to="{ path: '/' }">
                 <h2 class="logo">
-                    StudyWorks
+                    StudyKale
                 </h2>
             </b-navbar-item>
             </template>
@@ -58,7 +58,7 @@
 <script>
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import SignInCard from "@/components/SignIn";
+import SignInCard from "@/components/SignInCard";
 
 export default {
     name: 'Layout',

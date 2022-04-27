@@ -26,7 +26,7 @@
                 >
                     <b-input v-model.trim="$v.password.$model" placeholder="Your password" type="password" minLength="8" maxlength="16" password-reveal></b-input>
                 </b-field>
-                <button :disabled="submitStatus === 'ERROR'" :loading="submitStatus === 'PENDING'" class="is-success button is-fullwidth" type="submit" expanded>Sign Up</button>
+                <button :disabled="submitStatus === 'ERROR'" :class="{ 'is-loading': signingup }" class="is-success button is-fullwidth" type="submit" expanded>Sign Up</button>
             </form>
         </div>
         <div class="links">
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapActions, createNamespacedHelpers } from "vuex"
+import { mapActions, createNamespacedHelpers, mapState } from "vuex"
 import { validationMixin } from "vuelidate";
 const { required, minLength, email, maxLength } = require('vuelidate/lib/validators');
 const { mapGetters } = createNamespacedHelpers('notifications');
@@ -68,15 +68,12 @@ export default {
             if(this.$v.$invalid) {
                 this.submitStatus = 'ERROR'
             } else {
-                console.log("yes")
-
                 this.submitStatus = 'OKAY';
                 this.submitStatus = 'PENDING';
                 this.signUp(data);
                 this.email = "";
                 this.password = "";
                 this.username = "";
-                console.log("notes", this.Notify)
                 this.$v.$reset()
             }
         }
@@ -98,6 +95,9 @@ export default {
         }
     },
     computed: {
+        ...mapState({
+            signingup: state => state.user.status.signingup
+        }),
         ...mapGetters(['Notify']),
         emailErrors () {
             const errors = [];
