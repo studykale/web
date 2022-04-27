@@ -1,6 +1,6 @@
 <template>
   <div>
-      <h2>Contact</h2>
+      <h3>Chats</h3>
   </div>
 </template>
 

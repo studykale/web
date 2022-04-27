@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="h-100">
-      <div class="p-2">
+    <div class="h-100 flex justify-content items-center">
+      <div class="p-2 mx-auto">
         <div>
           <div class="text-center logo flex leading-snug justify-center">
             <span>
@@ -11,50 +11,38 @@
             </span>
             <span>
               <h2 class="text-purple font-bold">
-                Kale
+                Works
               </h2>
             </span>
           </div>
-          <div class="flex justify-center">
-            <SignUpCard/>
-          </div>
+          <div class="flex justify-center no-drop no-border">
+              <SignInCard/>
+        </div>
         </div>
       </div>
+
     </div>
-    <div class="counter-height">
     <Footer/>
-    </div>
   </div>
 </template>
 
 <script>
-
-import SignUpCard from "@/components/SignUp.vue"
+import SignInCard from "@/components/SignIn.vue";
 import Footer from "@/components/Footer.vue";
 
+
 export default {
-  components: {
-    SignUpCard,
-    Footer
-  }
+    components: {
+        SignInCard,
+        Footer
+    }
 }
 </script>
 
-<style scoped lang="scss">
-  .p-2 {
-    padding: 1em;
-  }
-
-
-  .logo {
-    padding: 2em;
-  }
-
-  .counter-height {
-    margin-top: -15vh;
-
-    @media screen and (max-width: 520px) {
-      margin-top: 1em;
+<style scoped>
+    .logo {
+        padding: 2em;
     }
-  }
+
+    
 </style>

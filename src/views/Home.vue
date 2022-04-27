@@ -1,241 +1,356 @@
 <template>
-  <div>
-    <Navbar/>
-    <section class="w-full flex hero flex-wrap flex-col-reverse md:flex-row">
-      <div class="w-full md:w-1/2 text-white px-4 p-6 md:p-12 lg:p-20 lg:py-32 leading-snug">
-        <div class="sm:text-center lg:text-left">
-          <h2 class="text-4xl tracking-tight leading-10 font-extrabold text-gray-900 sm:text-5xl sm:leading-none md:text-6xl font-display">
-            Data to enrich your
-            <br class="xl:hidden" />
-            <span class="text-indigo-600">online business</span>
-          </h2>
-          <p class="mt-3 text-base text-gray-700 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-            Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.
-          </p>
-          <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-            <div class="rounded-md shadow">
-              <router-link to="/login" class="w-full flex items-center justify-center px-8 py-3 border border-transparent rounded-sm shadow text-base leading-6 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none  transition duration-150 ease-in-out md:py-4 md:text-lg md:px-10">
-                Get started
-              </router-link>
-            </div>
-            <div class="mt-3 sm:mt-0 sm:ml-3">
-              <router-link to="/signup" class="w-full flex items-center justify-center px-8 py-3 border border-transparent rounded-sm shadow text-base leading-6 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:text-indigo-600 hover:bg-indigo-50 focus:outline-none  focus:border-indigo-300 transition duration-150 ease-in-out md:py-4 md:text-lg md:px-10">
-                Sign Up
-              </router-link>
-            </div>
-          </div>
-        </div>
-      </div>
-      <figure class="w-full md:w-1/2 flex bg-center bg-no-repeat bg-cover aspect"></figure>
-    </section>
-    <section class="site-details ">
-      <div class="py-12 bg-gray-900 site-details__inner md:py-20">
-        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 info">
-          <div class="lg:text-center">
-            <p class="text-base leading-6 text-indigo-600 font-semibold tracking-wide uppercase">Transactions</p>
-            <h3 class="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-100 sm:text-4xl sm:leading-10 font-display">
-              A better way to send money
-            </h3>
-            <p class="mt-4 max-w-2xl text-base leading-6 text-gray-400 lg:mx-auto">
-              Lorem ipsum dolor sit amet consect adipisicing elit. Possimus magnam voluptatum cupiditate veritatis in accusamus quisquam.
-            </p>
-          </div>
-        </div>
-        <div class="flex flex-wrap lg:mt-6">
+    <div>
 
+        <section class="hero home">
+            <!-- Hero head: will stick at the top -->
+            <navbar>
+            </navbar>
+
+            <!-- Hero content: will be in the middle -->
+            <div class="hero-body">
+                <div class="container flex justify-around flex-wrap flex-row">
+                    <div class="has-text-left content">
+                        <h1 class="title font-bold">
+                            Build your grades, Save time, with our essay service.
+                        </h1>
+                        <h4 class="subtitle">
+                            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos quis cum aliquid, ipsam tempora enim facere.
+                        </h4>
+                        <div class="buttons">
+                            <b-button 
+                                tag="router-link"
+                                to="/auth/signup"
+                                type="is-primary" 
+                                rounded
+                                size="is-medium">
+                                Get Started
+                        </b-button>
+                        
+                    </div>
+                    </div>
+                        <OrderCard/>
+                    </div>
+            </div>
+        </section>
+        <div class="container mt-5 mx-a w-90">
+            <div>
+                <h3 class="title">Our features</h3>
+            </div>
+            <div class="divider"></div>
+            <div class="tile is-ancestor">
+                <div class="tile is-4 is-vertical is-parent">
+                    <div class="tile is-child box rocket">
+                        <p class="title">Fast Response</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.</p>
+                    </div>
+                    <div class="tile is-child box plane">
+                        <p class="title">Easy Use</p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ornare magna eros, eu pellentesque tortor vestibulum ut. Maecenas non massa sem. Etiam finibus odio quis feugiat facilisis.</p>
+                    </div>
+                </div>
+                <div class="tile is-parent ">
+                    <div class="tile is-child box service">
+                    <p class="title">Exceptional Deliveries and Content</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam semper diam at erat pulvinar, at pulvinar felis blandit. Vestibulum volutpat tellus diam, consequat gravida libero rhoncus ut. Morbi maximus, leo sit amet vehicula eleifend, nunc dui porta orci, quis semper odio felis ut quam.</p>
+                    <p>Suspendisse varius ligula in molestie lacinia. Maecenas varius eget ligula a sagittis. Pellentesque interdum, nisl nec interdum maximus, augue diam porttitor lorem, et sollicitudin felis neque sit amet erat. Maecenas imperdiet felis nisi, fringilla luctus felis hendrerit sit amet. Aenean vitae gravida diam, finibus dignissim turpis. Sed eget varius ligula, at volutpat tortor.</p>
+                    <!-- <p>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero. Donec leo ligula, maximus et pellentesque sed, gravida a metus. Cras ullamcorper a nunc ac porta. Aliquam ut aliquet lacus, quis faucibus libero. Quisque non semper leo.</p> -->
+                    </div>
+                </div>
+                </div>
         </div>
-      </div>
-    </section>
-    <section class="md:py-5 lg:py-8">
-      <div class="mt-10 container px-3">
-        <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-10">
-          <li>
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-green-500 text-white feature-icon">
-                  <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
-                  </svg>
+        <div class="reviews">
+            <h3 class="title">What people are saying?...</h3>
+            <div class="divider bg-white"></div>
+
+            <div class="flex flex-wrap flex-row justify-center">
+                <div class="card">
+                    <div class="card__header">
+                        <div>
+                            <div class="avatar">
+                                <img src="https://source.unsplash.com/user/erondu" alt="User image">
+                            </div>
+                            <div class="user-details">
+                                <h3>Maria Sanchex</h3>
+                                <h5>University Of California</h5>
+                            </div>
+                        </div>
+                        <div class="rating">
+                            <b-rate v-model="rate1" icon-pack="fas" custom-text="4.6"></b-rate>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempora rem beatae, eius quo temporibus quae cumque velit excepturi quis distinctio.</p>
+                    </div>
                 </div>
-              </div>
-              <div class="ml-4">
-                <h5 class="text-lg leading-6 font-medium text-gray-900">Competitive exchange rates</h5>
-                <p class="mt-2 text-base leading-6 text-gray-500">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.
-                </p>
-              </div>
-            </div>
-          </li>
-          <li class="mt-10 md:mt-0">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-red-500 text-white feature-icon">
-                  <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
-                  </svg>
+
+                <div class="card">
+                    <div class="card__header">
+                        <div>
+                            <div class="avatar">
+                                <img src="https://source.unsplash.com/user/erondu" alt="User image">
+                            </div>
+                            <div class="user-details">
+                                <h3>Maria Sanchex</h3>
+                                <h5>University Of California</h5>
+                            </div>
+                        </div>
+                        <div class="rating">
+                            <b-rate v-model="rate1" icon-pack="fas" custom-text="4.6"></b-rate>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempora rem beatae, eius quo temporibus quae cumque velit excepturi quis distinctio.</p>
+                    </div>
                 </div>
-              </div>
-              <div class="ml-4">
-                <h5 class="text-lg leading-6 font-medium text-gray-900">No hidden fees</h5>
-                <p class="mt-2 text-base leading-6 text-gray-500">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.
-                </p>
-              </div>
-            </div>
-          </li>
-          <li class="mt-10 md:mt-0">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white feature-icon">
-                  <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                  </svg>
+
+                <div class="card">
+                    <div class="card__header">
+                        <div>
+                            <div class="avatar">
+                                <img src="https://source.unsplash.com/user/erondu" alt="User image">
+                            </div>
+                            <div class="user-details">
+                                <h3>Maria Sanchex</h3>
+                                <h5>University Of California</h5>
+                            </div>
+                        </div>
+                        <div class="rating">
+                            <b-rate v-model="rate1" icon-pack="fas" custom-text="4.6"></b-rate>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Tempora rem beatae, eius quo temporibus quae cumque velit excepturi quis distinctio.</p>
+                    </div>
                 </div>
-              </div>
-              <div class="ml-4">
-                <h5 class="text-lg leading-6 font-medium text-gray-900">Transfers are instant</h5>
-                <p class="mt-2 text-base leading-6 text-gray-500">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.
-                </p>
-              </div>
             </div>
-          </li>
-          <li class="mt-10 md:mt-0">
-            <div class="flex">
-              <div class="flex-shrink-0">
-                <div class="flex items-center justify-center h-12 w-12 rounded-md bg-purple-500 text-white feature-icon">
-                  <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
-                  </svg>
-                </div>
-              </div>
-              <div class="ml-4">
-                <h5 class="text-lg leading-6 font-medium text-gray-900">Mobile notifications</h5>
-                <p class="mt-2 text-base leading-6 text-gray-500">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.
-                </p>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </section>
-    <section>
-      <div class="bg-gray-200 mt-5 flex justify-center">
-        <div class="max-w-screen-xl mx-auto py-12 px-4 sm:px-6 lg:py-24 md:justify-between lg:px-8  lg:flex lg:items-center lg:justify-between">
-          <h2 class="text-3xl leading-9 font-extrabold tracking-tight text-gray-900 sm:text-4xl sm:leading-10 font-display">
-            Ready to dive in?
-            <br />
-            <span class="text-indigo-600">Start your free trial today.</span>
-          </h2>
-          <div class="mt-8">
-            <div class="inline-flex rounded-md shadow">
-              <router-link to="login" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base leading-6 font-medium rounded-sm text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                Get started
-              </router-link>
-            </div>
-            <div class="ml-3 inline-flex rounded-md shadow">
-              <router-link to="signup" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base leading-6 font-medium rounded-sm text-indigo-600 bg-white hover:text-indigo-500 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out">
-                Learn more
-              </router-link>
-            </div>
-          </div>
         </div>
-      </div>
-    </section>
-    <section class="mt-5">
-      <div class="container sm:px-3 md:px-5 lg:px-5 lg:py-8">
-        <div class="text-center my-5 leading">
-          <h2 class="font-display text-indigo-600 text-4xl font-extrabold">
-            Testimonials
-          </h2>
-        </div>
-        <ul>
-          <li>
-            <div class="flex flex-col">
-              <h2 class="leading-loose text-xl font-bold text-purple-700 text-center font-display">Workation</h2>
-              <blockquote class="text-gray-700 mx-auto text-center md:w-50 lg:w-1/2 block">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa, fugiat. Omnis facere minima iste possimus obcaecati voluptas reiciendis accusamus cum.
-              </blockquote>
-              <div class="flex flex-row justify-center my-5">
-                <div class="h-12 w-12 mr-3 rounded-full bg-gray-500 md:h-11 md:w-11">
-                </div>
-                <div class="details flex flex-col leading-tight">
-                  <h4 class="font-semibold text-purple-900">Jon Courson</h4>
-                  <p class="font-normal">Student, Brooklyn</p>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li>
-          
-          </li>
-        </ul>
-      </div>
-    </section>
-    <Footer/>
-  </div>
+        <Footer/>
+    </div>
 </template>
 
 <script>
-import Footer from "@/components/custom/Footer.vue";
-import Navbar from "@/components/custom/Navbar.vue";
+    import Navbar from "@/components/Navbar.vue";
+    import OrderCard from "@/components/OrderCard.vue";
+    import Footer from "@/components/Footer.vue";
 
-export default {
-  name: "Home",
-  components: {
-    Footer,
-    Navbar
-  }
-};
+    export default {
+        components: {
+            'navbar': Navbar,
+            OrderCard,
+            Footer
+        },
+        data () {
+            return {
+                rate1: 4.6
+            }
+        }
+    }
 </script>
 
 <style lang="scss" scoped>
-  .hero figure {
-    background: url('../assets/images/brown.jpg') no-repeat;
-    object-fit: contain;
+.home {
+    background: url('../assets/images/students-laptop.jpg');
     background-position: center;
     background-size: cover;
-  }
 
-  .aspect:after {
-    content: "";
-    padding-bottom: 55%;
-    display: block;
-  }
+    position: relative;
 
-  .site-details {
-    
-    &__inner {
-      clip-path: polygon(0 6%, 100% 0, 100% 95%, 0% 100%);
-      position: relative;
+    margin-bottom: 5em;
 
-      @media screen and (min-width: 678px) {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-      }
+    .hero-body {
+        z-index: 9;
 
+        .title {
+            line-height: 1.5;
+            margin-bottom: 1.2em;
+        }
+    }
 
-      .info {
-            z-index: 999;
-            position: inherit;
-      }
-
-      &::before {
+    &::before {
         position: absolute;
-        content: "";
         height: 100%;
         width: 100%;
-        opacity: .125;
+        
+        content: "";
         top: 0;
-        right: 0;
-        background-color: transparent;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='88' viewBox='0 0 88 88'%3E%3Cg fill='%2345d09e' fill-opacity='0.61'%3E%3Cpath fill-rule='evenodd' d='M29.42 29.41c.36-.36.58-.85.58-1.4V0h-4v26H0v4h28c.55 0 1.05-.22 1.41-.58h.01zm0 29.18c.36.36.58.86.58 1.4V88h-4V62H0v-4h28c.56 0 1.05.22 1.41.58zm29.16 0c-.36.36-.58.85-.58 1.4V88h4V62h26v-4H60c-.55 0-1.05.22-1.41.58h-.01zM62 26V0h-4v28c0 .55.22 1.05.58 1.41.37.37.86.59 1.41.59H88v-4H62zM18 36c0-1.1.9-2 2-2h10a2 2 0 1 1 0 4H20a2 2 0 0 1-2-2zm0 16c0-1.1.9-2 2-2h10a2 2 0 1 1 0 4H20a2 2 0 0 1-2-2zm16-26a2 2 0 0 1 2-2 2 2 0 0 1 2 2v4a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-4zm16 0a2 2 0 0 1 2-2 2 2 0 0 1 2 2v4a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-4zM34 58a2 2 0 0 1 2-2 2 2 0 0 1 2 2v4a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-4zm16 0a2 2 0 0 1 2-2 2 2 0 0 1 2 2v4a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-4zM34 78a2 2 0 0 1 2-2 2 2 0 0 1 2 2v6a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-6zm16 0a2 2 0 0 1 2-2 2 2 0 0 1 2 2v6a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-6zM34 4a2 2 0 0 1 2-2 2 2 0 0 1 2 2v6a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4zm16 0a2 2 0 0 1 2-2 2 2 0 0 1 2 2v6a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4zm-8 82a2 2 0 1 1 4 0v2h-4v-2zm0-68a2 2 0 1 1 4 0v10a2 2 0 1 1-4 0V18zM66 4a2 2 0 1 1 4 0v8a2 2 0 1 1-4 0V4zm0 72a2 2 0 1 1 4 0v8a2 2 0 1 1-4 0v-8zm-48 0a2 2 0 1 1 4 0v8a2 2 0 1 1-4 0v-8zm0-72a2 2 0 1 1 4 0v8a2 2 0 1 1-4 0V4zm24-4h4v2a2 2 0 1 1-4 0V0zm0 60a2 2 0 1 1 4 0v10a2 2 0 1 1-4 0V60zm14-24c0-1.1.9-2 2-2h10a2 2 0 1 1 0 4H58a2 2 0 0 1-2-2zm0 16c0-1.1.9-2 2-2h10a2 2 0 1 1 0 4H58a2 2 0 0 1-2-2zm-28-6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm8 26a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm16 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM36 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm16 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm-8-8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 68a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm16-34a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm16-12a2 2 0 1 0 0 4 6 6 0 1 1 0 12 2 2 0 1 0 0 4 10 10 0 1 0 0-20zm-64 0a2 2 0 1 1 0 4 6 6 0 1 0 0 12 2 2 0 1 1 0 4 10 10 0 1 1 0-20zm56-12a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 48a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm-48 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0-48a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm24 32a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-4a6 6 0 1 0 0-12 6 6 0 0 0 0 12zm36-36a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-4a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM10 44c0-1.1.9-2 2-2h8a2 2 0 1 1 0 4h-8a2 2 0 0 1-2-2zm56 0c0-1.1.9-2 2-2h8a2 2 0 1 1 0 4h-8a2 2 0 0 1-2-2zm8 24c0-1.1.9-2 2-2h8a2 2 0 1 1 0 4h-8a2 2 0 0 1-2-2zM3 68c0-1.1.9-2 2-2h8a2 2 0 1 1 0 4H5a2 2 0 0 1-2-2zm0-48c0-1.1.9-2 2-2h8a2 2 0 1 1 0 4H5a2 2 0 0 1-2-2zm71 0c0-1.1.9-2 2-2h8a2 2 0 1 1 0 4h-8a2 2 0 0 1-2-2zm6 66a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-4a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM8 86a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-4a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0-68A6 6 0 1 1 8 2a6 6 0 0 1 0 12zm0-4a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm36 36a2 2 0 1 0 0-4 2 2 0 0 0 0 4z'/%3E%3C/g%3E%3C/svg%3E");
-      }
+        left: 0;
+        background: linear-gradient(to top right, rgba(205, 159, 252, 0.87), rgba(114, 103, 240, 0.849));
     }
-  }
+}
 
-  .feature-icon {
-    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    border-radius: 4px;
-  }
+.hero-body {
+    .content {
+        width: 50%;
+
+        @media only screen and (max-width: 768px) {
+            width: 100%;
+
+            .title, .subtitle {
+
+            text-align: center;
+            }
+        }
+    }
+    .title, .subtitle {
+        color: white;
+        line-height: 1.8;
+    }
+
+    .title {
+        font-weight: 800;
+
+        @media  (max-width: 480px) {
+            text-align: center;
+        }
+    }
+
+    .buttons {
+        @media only screen and (max-width: 480px) {
+            display: flex;
+            justify-content: center;
+        }
+    }
+}
+
+.mt-5 {
+    margin-top: 2.5em;
+}
+
+.mx-3 {
+    margin: 0 1.5em;
+}
+
+.divider {
+    height: 4px;
+    width: 100%;
+    background: rgb(92, 21, 163);
+    border-radius: 2px;
+    margin: 2em 0;
+
+    @media screen and (min-width: 768px) {
+        width: 25%;
+    }
+}
+
+.rocket {
+    background-color: rebeccapurple;
+    p {
+        color: white;
+    }
+
+    .title {
+        color: mediumpurple;
+    }
+}
+
+.plane {
+        // background: url('../assets/images/sent.png') no-repeat right;
+        // background-size: contain;
+        // z-index: -10;
+
+        background-color: orange;
+
+        position: relative;
+        p {
+            color: white !important;
+        }
+
+        .title {
+            color: rgb(243, 207, 141);
+        }
+}
+
+.service {
+        // background: url('../assets/images/success.png') no-repeat right;
+        // background-size: contain;
+        // z-index: -10;
+        background-color: #E20338;
+        position: relative;
+        p {
+            color: white !important;
+        }
+
+        .title {
+            color: rgb(255, 152, 152);
+        }
+}
+
+.reviews {
+    height: auto;
+    background-color: #0e0d11;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%234c4a4f' fill-opacity='0.29'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41zM20 18.6l2.83-2.83 1.41 1.41L21.41 20l2.83 2.83-1.41 1.41L20 21.41l-2.83 2.83-1.41-1.41L18.59 20l-2.83-2.83 1.41-1.41L20 18.59z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+
+    width: 100%;
+    margin-top: 2em;
+    padding: 10em 1.5em;
+
+    @media only screen and (min-width: 768px) {
+        clip-path: polygon(0 10%, 100% 0, 100% 100%, 0% 100%);
+    }
+
+    .title {
+        color: white;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .divider {
+        margin: auto;
+    }
+
+    .bg-white {
+        background-color: #fff !important;
+    }
+
+    .card {
+        margin: 1em 10px;
+        &__header {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+         
+
+            div:first-of-type {
+                display: inline-flex;
+                margin-bottom: 10px;
+
+
+                .avatar {
+                    display: inline-block;
+                }
+                .avatar img {
+                    height: 40px;
+                    width: 40px;
+                    border-radius: 50%;
+                }
+            }
+        }
+        .user-details {
+            margin-left: 1.5em;
+            display: block;
+            
+            h3 {
+                font-weight: bold;
+            }
+        }
+
+        .user-details h5 {
+            font-style: italic;
+            font-weight: 400;
+            color: white;
+        }
+
+        .rating {
+            margin-left: 60px;
+        }
+    }
+}
+
+.CTO {
+    margin-top: -70px;
+    height: 70vh;
+    background: #F2F8FD;
+    padding: 4em 1.5em;
+    text-align: left;
+}
 </style>

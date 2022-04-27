@@ -1,6 +1,8 @@
 <template>
-  <div class="h-100">
-      <h5>404 not found</h5>
+  <div>
+      <h3>
+          Email Auth
+      </h3>
   </div>
 </template>
 
